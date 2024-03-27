@@ -5,14 +5,14 @@ import ProtectedRoute from "./components/PrivateRoute/PrivateRoute";
 import Login from "./containers/Login/Login";
 import Register from "./containers/Register/Register";
 import AutoLogout from "./components/AutoLogout/AutoLogout";
-import Templates from "./containers/Templates/TemplateMain";
+import Template from "./containers/Templates/TemplateMain";
 import Settings from "./containers/Settings/SettingsMain";
 
 export enum Paths {
   LOGIN = "/login",
   HOME = "/",
   SIGNUP = "/signup",
-  TEMPLATES = "/templates",
+  TEMPLATE = "/template",
   SETTINGS = "/settings",
   REGISTER = "/register",
   NOTFOUND = "/404",
@@ -30,7 +30,7 @@ function App() {
         <Route path={Paths.SIGNUP} element={<PasswordCreate />} />
         <Route element={<ProtectedRoute />}>
           <Route path={Paths.HOME} element={<Home />} />
-          <Route path={Paths.TEMPLATES} element={<Templates />} />
+          <Route path={Paths.TEMPLATE} element={<Template />} />
           <Route path={Paths.SETTINGS} element={<Settings />} />
         </Route>
       </Routes>

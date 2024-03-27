@@ -38,18 +38,18 @@ const HomePage = () => {
           <Card>
             <CardContent>
               <Typography variant="h5" component="h2" gutterBottom>
-                Manage Message Templates
+                Manage Message Template
               </Typography>
               <Typography variant="body1" component="p">
                 Create, edit, and manage your Organization tasks.
               </Typography>
-              <Link to={Paths.TEMPLATES} style={{ textDecoration: "none" }}>
+              <Link to={Paths.TEMPLATE} style={{ textDecoration: "none" }}>
                 <Button
                   variant="contained"
                   color="primary"
                   style={{ marginTop: "20px" }}
                 >
-                  View Templates
+                  View Template
                 </Button>
               </Link>
             </CardContent>

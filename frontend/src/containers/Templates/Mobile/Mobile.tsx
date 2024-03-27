@@ -1,7 +1,6 @@
 import React from "react";
 import { Button, Container, Box, CssBaseline } from "@mui/material";
-import HomeIcon from "@mui/icons-material/Home";
-import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+
 
 function MobileScreenWithButton() {
   const handleClickWhatsAppButton = () => {
@@ -22,7 +21,6 @@ function MobileScreenWithButton() {
           border: "2px solid #000",
           margin: "20px",
           minWidth: "280px",
-          minHeight: "500px",
           marginRight: "20px",
         }}
       >

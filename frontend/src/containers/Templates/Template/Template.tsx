@@ -10,10 +10,6 @@ function TemplateCreationPage() {
     setTemplateName(event.target.value);
   };
 
-  const handleTemplateContentChange = (event: any) => {
-    setTemplateContent(event.target.value);
-  };
-
   const handleButtonTextChange = (index: any, event: any) => {
     const newButtons = [...buttons];
     newButtons[index].text = event.target.value;
@@ -44,14 +40,18 @@ function TemplateCreationPage() {
     <Box
       maxWidth="md"
       style={{
-        padding: "20px 10px 20px 10px",
+        padding: "40px 10px 20px 10px",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
       }}
     >
-      <Typography variant="h4" gutterBottom style={{ padding: "0 10px 20px 10px" }}>
-        Create Template
+      <Typography
+        variant="h4"
+        gutterBottom
+        style={{ padding: "20px 10px 20px 10px" }}
+      >
+        Your Template
       </Typography>
       <form onSubmit={handleSubmit}>
         <Grid
@@ -80,7 +80,7 @@ function TemplateCreationPage() {
             {buttons.map((button, index) => (
               <div key={index} style={{ margin: "10px" }}>
                 <TextField
-                  style={{ margin: "10px 0px 0 13px", width: "99.5%"}}
+                  style={{ margin: "10px 0px 0 13px", width: "99%" }}
                   label="Button Text"
                   value={button.text}
                   onChange={(event: any) =>
@@ -89,7 +89,7 @@ function TemplateCreationPage() {
                   required
                 />
                 <TextField
-                  style={{ margin: "10px 0px 0 13px", width: "99.5%"}}
+                  style={{ margin: "10px 0px 0 13px", width: "99%" }}
                   label="Button Link"
                   type="url"
                   value={button.link}

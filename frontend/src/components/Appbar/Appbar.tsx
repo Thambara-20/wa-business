@@ -11,13 +11,12 @@ import { Paths } from "../../App";
 const AppbarWrapper = styled.div`
   display: flex;
   position: absolute;
-  width: 100%;
+  width: 99%;
   z-index: 1;
   background-color: white;
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid #e0e0e0;
-  padding: 0 20px;
 `;
 
 const AppbarLeftContainer = styled.div`
@@ -44,7 +43,6 @@ const AppbarItems = styled.div`
 const ButtonWrapper = styled.div`
   display: flex;
   align-items: flex-end;
-  margin-right: 17px;
   padding: 5px 0 5px 0;
 `;
 
@@ -79,8 +77,8 @@ const Appbar = () => {
         <Link to={Paths.HOME} style={{ textDecoration: "none" }}>
           <AppbarTitle>WS Business</AppbarTitle>
         </Link>
-        <Link to={Paths.TEMPLATES} style={{ textDecoration: "none" }}>
-          <AppbarItems>Templates</AppbarItems>
+        <Link to={Paths.TEMPLATE} style={{ textDecoration: "none" }}>
+          <AppbarItems>Template</AppbarItems>
         </Link>
         <Link to={Paths.SETTINGS} style={{ textDecoration: "none" }}>
           <AppbarItems>Settings</AppbarItems>
