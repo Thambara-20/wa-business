@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import Appbar from "../../components/Appbar/Appbar";
+import TemplateCreationPage from "./Template/Template";
+import MobileScreenWithButton from "./Mobile/Mobile";
 
 export const HomeWarpper = styled.div`
   display: flex;
@@ -8,20 +10,23 @@ export const HomeWarpper = styled.div`
   position: relative;
   width: 100%;
   height: 100vh;
-  overflow-y: auto;
 `;
 
 export const ContainerWrapper = styled.div`
   display: flex;
-  position: relative;
-  flex-direction: column;
+  background-color: #f5f5f5;
+  border-radius: 20px;
+  flex-direction: row;
   width: 100%;
   height: auto;
-  margin-top: 105px;
-  justify-content: center;
+  margin-top: 55px;
+  justify-content: space-around;
   align-items: center;
-`;
 
+  @media (max-width: 700px) {
+    flex-direction: column;
+  }
+`;
 export const ButtonWrapper = styled.div`
   display: flex;
   position: relative;
@@ -38,6 +43,8 @@ export default function Home() {
     <HomeWarpper>
       <Appbar />
       <ContainerWrapper>
+        <MobileScreenWithButton />
+        <TemplateCreationPage />
       </ContainerWrapper>
     </HomeWarpper>
   );

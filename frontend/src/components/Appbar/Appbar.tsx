@@ -30,7 +30,7 @@ const AppbarTitle = styled.div`
 `;
 
 const ButtonWrapper = styled.div`
-  padding: 5px 15px 5px 0;
+  padding: 5px 15px 8px 0;
   display: flex;
   flex-direction: raw;
 `;
@@ -66,12 +66,20 @@ const Appbar = () => {
       <ButtonWrapper>
         {isLogged ? (
           <>
-            <Button variant="outlined" onClick={handleLogout}>
+            <Button
+              variant="outlined"
+              onClick={handleLogout}
+              style={{ borderRadius: "20px" }}
+            >
               Logout
             </Button>
           </>
         ) : (
-          <Button variant="outlined" onClick={handleLogin}>
+          <Button
+            variant="outlined"
+            onClick={handleLogin}
+            style={{ borderRadius: "20px" }}
+          >
             Login
           </Button>
         )}
