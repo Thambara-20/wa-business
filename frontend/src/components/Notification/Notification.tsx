@@ -82,15 +82,7 @@ const NotificationPopup: React.FC<ErrorPopupProps> = ({
     );
   };
 
-  const AddUpdateErrorButton: React.FC = () => {
-    return (
-      <>
-        <StyledButton variant="outlined" color="primary" onClick={onSubmit}>
-          try again
-        </StyledButton>
-      </>
-    );
-  };
+
   if (type === NotificationTypes.LOADING_DATA) {
     errorMessage = NotificationTexts[NotificationTypes.LOADING_DATA];
     button = <SingleButton text="ok" />;

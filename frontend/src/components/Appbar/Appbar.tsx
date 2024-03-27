@@ -1,27 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@mui/material";
 import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { login, logout } from "../../redux/user/slice";
 import PopupNotification from "../../components/Notification/Notification";
 import { NotificationTypes } from "../../utilities";
-import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
+import { Paths } from "../../App";
 
 const AppbarWrapper = styled.div`
   display: flex;
-  position: fixed;
+  position: absolute;
   width: 100%;
   z-index: 1;
   background-color: white;
-  flex-direction: raw;
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid #e0e0e0;
+  padding: 0 20px;
+`;
+
+const AppbarLeftContainer = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 const AppbarTitle = styled.div`
-  display: flex;
-  flex-direction: raw;
   font-size: 24px;
   padding: 5px 0 5px 15px;
   font-weight: 500;
@@ -29,10 +33,19 @@ const AppbarTitle = styled.div`
   color: rgba(30, 136, 229, 1);
 `;
 
+const AppbarItems = styled.div`
+  font-size: 16px;
+  padding: 5px 0 5px 15px;
+  font-weight: 400;
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.87);
+`;
+
 const ButtonWrapper = styled.div`
-  padding: 5px 15px 8px 0;
   display: flex;
-  flex-direction: raw;
+  align-items: flex-end;
+  margin-right: 17px;
+  padding: 5px 0 5px 0;
 `;
 
 const Appbar = () => {
@@ -62,18 +75,26 @@ const Appbar = () => {
 
   return (
     <AppbarWrapper>
-      <AppbarTitle>WS Business</AppbarTitle>
+      <AppbarLeftContainer>
+        <Link to={Paths.HOME} style={{ textDecoration: "none" }}>
+          <AppbarTitle>WS Business</AppbarTitle>
+        </Link>
+        <Link to={Paths.TEMPLATES} style={{ textDecoration: "none" }}>
+          <AppbarItems>Templates</AppbarItems>
+        </Link>
+        <Link to={Paths.SETTINGS} style={{ textDecoration: "none" }}>
+          <AppbarItems>Settings</AppbarItems>
+        </Link>
+      </AppbarLeftContainer>
       <ButtonWrapper>
         {isLogged ? (
-          <>
-            <Button
-              variant="outlined"
-              onClick={handleLogout}
-              style={{ borderRadius: "20px" }}
-            >
-              Logout
-            </Button>
-          </>
+          <Button
+            variant="outlined"
+            onClick={handleLogout}
+            style={{ borderRadius: "20px" }}
+          >
+            Logout
+          </Button>
         ) : (
           <Button
             variant="outlined"
