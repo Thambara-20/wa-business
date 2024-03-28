@@ -7,86 +7,129 @@ import {
   Grid,
   IconButton,
 } from "@mui/material";
+import { EditOutlined } from "@mui/icons-material";
 import { GridDeleteIcon } from "@mui/x-data-grid";
+import styled from "styled-components";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import {
+  updatetemplate,
+  updateButton,
+  deleteButton,
+} from "../../../redux/template/slice";
+import InputAdornment from "@mui/material/InputAdornment";
+
+const TemplateBox = styled(Box)`
+  max-width: md;
+  padding: 1px 30px 20px 30px;
+  margin: 20px 10px 0 10px;
+  display: flex;
+  background-color: #f0f0f0;
+  border-radius: 20px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.4);
+  flex-direction: column;
+  justify-content: center;
+`;
+
+const TemplateTypography = styled(Typography)`
+  padding: 20px 10px 10px 10px;
+  display: flex;
+  justify-content: space-between;
+`;
+
+const StyledTextField = styled(TextField)<{ editable: any }>`
+  margin: 10px 0px 0 13px !important;
+  width: 99%;
+  background-color: ${({ editable }) => (editable ? "white" : "lightgray")};
+  border-radius: 5px;
+`;
+
+const Divider = styled.div`
+  height: 2px;
+  width: 99%;
+  background-color: grey;
+  margin: 10px 0 0 10px;
+`;
+
+const StyledButton = styled(Button)`
+  width: 45%;
+  border-radius: 20px !important;
+`;
+
+const EditText = styled.div`
+  display: flex;
+  font-size: 19px;
+  color: 'blue'!important;
+  justify-content: center;
+  align-items: center;
+  margin: 0 10px;
+`;
 
 function TemplateCreationPage() {
-  const [templateName, setTemplateName] = useState("");
-  const [templateContent, setTemplateContent] = useState("");
-  const [buttons, setButtons] = useState([{ text: "", link: "" }]);
+  const [editable, setEditable] = useState(false);
+  const template = useAppSelector((state) => state.template);
+  const buttons = useAppSelector((state) => state.template.buttons);
+  const dispatch = useAppDispatch();
 
   const handleTemplateNameChange = (event: any) => {
-    setTemplateName(event.target.value);
+    dispatch(updatetemplate({ name: event.target.value }));
   };
 
   const handleButtonTextChange = (index: any, event: any) => {
-    const newButtons = [...buttons];
-    newButtons[index].text = event.target.value;
-    setButtons(newButtons);
+    dispatch(updateButton({ _id: index, name: event.target.value }));
   };
 
   const handleButtonLinkChange = (index: any, event: any) => {
-    const newButtons = [...buttons];
-    newButtons[index].link = event.target.value;
-    setButtons(newButtons);
+    dispatch(updateButton({ _id: index, link: event.target.value }));
   };
 
   const handleAddButton = () => {
-    setButtons([...buttons, { text: "", link: "" }]);
+    const id = Math.max.apply(
+      Math,
+      buttons.map(function (button) {
+        return button._id;
+      })
+    );
+    dispatch(
+      updatetemplate({
+        buttons: [...buttons, { _id: id + 1, link: "", name: "Test", type: "" }],
+      })
+    );
   };
 
-  const handleDeleteButton = (index: number) => {
+  const handleDeleteButton = (index: any) => {
     if (buttons.length === 1) {
       return;
     }
-    const newButtons = [...buttons];
-    newButtons.splice(index, 1);
-    setButtons(newButtons);
+    dispatch(deleteButton(index));
   };
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
-    console.log("Template Name:", templateName);
-    console.log("Template Content:", templateContent);
+    console.log("Template Name:", template.name);
     console.log("Buttons:", buttons);
-    setTemplateName("");
-    setTemplateContent("");
-    setButtons([{ text: "", link: "" }]);
+    // API call to save the template
+
+    setEditable(!editable);
+    // setTemplateName("");
+    // setButtons([{ text: "", link: "" }]);
   };
 
   return (
-    <Box
-      maxWidth="md"
-      style={{
-        padding: "1px 30px 20px 30px",
-        margin: "20px 10px 0 10px",
-        display: "flex",
-        border: "1px #000",
-        backgroundColor: "#f0f0f0",
-        borderRadius: "20px",
-        boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.4)",
-        flexDirection: "column",
-        justifyContent: "center",
-      }}
-    >
-      <Typography
-        variant="h4"
-        gutterBottom
-        style={{ padding: "20px 10px 10px 10px" }}
-      >
+    <TemplateBox>
+      <TemplateTypography variant="h4" gutterBottom>
         Your Template
-      </Typography>
+        {!editable && (
+          <IconButton onClick={() => setEditable(!editable)}>
+            <EditOutlined />
+            <EditText >Edit</EditText>
+          </IconButton>
+        )}
+      </TemplateTypography>
       <form onSubmit={handleSubmit}>
         <Grid
           container
           spacing={3}
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            maxHeight: "430px",
-            overflowY: "auto",
-            overflowX: "hidden",
-          }}
+          style={{ height: "420px", overflowY: "auto" }}
         >
           <Grid item xs={12}>
             <Typography variant="h6" style={{ textAlign: "start" }}>
@@ -94,16 +137,15 @@ function TemplateCreationPage() {
             </Typography>
             <TextField
               variant="outlined"
-              fullWidth
               style={{
                 margin: "10px 0",
-                backgroundColor: "white",
-                borderRadius: "5px",
+                width: "99.5%",
               }}
-              label="Template Name"
-              value={templateName}
+              value={template.name}
               onChange={handleTemplateNameChange}
               required
+              InputLabelProps={{ hidden: true }}
+              disabled={!editable}
             />
           </Grid>
           <Grid item xs={12} style={{ padding: "0px 0px 10px 0px" }}>
@@ -112,7 +154,7 @@ function TemplateCreationPage() {
             </Typography>
             {buttons.map((button, index) => (
               <div
-                key={index}
+                key={button._id}
                 style={{
                   margin: "10px",
                 }}
@@ -130,37 +172,46 @@ function TemplateCreationPage() {
                   </Typography>
                   <IconButton
                     aria-label="delete"
-                    onClick={() => handleDeleteButton(index)}
+                    onClick={() => handleDeleteButton(button._id)}
                   >
                     <GridDeleteIcon />
                   </IconButton>
                 </div>
-                <TextField
-                  style={{ margin: "10px 0px 0 13px", width: "99%" }}
-                  label="Button Text"
-                  value={button.text}
-                  onChange={(event: any) =>
-                    handleButtonTextChange(index, event)
+                <StyledTextField
+                  value={button.name}
+                  onChange={(event) =>
+                    handleButtonTextChange(button._id, event)
                   }
                   required
+                  disabled={!editable}
+                  editable={editable}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        Button text
+                      </InputAdornment>
+                    ),
+                  }}
                 />
-                <TextField
-                  style={{ margin: "10px 0px 0 13px", width: "99%" }}
-                  label="Button Link"
+                <StyledTextField
                   type="url"
                   value={button.link}
-                  onChange={(event) => handleButtonLinkChange(index, event)}
+                  onChange={(event) =>
+                    handleButtonLinkChange(button._id, event)
+                  }
                   required
+                  disabled={!editable}
+                  editable={editable}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        Button link
+                      </InputAdornment>
+                    ),
+                  }}
                 />
 
-                <div
-                  style={{
-                    height: "2px",
-                    width: "100%",
-                    backgroundColor: "grey",
-                    margin: "10px 0 0 10px",
-                  }}
-                ></div>
+                <Divider />
               </div>
             ))}
           </Grid>
@@ -173,25 +224,19 @@ function TemplateCreationPage() {
             padding: "20px 0",
           }}
         >
-          <Button
+          <StyledButton
             variant="contained"
             onClick={handleAddButton}
-            style={{ width: "45%" }}
-            disabled={buttons.length >= 6}
+            disabled={buttons.length >= 6 || !editable} // Disable when not editable
           >
             Add Button
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            type="submit"
-            style={{ width: "45%" }}
-          >
+          </StyledButton>
+          <StyledButton variant="contained" color="primary" type="submit">
             Save Template
-          </Button>
+          </StyledButton>
         </div>
       </form>
-    </Box>
+    </TemplateBox>
   );
 }
 
