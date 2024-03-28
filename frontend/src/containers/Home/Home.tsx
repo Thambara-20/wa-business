@@ -16,7 +16,7 @@ const HomePage = () => {
       <Typography
         variant="h3"
         gutterBottom
-        style={{ marginTop: "50px", textAlign: "center" }}
+        style={{ marginTop: "10px", textAlign: "center" }}
       >
         Welcome to Whatsapp Business Connector
       </Typography>

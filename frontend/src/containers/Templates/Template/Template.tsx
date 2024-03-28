@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { TextField, Button, Typography, Box, Grid } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Typography,
+  Box,
+  Grid,
+  IconButton,
+} from "@mui/material";
+import { GridDeleteIcon } from "@mui/x-data-grid";
 
 function TemplateCreationPage() {
   const [templateName, setTemplateName] = useState("");
@@ -26,6 +34,15 @@ function TemplateCreationPage() {
     setButtons([...buttons, { text: "", link: "" }]);
   };
 
+  const handleDeleteButton = (index: number) => {
+    if (buttons.length === 1) {
+      return;
+    }
+    const newButtons = [...buttons];
+    newButtons.splice(index, 1);
+    setButtons(newButtons);
+  };
+
   const handleSubmit = (event: any) => {
     event.preventDefault();
     console.log("Template Name:", templateName);
@@ -40,8 +57,13 @@ function TemplateCreationPage() {
     <Box
       maxWidth="md"
       style={{
-        padding: "40px 10px 20px 10px",
+        padding: "1px 30px 20px 30px",
+        margin: "20px 10px 0 10px",
         display: "flex",
+        border: "1px #000",
+        backgroundColor: "#f0f0f0",
+        borderRadius: "20px",
+        boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.4)",
         flexDirection: "column",
         justifyContent: "center",
       }}
@@ -49,7 +71,7 @@ function TemplateCreationPage() {
       <Typography
         variant="h4"
         gutterBottom
-        style={{ padding: "20px 10px 20px 10px" }}
+        style={{ padding: "20px 10px 10px 10px" }}
       >
         Your Template
       </Typography>
@@ -58,27 +80,61 @@ function TemplateCreationPage() {
           container
           spacing={3}
           style={{
-            maxHeight: "400px",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            maxHeight: "430px",
             overflowY: "auto",
             overflowX: "hidden",
           }}
         >
           <Grid item xs={12}>
+            <Typography variant="h6" style={{ textAlign: "start" }}>
+              Template Name:
+            </Typography>
             <TextField
+              variant="outlined"
               fullWidth
+              style={{
+                margin: "10px 0",
+                backgroundColor: "white",
+                borderRadius: "5px",
+              }}
               label="Template Name"
               value={templateName}
               onChange={handleTemplateNameChange}
               required
             />
           </Grid>
-
-          <Grid item xs={12} style={{ padding: "25px 0px 10px 0px" }}>
+          <Grid item xs={12} style={{ padding: "0px 0px 10px 0px" }}>
             <Typography variant="h6" style={{ margin: "25px 0px 10px 25px" }}>
-              Buttons:
+              Buttons: Max(6)
             </Typography>
             {buttons.map((button, index) => (
-              <div key={index} style={{ margin: "10px" }}>
+              <div
+                key={index}
+                style={{
+                  margin: "10px",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    margin: "0 0 0 20px",
+                  }}
+                >
+                  <Typography variant="subtitle1">
+                    Button {index + 1}:
+                  </Typography>
+                  <IconButton
+                    aria-label="delete"
+                    onClick={() => handleDeleteButton(index)}
+                  >
+                    <GridDeleteIcon />
+                  </IconButton>
+                </div>
                 <TextField
                   style={{ margin: "10px 0px 0 13px", width: "99%" }}
                   label="Button Text"
@@ -96,6 +152,15 @@ function TemplateCreationPage() {
                   onChange={(event) => handleButtonLinkChange(index, event)}
                   required
                 />
+
+                <div
+                  style={{
+                    height: "2px",
+                    width: "100%",
+                    backgroundColor: "grey",
+                    margin: "10px 0 0 10px",
+                  }}
+                ></div>
               </div>
             ))}
           </Grid>
@@ -104,14 +169,24 @@ function TemplateCreationPage() {
           style={{
             display: "flex",
             justifyContent: "space-between",
-            width: "100%",
-            padding: "20px 0px 20px 0px",
+            width: "99.5%",
+            padding: "20px 0",
           }}
         >
-          <Button variant="contained" onClick={handleAddButton}>
+          <Button
+            variant="contained"
+            onClick={handleAddButton}
+            style={{ width: "45%" }}
+            disabled={buttons.length >= 6}
+          >
             Add Button
           </Button>
-          <Button variant="contained" color="primary" type="submit">
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            style={{ width: "45%" }}
+          >
             Save Template
           </Button>
         </div>

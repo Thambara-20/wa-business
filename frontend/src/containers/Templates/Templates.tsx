@@ -11,23 +11,25 @@ export const HomeWrapper = styled.div`
   flex-direction: column;
   position: relative;
   width: 100%;
-  height: 100vh;
+  height: 100%;
+  min-height: 100vh;
 `;
 
 export const ContainerWrapper = styled.div`
   display: flex;
   border-radius: 20px;
-  margin-top: 30px;
+  margin-top: 0px;
   flex-direction: row;
   width: 100%;
-  height: auto;
+  height: 100%;
+  min-height: 100vh;
   justify-content: space-around;
   align-items: center;
 
-  @media (max-width: 800px) {
+  @media (max-width: 700px) {
     flex-direction: column;
-    margin-top: 50px;
-
+    justify-content: center;
+    margin-top: 20px;
   }
 `;
 export const ButtonWrapper = styled.div`
@@ -41,18 +43,12 @@ export const ButtonWrapper = styled.div`
   padding: 0 20px;
 `;
 
-
 const TemplatesPage = () => {
-
   return (
-    <Container style={{ height: "100vh" }}>
-      <Grid container spacing={2} style={{ height: "100vh" }}>
-        <ContainerWrapper>
-          <MobileScreenWithButton />
-          <TemplateCreationPage />
-        </ContainerWrapper>
-      </Grid>
-    </Container>
+    <ContainerWrapper>
+      <TemplateCreationPage />
+      <MobileScreenWithButton />
+    </ContainerWrapper>
   );
 };
 

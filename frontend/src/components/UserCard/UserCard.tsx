@@ -46,7 +46,7 @@ const UserCard: React.FC<UserCardProps> = ({ open, onClose }) => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user.newUser);
   const socketId = useAppSelector((state) => state.user.socketId);
-
+  console.log("socketId", socketId);  
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(updateNewUser({ [event.target.name]: event.target.value }));
   };

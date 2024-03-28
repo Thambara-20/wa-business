@@ -19,7 +19,7 @@ function MobileScreenWithButton() {
           position: "relative",
           borderRadius: "20px",
           border: "2px solid #000",
-          margin: "20px",
+          margin: "20px 20px 0px 20px",
           minWidth: "280px",
           marginRight: "20px",
         }}
@@ -76,7 +76,7 @@ function MobileScreenWithButton() {
         </Container>
         <div
           style={{
-            width: "93%",
+            width: "92%",
             backgroundColor: "#ccc",
             position: "absolute",
             bottom: "0",
@@ -93,7 +93,8 @@ function MobileScreenWithButton() {
             style={{
               width: "60px", 
               height: "15px",
-              backgroundColor: "#fff", 
+              backgroundColor: "grey",
+              border: "1px solid #fff", 
               borderRadius: "6px",
               display: "flex",
               justifyContent: "center",

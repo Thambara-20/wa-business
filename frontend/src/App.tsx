@@ -7,6 +7,12 @@ import Register from "./containers/Register/Register";
 import AutoLogout from "./components/AutoLogout/AutoLogout";
 import Template from "./containers/Templates/TemplateMain";
 import Settings from "./containers/Settings/SettingsMain";
+import "./App.css";
+import { setSocketId } from "./redux/user/slice";
+import { useEffect } from "react";
+import { io } from "socket.io-client";
+import { useAppDispatch } from "./redux/hooks";
+const url = process.env.REACT_APP_API_URL;
 
 export enum Paths {
   LOGIN = "/login",
@@ -21,6 +27,25 @@ export enum Paths {
 const routes = [{ path: Paths.HOME, element: <Home /> }];
 
 function App() {
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    const socket: any = io(`${url}`);
+
+    socket.on("connect", () => {
+      console.log("Connected to Socket.IO server", socket.id);
+      dispatch(setSocketId(socket.id));
+      socket.emit("authenticate", socket.id);
+    });
+
+    socket.on("disconnect", () => {
+      socket.emit("userDisconnected");
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [dispatch]);
+
   return (
     <div>
       <AutoLogout />

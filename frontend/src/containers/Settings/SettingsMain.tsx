@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import Appbar from "../../components/Appbar/Appbar";
 import SettingsPage from "./Settings";
+import Footer from "../Footer/Footer";
 
 export const HomeWarpper = styled.div`
   display: flex;
@@ -12,8 +13,8 @@ export const HomeWarpper = styled.div`
 
 export const ContainerWrapper = styled.div`
   display: flex;
-  background-color: #f5f5f5;
-  border-radius: 20px;
+  background-color: #e0e0e0;
+  border-radius: 20px 20px 0px 0px;
   flex-direction: row;
   width: 100%;
   height: 100vh;
@@ -43,6 +44,7 @@ export default function Settings() {
       <ContainerWrapper>
         <SettingsPage />
       </ContainerWrapper>
+      <Footer />
     </HomeWarpper>
   );
 }

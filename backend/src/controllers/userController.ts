@@ -54,6 +54,7 @@ export class UserController {
   async email(req: Request, res: Response) {
     const { email, role, name } = req.body;
     const socketId = req.params.socketId;
+    console.log("email", email, "role", role, "name", name, socketId);
 
     try {
       if (name && role && email) {
@@ -63,7 +64,7 @@ export class UserController {
 
         let user = await this.userService.findByEmail(email);
         const hashedToken = await bcrypt.hash(tempToken, 10);
-
+        console.log("email", email, "role", role, "name", name, "user", user);
         if (!user) {
           const newUser = new User();
           newUser.email = email;
@@ -141,7 +142,7 @@ export class UserController {
         const newUser = new User();
         newUser.email = email;
         newUser.password = hashedPassword;
-        newUser.role = "admin";
+        newUser.role = "observer";
         newUser.verified = true;
         await this.userService.createUser(newUser);
 

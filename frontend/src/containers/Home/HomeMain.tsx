@@ -8,23 +8,25 @@ import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "../../components/PrivateRoute/PrivateRoute";
 import { Paths } from "../../App";
 import HomePage from "./Home";
+import Footer from "../Footer/Footer";
 
 export const HomeWarpper = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
   width: 100%;
-  height: 100vh;
+  height: 100%;
 `;
 
 export const ContainerWrapper = styled.div`
   display: flex;
-  background-color: #f5f5f5;
-  border-radius: 20px;
+  background-color: #e0e0e0;
+  border-radius: 20px 20px 0px 0px;
   flex-direction: row;
   width: 100%;
-  height: 100vh;
-  margin-top: 55px;
+  height: 100%;
+  min-height: 100vh;
+  margin-top: 10px;
   justify-content: space-around;
   align-items: center;
 
@@ -50,6 +52,7 @@ export default function Home() {
       <ContainerWrapper>
         <HomePage />
       </ContainerWrapper>
+      <Footer/>
     </HomeWarpper>
   );
 }
