@@ -13,7 +13,6 @@ import { setSocketId } from "../../redux/user/slice";
 import { Socket, io } from "socket.io-client";
 const url = process.env.REACT_APP_API_URL;
 
-
 const AppbarWrapper = styled.div`
   display: flex;
   position: fixed;
@@ -120,9 +119,8 @@ const Appbar = () => {
   }, []);
 
   useEffect(() => {
-    
     const socket: any = io(`${url}`);
-    
+
     socket.on("email_sent_successfully", (id: any) => {
       setAddUserClicked(false);
       setNotification({
@@ -150,7 +148,7 @@ const Appbar = () => {
     return () => {
       socket.disconnect();
     };
-  }, [dispatch]);
+  }, []);
 
   const handleLogin = () => {
     dispatch(login({ user: "test" }));

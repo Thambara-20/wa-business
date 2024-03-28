@@ -4,10 +4,7 @@ import styled from "styled-components";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { useNavigate } from "react-router";
-import {
-  register,
-  updateNewUser,
-} from "../../redux/user/slice";
+import { register, updateNewUser } from "../../redux/user/slice";
 import { Paths } from "../../App";
 import {
   isValidEmail,
@@ -17,16 +14,51 @@ import {
 import NotificationPopup from "../../components/Notification/Notification";
 import { NotificationTypes } from "../../utilities";
 
-const StyledPasswordCreate = styled.div`
-  position: relative;
+const StyledLoginContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 100vh;
-  width: 100%;
+  background-color: #f5f5f5;
+
+  @media (max-width: 700px) {
+    flex-direction: column;
+    height: 100vh;
+  }
+`;
+
+const StyledWelcomeContainer = styled.div`
+  flex: 1;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-align: center;
+
+  @media (max-width: 700px) {
+    font-size: 0.5rem;
+    flex: 0.5;
+  }
 `;
 
+const StyledPasswordCreate = styled.div`
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0px 0px 10px 0px #e0e0e0;
+  border-radius: 10px;
+  height: 95vh;
+  background-color: white;
+  @media (max-width: 700px) {
+    width: 89%;
+    justify-content: flex-start;
+  }
+`;
 const StyledTypography = styled(Typography)`
   margin: 10px 0 12px 0 !important;
 `;
@@ -35,9 +67,13 @@ const StyledPasswordContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 30%;
+  width: 70%;
   min-width: 250px;
   max-width: 500px;
+
+  @media (max-width: 700px) {
+    width: 100%;
+  }
 `;
 
 const StyledButton = styled(Button)`
@@ -127,116 +163,134 @@ const Register = () => {
   };
 
   return (
-    <StyledPasswordCreate>
-      <StyledPasswordContainer>
-        <StyledTypography
-          fontSize={20}
-          justifyContent={"flex-start"}
-          width={"100%"}
-          fontWeight={500}
-        >
-          Register
-        </StyledTypography>
-        <StyledTextField
-          fullWidth
-          label="Name"
-          error={!isValidName(user.name) || NameEmptyError}
-          onChange={handleChange}
-          value={user.name}
-          name="name"
-          helperText={
-            NameEmptyError
-              ? "Mandatory field missing"
-              : !isValidName(user.name)
-                ? "Invalid Name"
-                : ""
-          }
-        >
-          Name
-        </StyledTextField>
-        <StyledTextField
-          fullWidth
-          label="Email"
-          error={!isEmailOk || EmailEmptyError}
-          onChange={handleChange}
-          value={user.email}
-          name="email"
-          helperText={
-            isEmailTaken
-              ? "The entered email has already been registered. "
-              : !isValidEmail(user.email)
-                ? "Please enter a valid email address. "
-                : EmailEmptyError
+    <StyledLoginContainer>
+      <StyledWelcomeContainer>
+        <Typography variant="h4" gutterBottom maxWidth={400}>
+          Welcome to WhatsApp Business Connector
+        </Typography>
+        <Typography maxWidth={600}>
+          The WhatsApp Business Connector is a platform designed to facilitate
+          communication between organizations and their customers via WhatsApp
+          messaging.
+        </Typography>
+      </StyledWelcomeContainer>
+      <StyledPasswordCreate>
+        <StyledPasswordContainer>
+          <StyledTypography
+            fontSize={30}
+            justifyContent={"center"}
+            textAlign={"center"}
+            width={"100%"}
+            fontWeight={500}
+          >
+            Register
+          </StyledTypography>
+          <StyledTextField
+            fullWidth
+            label="Name"
+            error={!isValidName(user.name) || NameEmptyError}
+            onChange={handleChange}
+            value={user.name}
+            name="name"
+            helperText={
+              NameEmptyError
+                ? "Mandatory field missing"
+                : !isValidName(user.name)
+                  ? "Invalid Name"
+                  : ""
+            }
+          >
+            Name
+          </StyledTextField>
+          <StyledTextField
+            fullWidth
+            label="Email"
+            error={!isEmailOk || EmailEmptyError}
+            onChange={handleChange}
+            value={user.email}
+            name="email"
+            helperText={
+              isEmailTaken
+                ? "The entered email has already been registered. "
+                : !isValidEmail(user.email)
+                  ? "Please enter a valid email address. "
+                  : EmailEmptyError
+                    ? "Mandatory field missing"
+                    : ""
+            }
+          >
+            Email
+          </StyledTextField>
+          <StyledTextField
+            fullWidth
+            type={showPassword ? "text" : "password"}
+            placeholder="Password"
+            name="password"
+            label="Password"
+            value={user.password}
+            onChange={handleChange}
+            error={!validatePassword(user.password) || PasswordEmptyError}
+            helperText={
+              !validatePassword(user.password)
+                ? "Weak password"
+                : PasswordEmptyError
                   ? "Mandatory field missing"
                   : ""
-          }
-        >
-          Email
-        </StyledTextField>
-        <StyledTextField
-          fullWidth
-          type={showPassword ? "text" : "password"}
-          placeholder="Password"
-          name="password"
-          label="Password"
-          value={user.password}
-          onChange={handleChange}
-          error={!validatePassword(user.password) || PasswordEmptyError}
-          helperText={
-            !validatePassword(user.password)
-              ? "Weak password"
-              : PasswordEmptyError
-                ? "Mandatory field missing"
-                : ""
-          }
-          InputProps={{
-            endAdornment: (
-              <IconButton onClick={handleTogglePasswordVisibility} edge="end">
-                {showPassword ? <Visibility /> : <VisibilityOff />}
-              </IconButton>
-            ),
-          }}
+            }
+            InputProps={{
+              endAdornment: (
+                <IconButton onClick={handleTogglePasswordVisibility} edge="end">
+                  {showPassword ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              ),
+            }}
+          />
+          <StyledTextField
+            fullWidth
+            label="Confirm Password"
+            type={showPassword ? "text" : "password"}
+            placeholder="Confirm Password"
+            value={confirmPassword}
+            onChange={(e) => handleConfirmPasswordChange(e.target.value)}
+            error={
+              confirmPassword !== user.password || PasswordComfirmEmptyError
+            }
+            helperText={
+              confirmPassword !== user.password
+                ? "Please make sure your passwords match!"
+                : PasswordComfirmEmptyError
+                  ? "Mandatory field missing"
+                  : ""
+            }
+            InputProps={{
+              endAdornment: (
+                <IconButton onClick={handleTogglePasswordVisibility} edge="end">
+                  {showPassword ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              ),
+            }}
+          />
+          <StyledButton variant="contained" fullWidth onClick={handleSubmit}>
+            Register
+          </StyledButton>
+          <StyledTypography>
+            Already have an account?{" "}
+            <a
+              href={Paths.LOGIN}
+              style={{ color: "blue", textDecoration: "none" }}
+            >
+              Login
+            </a>
+          </StyledTypography>
+        </StyledPasswordContainer>
+        <NotificationPopup
+          open={notification.open}
+          onClose={handleCloseNotification}
+          type={notification.type}
+          onSubmit={notification.onConfirm}
         />
-        <StyledTextField
-          fullWidth
-          label="Confirm Password"
-          type={showPassword ? "text" : "password"}
-          placeholder="Confirm Password"
-          value={confirmPassword}
-          onChange={(e) => handleConfirmPasswordChange(e.target.value)}
-          error={confirmPassword !== user.password || PasswordComfirmEmptyError}
-          helperText={
-            confirmPassword !== user.password
-              ? "Please make sure your passwords match!"
-              : PasswordComfirmEmptyError
-                ? "Mandatory field missing"
-                : ""
-          }
-          InputProps={{
-            endAdornment: (
-              <IconButton onClick={handleTogglePasswordVisibility} edge="end">
-                {showPassword ? <Visibility /> : <VisibilityOff />}
-              </IconButton>
-            ),
-          }}
-        />
-        <StyledButton variant="contained" fullWidth onClick={handleSubmit}>
-          Register
-        </StyledButton>
-        <StyledTypography>
-          Already have an account?{" "}
-          <a href={Paths.LOGIN} style={{ color: "blue" }}>
-            Login
-          </a>
-        </StyledTypography>
-      </StyledPasswordContainer>
-      <NotificationPopup
-        open={notification.open}
-        onClose={handleCloseNotification}
-        type={notification.type}
-        onSubmit={notification.onConfirm}
-      />
-    </StyledPasswordCreate>
+      </StyledPasswordCreate>
+    </StyledLoginContainer>
   );
 };
 
