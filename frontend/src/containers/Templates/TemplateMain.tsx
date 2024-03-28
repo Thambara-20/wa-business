@@ -25,8 +25,14 @@ export const ContainerWrapper = styled.div`
 
   @media (max-width: 700px) {
     flex-direction: column;
+    min-height: 160vh;
+  }
+
+  @media (max-width: 400px) {
+    flex-direction: column;
     min-height: 190vh;
   }
+
 `;
 
 export default function Templates() {

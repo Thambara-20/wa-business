@@ -227,7 +227,7 @@ const Appbar = () => {
           <Button
             variant="outlined"
             onClick={handleLogin}
-            style={{ borderRadius: "20px" }}
+            style={{ borderRadius: "20px",marginRight: "10px" }}
           >
             Login
           </Button>

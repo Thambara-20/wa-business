@@ -28,17 +28,25 @@ const TemplateBox = styled(Box)`
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.4);
   flex-direction: column;
   justify-content: center;
+
+  @media (max-width: 700px) {
+    margin: 0px 10px;
+  }
 `;
 
 const TemplateTypography = styled(Typography)`
   padding: 20px 10px 10px 10px;
   display: flex;
   justify-content: space-between;
+  @media (max-width: 700px) {
+   padding: 15px 0
+  }
 `;
 
 const StyledTextField = styled(TextField)<{ editable: any }>`
   margin: 10px 0px 0 13px !important;
   width: 99%;
+  
   background-color: ${({ editable }) => (editable ? "white" : "lightgray")};
   border-radius: 5px;
 `;
@@ -53,6 +61,12 @@ const Divider = styled.div`
 const StyledButton = styled(Button)`
   width: 45%;
   border-radius: 20px !important;
+  text-transform: none !important;
+
+
+  @media (max-width: 700px) {
+    width: 48%;
+  }
 `;
 
 const EditText = styled.div`

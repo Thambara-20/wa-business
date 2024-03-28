@@ -18,7 +18,6 @@ export const HomeWrapper = styled.div`
 export const ContainerWrapper = styled.div`
   display: flex;
   border-radius: 20px;
-  margin-top: 0px;
   flex-direction: row;
   width: 100%;
   height: 100%;
@@ -41,6 +40,11 @@ export const ButtonWrapper = styled.div`
   justify-content: flex-end;
   align-items: center;
   padding: 0 20px;
+
+  @media (max-width: 700px) {
+    justify-content: center;
+    padding: 0 0 0 0;
+  }
 `;
 
 const TemplatesPage = () => {

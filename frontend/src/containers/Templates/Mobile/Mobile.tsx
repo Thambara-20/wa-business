@@ -3,6 +3,14 @@ import { Button, Container } from "@mui/material";
 import { useAppSelector } from "../../../redux/hooks";
 import styled from "styled-components";
 
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0 20px 0;
+`;
+
 const StyledBox = styled.div`
   display: flex;
   flex-direction: column;
@@ -13,7 +21,7 @@ const StyledBox = styled.div`
   border-radius: 20px;
   border: 1px solid #000;
   margin: 20px 20px 0px 20px;
-  min-width: 280px;
+  min-width: 300px;
   max-width: 300px;
   margin-right: 20px;
   box-shadow:
@@ -39,6 +47,12 @@ const StyledBox = styled.div`
     top: 30px;
     left: 0;
     background-color: #fff;
+  }
+
+  @media (max-width: 700px) {
+    margin: 0;
+    min-width: 340px;
+    max-width: 340px;
   }
 `;
 
@@ -148,12 +162,7 @@ function MobileScreenWithButton() {
   ];
 
   return (
-    <div
-      style={{
-        padding: "0px 40px 20px 40px",
-        borderRadius: "20px",
-        margin: "25px 5px 10px 5px",
-      }}
+    <Wrapper
     >
       <StyledBox>
         <div />
@@ -192,7 +201,7 @@ function MobileScreenWithButton() {
           <FooterElement />
         </StyledFooter>
       </StyledBox>
-    </div>
+    </Wrapper>
   );
 }
 
