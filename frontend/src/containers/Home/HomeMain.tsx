@@ -20,7 +20,6 @@ export const HomeWarpper = styled.div`
 
 export const ContainerWrapper = styled.div`
   display: flex;
-  background-color: #e0e0e0;
   border-radius: 20px 20px 0px 0px;
   flex-direction: row;
   width: 100%;
@@ -29,30 +28,34 @@ export const ContainerWrapper = styled.div`
   margin-top: 10px;
   justify-content: space-around;
   align-items: center;
+  background-image: url("./clock.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.6);
+  }
 
   @media (max-width: 700px) {
     flex-direction: column;
   }
-`;
-export const ButtonWrapper = styled.div`
-  display: flex;
-  position: relative;
-  flex-direction: row;
-  width: 100%;
-  height: auto;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 0 20px;
 `;
 
 export default function Home() {
   return (
     <HomeWarpper>
       <Appbar />
-      <ContainerWrapper>
-        <HomePage />
-      </ContainerWrapper>
-      <Footer/>
+      <>
+        <ContainerWrapper>
+          <HomePage />
+        </ContainerWrapper>
+      </>
+      <Footer />
     </HomeWarpper>
   );
 }

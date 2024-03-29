@@ -33,8 +33,9 @@ const AppbarLeftContainer = styled.div`
 
 const AppbarTitle = styled.div`
   font-size: 24px;
+  font-style: arial;
   padding: 5px 0 5px 15px;
-  font-weight: 500;
+  font-weight: 700;
   cursor: pointer;
   color: rgba(30, 136, 229, 1);
 `;
@@ -181,6 +182,9 @@ const Appbar = () => {
             <Link to={Paths.HOME} style={{ textDecoration: "none" }}>
               <AppbarTitle>WS Business</AppbarTitle>
             </Link>
+            <Link to={Paths.HOME} style={{ textDecoration: "none" }}>
+              <AppbarItems>Home</AppbarItems>
+            </Link>
             <Link to={Paths.TEMPLATE} style={{ textDecoration: "none" }}>
               <AppbarItems>Template</AppbarItems>
             </Link>
@@ -227,7 +231,7 @@ const Appbar = () => {
           <Button
             variant="outlined"
             onClick={handleLogin}
-            style={{ borderRadius: "20px",marginRight: "10px" }}
+            style={{ borderRadius: "20px", marginRight: "10px" }}
           >
             Login
           </Button>

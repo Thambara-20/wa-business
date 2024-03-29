@@ -18,7 +18,18 @@ const HomePage = () => {
     });
   }, []);
   return (
-    <Container data-aos="fade-up">
+    <Container
+      data-aos="fade-up"
+      style={{
+        backdropFilter: "blur(30px)",
+        border: "1px #000",
+        padding: "35px",
+        margin: "10px",
+        backgroundColor: "rgba(255, 255, 255, 0.5)",
+        borderRadius: "20px",
+        boxShadow: "5px 5px 15px -5px rgba(0, 0, 0, 0.2)",
+      }}
+    >
       <Typography
         variant="h3"
         gutterBottom
@@ -41,7 +52,9 @@ const HomePage = () => {
         style={{ marginTop: "50px" }}
       >
         <Grid item xs={12} md={6}>
-          <Card>
+          <Card
+            style={{ marginTop: "20px", borderRadius: "20px", padding: "15px" }}
+          >
             <CardContent>
               <Typography variant="h5" component="h2" gutterBottom>
                 Manage Message Template
@@ -53,7 +66,7 @@ const HomePage = () => {
                 <Button
                   variant="contained"
                   color="primary"
-                  style={{ marginTop: "20px" }}
+                  style={{ marginTop: "20px", borderRadius: "20px" }}
                 >
                   View Template
                 </Button>
@@ -62,7 +75,9 @@ const HomePage = () => {
           </Card>
         </Grid>
         <Grid item xs={12} md={6}>
-          <Card>
+          <Card
+            style={{ marginTop: "20px", borderRadius: "20px", padding: "15px" }}
+          >
             <CardContent>
               <Typography variant="h5" component="h2" gutterBottom>
                 Settings
@@ -74,7 +89,7 @@ const HomePage = () => {
                 <Button
                   variant="contained"
                   color="primary"
-                  style={{ marginTop: "20px" }}
+                  style={{ marginTop: "20px", borderRadius: "20px" }}
                 >
                   Go to Settings
                 </Button>

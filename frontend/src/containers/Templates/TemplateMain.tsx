@@ -22,9 +22,11 @@ export const ContainerWrapper = styled.div`
   justify-content: center;
   align-items: center;
   background-image: url("./mobile.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
   &::before {
     content: "";
-    position: absolute; 
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
