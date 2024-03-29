@@ -122,13 +122,23 @@ const Appbar = () => {
   useEffect(() => {
     const socket: any = io(`${url}`);
 
-    socket.on("email_sent_successfully", (id: any) => {
+    socket.on("connect", () => {
+      console.log("Connected to Socket.IO server", socket.id);
+      dispatch(setSocketId(socket.id));
+      socket.emit("authenticate", socket.id);
+    });
+
+    socket.on("disconnect", () => {
+      socket.emit("userDisconnected");
+    });
+    socket.on("email_sent_successfully", (data: any) => {
       setAddUserClicked(false);
       setNotification({
         open: true,
         onConfirm: handleCloseNotification,
         type: NotificationTypes.SUCCESS_SEND_EMAIL,
       });
+      console.log("email sent", data);
       socket.emit("messageReceived", "Message received successfully");
     });
 

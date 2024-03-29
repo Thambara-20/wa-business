@@ -15,6 +15,7 @@ import {
   updatetemplate,
   updateButton,
   deleteButton,
+  saveTemplate,
 } from "../../../redux/template/slice";
 import InputAdornment from "@mui/material/InputAdornment";
 
@@ -131,9 +132,8 @@ function TemplateCreationPage() {
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
-    console.log("Template Name:", template.name);
-    console.log("Buttons:", buttons);
-    // API call to save the template
+  
+    dispatch(saveTemplate(template));
 
     setEditable(!editable);
     // setTemplateName("");

@@ -34,6 +34,7 @@ const userSlice = createSlice({
   initialState: initialStateTemplate,
   reducers: {
     updatetemplate: (state, action: PayloadAction<Partial<template>>) => {
+      console.log("action.payload", action.payload);
       Object.assign(state, action.payload);
     },
     updateButton: (state, action: PayloadAction<Partial<Button>>) => {
@@ -49,8 +50,15 @@ const userSlice = createSlice({
       state.buttons = state.buttons.filter((e) => e.id != action.payload);
     },
     getTemplateByUserId: (state, action: PayloadAction<any>) => {},
+    saveTemplate: (state, action: PayloadAction<template>) => {},
   },
 });
 
 export default userSlice.reducer;
-export const { updatetemplate, updateButton, deleteButton, getTemplateByUserId } = userSlice.actions;
+export const {
+  updatetemplate,
+  updateButton,
+  deleteButton,
+  getTemplateByUserId,
+  saveTemplate
+} = userSlice.actions;

@@ -47,10 +47,11 @@ export async function sendMessage(
   io: Server,
   userId: string,
   message: string,
-  email: string
+  data: string
 ) {
   if (userId) {
-    io.to(userId).emit(message, email);
+    console.log("Sending message to user:", userId, message);
+    io.to(userId).emit(message, data);
   } else {
     console.warn("User not found:", userId);
   }

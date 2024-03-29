@@ -47,6 +47,7 @@ export class TemplateController {
     const { name, id, buttons } = req.body;
 
     try {
+      console.log(req.body);
       const template = await this.templateService.updateTemplate(
         id,
         name,

@@ -9,6 +9,9 @@ import { sendMessage, sendSignupEmail } from "../services/emailService";
 import { getSocketInstance } from "../services/socketService";
 import { TemplateService } from "../services/templateService";
 const SECRET_KEY = process.env.SECRET_KEY;
+const domain =
+  process.env.NODE_ENV === "development" ? "localhost" : ".lbmsalpha.live";
+const isSecure = process.env.NODE_ENV === "development" ? false : true;
 
 export class UserController {
   private userService = new UserService();
@@ -36,14 +39,14 @@ export class UserController {
       res
         .cookie("accessToken", accessToken, {
           httpOnly: true,
-          domain: "localhost",
-          secure: false,
+          domain: domain,
+          secure: isSecure,
           maxAge: 1000 * 60 * 60,
         })
         .cookie("refreshToken", refreshToken, {
           httpOnly: true,
-          domain: "localhost",
-          secure: false,
+          domain: domain,
+          secure: isSecure,
           maxAge: 1000 * 60 * 60 * 24 * 7,
         })
         .status(200)
@@ -92,12 +95,12 @@ export class UserController {
         res.status(200).json({
           message: "Signup link sent successfully",
           tempToken,
-          isVerified: false,
+          isVerified: isSecure,
         });
         sendMessage(this.io, socketId, "email_sent_successfully", email);
       } else {
         res.status(400).json({ error: "Invalid request parameters" });
-        sendMessage(this.io, socketId, "email_sent_fail", email);
+        sendMessage(this.io, socketId, "socketId_sent_fail", email);
       }
     } catch (error) {
       res.status(500).json({ error: "Internal Server Error" });
@@ -146,7 +149,6 @@ export class UserController {
         newUser.verified = true;
         await this.userService.createUser(newUser);
         res.status(200).json({ message: "User created successfully" });
-
       }
     } catch (error) {
       res.status(500).json({ error: "Internal Server Error" });
@@ -158,13 +160,13 @@ export class UserController {
       res
         .clearCookie("accessToken", {
           httpOnly: true,
-          domain: "localhost",
-          secure: false,
+          domain: domain,
+          secure: isSecure,
         })
         .clearCookie("refreshToken", {
           httpOnly: true,
-          domain: "localhost",
-          secure: false,
+          domain: domain,
+          secure: isSecure,
         })
         .status(200)
         .json({ message: "User logged out successfully" });
@@ -206,8 +208,8 @@ export class UserController {
       res
         .cookie("accessToken", accessToken, {
           httpOnly: true,
-          domain: "localhost",
-          secure: false,
+          domain: domain,
+          secure: isSecure,
           maxAge: 1000 * 60,
         })
         .status(200)

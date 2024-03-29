@@ -134,3 +134,14 @@ export const getTemplateByUserIdAsync = async (id: string) => {
     throw error;
   }
 };
+
+export const savetemplateAsync = async (data: any) => {
+  try {
+    const response = await axiosInstance.put(`${url}/templates/update`, data, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}

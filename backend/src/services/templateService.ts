@@ -64,7 +64,6 @@ export class TemplateService {
     return AppDataSource.transaction(async (transactionalEntityManager) => {
       const template = await transactionalEntityManager.findOne(Template, {
         where: { id: id },
-        relations: ["buttons"],
       });
 
       if (!template) {
@@ -84,13 +83,13 @@ export class TemplateService {
         button.link = buttonData.link;
         button.template = template;
         await transactionalEntityManager.save(button);
+        console.log(button)
       }
 
       const updatedTemplate = await transactionalEntityManager.save(template);
       return {
         id: updatedTemplate.id,
         name: updatedTemplate.name,
-        buttons: updatedTemplate.buttons,
       };
     });
   }
