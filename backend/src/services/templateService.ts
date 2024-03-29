@@ -20,26 +20,28 @@ export class TemplateService {
     return await this.templateRepository.find({ relations: ["buttons"] });
   }
 
-  async createTemplate(name: string, email: string): Promise<TemplateDTO> {
+  async createTemplate(
+    name: string,
+    email: string,
+    transactionalEntityManager: any
+  ): Promise<TemplateDTO> {
     //done
-    return AppDataSource.transaction(async (transactionalEntityManager) => {
-      const user = await transactionalEntityManager.findOne(User, {
-        where: { email },
-      });
-
-      if (!user) {
-        throw new Error("User not found");
-      }
-
-      const template = new Template();
-      template.name = name;
-      template.user = user;
-
-      await transactionalEntityManager.save(template);
-      await this.addButtonsToTemplate(transactionalEntityManager, template.id);
-
-      return { id: template.id, name: template.name, userId: user.email };
+    const user = await transactionalEntityManager.findOne(User, {
+      where: { email },
     });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const template = new Template();
+    template.name = name;
+    template.user = user;
+
+    await transactionalEntityManager.save(template);
+    await this.addButtonsToTemplate(transactionalEntityManager, template.id);
+
+    return { id: template.id, name: template.name, userId: user.email };
   }
 
   async getTemplateByUserId(userid: string): Promise<Template | undefined> {

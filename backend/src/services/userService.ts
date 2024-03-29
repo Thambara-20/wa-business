@@ -1,14 +1,23 @@
 import { AppDataSource } from "../config/data-source";
 import { User } from "../entity/user";
+import { TemplateService } from "./templateService";
 
 export class UserService {
   private userRepository = AppDataSource.getRepository(User);
+  private templateService = new TemplateService();
 
   async createUser(user: User): Promise<User> {
     try {
-      return await this.userRepository.save(user);
+      return await AppDataSource.transaction(
+        async (transactionalEntityManager) => {
+          const createdUser: User =  await transactionalEntityManager.save(user);
+          await this.templateService.createTemplate("Default", createdUser.email, transactionalEntityManager);
+          return createdUser;
+        }
+      );
     } catch (error) {
-      throw error;
+      console.error("Error creating user:", error, user);
+      throw new Error("Failed to create user");
     }
   }
   async findByEmail(email: string): Promise<User | undefined> {

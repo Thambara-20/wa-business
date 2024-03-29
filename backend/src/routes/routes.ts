@@ -65,13 +65,7 @@ export const Routes = [
     action: "getAllTemplates",
     middleware: [],
   },
-  {
-    method: "post",
-    route: "/templates",
-    controller: TemplateController,
-    action: "createTemplate",
-    middleware: [],
-  },
+
   {
     method: "get",
     route: "/templates/:id",

@@ -120,7 +120,6 @@ export class UserController {
       user.password = hashedPassword;
       user.tempToken = null;
       user.verified = true;
-
       await this.userService.createUser(user);
       res.status(200).json({ message: "User created successfully" });
     } catch (error) {
@@ -132,7 +131,6 @@ export class UserController {
     const { email, password, role } = req.body;
     try {
       const user: any = await this.userService.findByEmail(email);
-      console.log("register");
 
       if (user && user.verified) {
         res
@@ -144,11 +142,11 @@ export class UserController {
         const newUser = new User();
         newUser.email = email;
         newUser.password = hashedPassword;
-        newUser.role = "observer";
+        newUser.role = "admin";
         newUser.verified = true;
         await this.userService.createUser(newUser);
-
         res.status(200).json({ message: "User created successfully" });
+
       }
     } catch (error) {
       res.status(500).json({ error: "Internal Server Error" });

@@ -30,8 +30,6 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-
-
 export const loginAsync = async (newuser: any) => {
   try {
     const response: any = await axios.post(`${url}/users/login`, newuser, {
@@ -120,6 +118,19 @@ export const logoutAsync = async () => {
     return response.data;
   } catch (error) {
     console.log("error", error);
+    throw error;
+  }
+};
+
+// for template
+
+export const getTemplateByUserIdAsync = async (id: string) => {
+  try {
+    const response = await axiosInstance.get(`${url}/templates/${id}`, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
     throw error;
   }
 };

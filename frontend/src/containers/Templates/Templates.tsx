@@ -1,10 +1,9 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { Button, Container, Grid, Typography } from "@mui/material";
-
 import styled from "styled-components";
 import TemplateCreationPage from "./Template/Template";
 import MobileScreenWithButton from "./Mobile/Mobile";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { getTemplateByUserId } from "../../redux/template/slice";
+import { useEffect } from "react";
 
 export const HomeWrapper = styled.div`
   display: flex;
@@ -29,7 +28,6 @@ export const ContainerWrapper = styled.div`
   justify-content: space-around;
   align-items: center;
 
-
   @media (max-width: 700px) {
     flex-direction: column;
     justify-content: center;
@@ -38,6 +36,11 @@ export const ContainerWrapper = styled.div`
 `;
 
 const TemplatesPage = () => {
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.user);
+  useEffect(() => {
+    dispatch(getTemplateByUserId(user.email));
+  }, []);
   return (
     <ContainerWrapper>
       <TemplateCreationPage />

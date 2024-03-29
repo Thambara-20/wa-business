@@ -98,25 +98,25 @@ function TemplateCreationPage() {
   };
 
   const handleButtonTextChange = (index: any, event: any) => {
-    dispatch(updateButton({ _id: index, name: event.target.value }));
+    dispatch(updateButton({ id: index, name: event.target.value }));
   };
 
   const handleButtonLinkChange = (index: any, event: any) => {
-    dispatch(updateButton({ _id: index, link: event.target.value }));
+    dispatch(updateButton({ id: index, link: event.target.value }));
   };
 
   const handleAddButton = () => {
     const id = Math.max.apply(
       Math,
       buttons.map(function (button) {
-        return button._id;
+        return button.id;
       })
     );
     dispatch(
       updatetemplate({
         buttons: [
           ...buttons,
-          { _id: id + 1, link: "", name: "Test", type: "" },
+          { id: id + 1, link: "", name: "Test", type: "" },
         ],
       })
     );
@@ -185,7 +185,7 @@ function TemplateCreationPage() {
             </Typography>
             {buttons.map((button, index) => (
               <Box
-                key={button._id}
+                key={button.id}
                 style={{
                   margin: "10px",
                 }}
@@ -203,7 +203,7 @@ function TemplateCreationPage() {
                   </Typography>
                   <IconButton
                     aria-label="delete"
-                    onClick={() => handleDeleteButton(button._id)}
+                    onClick={() => handleDeleteButton(button.id)}
                   >
                     <GridDeleteIcon />
                   </IconButton>
@@ -211,7 +211,7 @@ function TemplateCreationPage() {
                 <StyledTextField
                   value={button.name}
                   onChange={(event) =>
-                    handleButtonTextChange(button._id, event)
+                    handleButtonTextChange(button.id, event)
                   }
                   required
                   disabled={!editable}
@@ -231,7 +231,7 @@ function TemplateCreationPage() {
                   type="url"
                   value={button.link}
                   onChange={(event) =>
-                    handleButtonLinkChange(button._id, event)
+                    handleButtonLinkChange(button.id, event)
                   }
                   required
                   disabled={!editable}

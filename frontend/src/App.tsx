@@ -54,10 +54,10 @@ function App() {
         <Route path={Paths.LOGIN} element={<Login />} />
         <Route path={Paths.REGISTER} element={<Register />} />
         <Route path={Paths.SIGNUP} element={<PasswordCreate />} />
-        <Route path={Paths.TEMPLATE} element={<Template />} />
         <Route element={<ProtectedRoute />}>
           <Route path={Paths.HOME} element={<Home />} />
           <Route path={Paths.SETTINGS} element={<Settings />} />
+          <Route path={Paths.TEMPLATE} element={<Template />} />
         </Route>
       </Routes>
     </div>

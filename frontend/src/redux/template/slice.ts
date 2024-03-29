@@ -2,26 +2,26 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 const LocalstorageId = `${process.env.REACT_APP_API_URL}`;
 
 type Button = {
-  _id: number;
+  id: number;
   name: string;
   type: string;
   link: string;
 };
 
 type template = {
-  _id: string;
+  id: string;
   name: string;
   buttons: Button[];
   isloading: boolean;
 };
 
 export const initialStateTemplate: template = {
-  _id: "1",
+  id: "1",
   isloading: false,
   name: "Sample",
   buttons: [
     {
-      _id: 1,
+      id: 1,
       name: "Test Button",
       type: "",
       link: "https://sample.com",
@@ -38,7 +38,7 @@ const userSlice = createSlice({
     },
     updateButton: (state, action: PayloadAction<Partial<Button>>) => {
       const buttonIndex = state.buttons.findIndex(
-        (button) => button._id === action.payload._id
+        (button) => button.id === action.payload.id
       );
       state.buttons[buttonIndex] = {
         ...state.buttons[buttonIndex],
@@ -46,10 +46,11 @@ const userSlice = createSlice({
       };
     },
     deleteButton: (state, action: PayloadAction<number>) => {
-      state.buttons = state.buttons.filter((e) => e._id != action.payload);
+      state.buttons = state.buttons.filter((e) => e.id != action.payload);
     },
+    getTemplateByUserId: (state, action: PayloadAction<any>) => {},
   },
 });
 
 export default userSlice.reducer;
-export const { updatetemplate, updateButton, deleteButton } = userSlice.actions;
+export const { updatetemplate, updateButton, deleteButton, getTemplateByUserId } = userSlice.actions;

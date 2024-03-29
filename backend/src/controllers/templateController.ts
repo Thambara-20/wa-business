@@ -14,17 +14,17 @@ export class TemplateController {
     }
   }
 
-  async createTemplate(req: Request, res: Response) {
-    //done
-    const { name, email } = req.body;
-    console.log(req.body);
-    try {
-      const template = await this.templateService.createTemplate(name, email);
-      res.status(201).json(template);
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
-  }
+  // async createTemplate(req: Request, res: Response) {
+  //   //done
+  //   const { name, email } = req.body;
+  //   console.log(req.body);
+  //   try {
+  //     const template = await this.templateService.createTemplate(name, email,);
+  //     res.status(201).json(template);
+  //   } catch (error) {
+  //     res.status(400).json({ message: error.message });
+  //   }
+  // }
 
   async getTemplateByUserId(req: Request, res: Response) {
     //done
@@ -32,6 +32,7 @@ export class TemplateController {
     try {
       const template = await this.templateService.getTemplateByUserId(id);
       if (template) {
+        console.log("template found");
         res.json(template);
       } else {
         res.status(404).json({ message: "Template not found" });
@@ -52,8 +53,10 @@ export class TemplateController {
         buttons
       );
       if (template) {
+        console.log("template updated");
         res.json(template);
       } else {
+
         res.status(404).json({ message: "Template not found" });
       }
     } catch (error) {

@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { useNavigate } from "react-router";
 import { authenticate, login, updateUser } from "../../redux/user/slice";
 import { Paths } from "../../App";
+import { getTemplateByUserId } from "../../redux/template/slice";
 
 const StyledLoginContainer = styled.div`
   display: flex;
@@ -92,6 +93,7 @@ const Login = () => {
     dispatch(authenticate());
     if (isLogged) {
       navigate(Paths.HOME);
+      dispatch(getTemplateByUserId(email));
     }
   }, [navigate, isLogged, dispatch]);
 
