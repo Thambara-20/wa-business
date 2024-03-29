@@ -9,6 +9,11 @@ const Wrapper = styled.div`
   align-items: center;
   justify-content: center;
   margin: 20px 0 20px 0;
+  min-height: 100vh;
+
+  @media (max-width: 700px) {
+    justify-content: flex-start;
+  }
 `;
 
 const StyledBox = styled.div`
@@ -16,7 +21,8 @@ const StyledBox = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 80vh;
+  height: 70vh;
+  min-height: 65vh;
   position: relative;
   border-radius: 20px;
   border: 1px solid #000;
@@ -53,6 +59,13 @@ const StyledBox = styled.div`
     margin: 0;
     min-width: 340px;
     max-width: 340px;
+    max-height: 60vh;
+  }
+
+  @media (min-height: 900px) {
+    max-height: 60vh;
+    min-width: 340px;
+    max-width: 340px;
   }
 `;
 
@@ -62,7 +75,6 @@ const StyledContainer = styled(Container)`
   padding: 20px 10px 0 10px !important;
   border: none;
   position: relative;
-  overflowy: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -162,8 +174,7 @@ function MobileScreenWithButton() {
   ];
 
   return (
-    <Wrapper
-    >
+    <Wrapper data-aos="fade-left">
       <StyledBox>
         <div />
         <div />

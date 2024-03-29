@@ -10,6 +10,8 @@ export const HomeWrapper = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   height: 100%;
   min-height: 100vh;
@@ -19,31 +21,19 @@ export const ContainerWrapper = styled.div`
   display: flex;
   border-radius: 20px;
   flex-direction: row;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   height: 100%;
   min-height: 100vh;
   justify-content: space-around;
   align-items: center;
 
+
   @media (max-width: 700px) {
     flex-direction: column;
     justify-content: center;
-    margin-top: 20px;
-  }
-`;
-export const ButtonWrapper = styled.div`
-  display: flex;
-  position: relative;
-  flex-direction: row;
-  width: 100%;
-  height: auto;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 0 20px;
-
-  @media (max-width: 700px) {
-    justify-content: center;
-    padding: 0 0 0 0;
+    margin-top: 250px;
   }
 `;
 

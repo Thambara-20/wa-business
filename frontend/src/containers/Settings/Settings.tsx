@@ -59,7 +59,17 @@ const SettingsPage = () => {
   };
 
   return (
-    <Box maxWidth="md" style={{ padding: "20px" }}>
+    <Box
+      maxWidth="md"
+      style={{
+        padding: "40px",
+        backgroundColor: "#fff",
+        borderRadius: "20px",
+        width: "85%",
+        boxShadow: "5px 5px 15px -5px rgba(0, 0, 0, 0.2)",
+      }}
+      data-aos="fade-up"
+    >
       <Typography variant="h4" gutterBottom>
         Settings
       </Typography>

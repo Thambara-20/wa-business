@@ -17,7 +17,7 @@ export const ContainerWrapper = styled.div`
   border-radius: 20px 20px 0px 0px;
   flex-direction: row;
   width: 100%;
-  height: 100vh;
+  min-height: 90vh;
   margin-top: 55px;
   justify-content: space-around;
   align-items: center;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   Button,
@@ -9,10 +9,16 @@ import {
   CardContent,
 } from "@mui/material";
 import { Paths } from "../../App";
+import AOS from "aos";
 
 const HomePage = () => {
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+    });
+  }, []);
   return (
-    <Container>
+    <Container data-aos="fade-up">
       <Typography
         variant="h3"
         gutterBottom

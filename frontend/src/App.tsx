@@ -13,6 +13,7 @@ import { useEffect } from "react";
 import { io } from "socket.io-client";
 import { useAppDispatch } from "./redux/hooks";
 const url = process.env.REACT_APP_API_URL;
+import "aos/dist/aos.css";
 
 export enum Paths {
   LOGIN = "/login",

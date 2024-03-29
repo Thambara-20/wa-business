@@ -2,6 +2,8 @@ import "reflect-metadata";
 import { DataSource } from "typeorm";
 import * as dotenv from "dotenv";
 import { User } from "../entity/user";
+import { Button } from "../entity/button";
+import { Template } from "../entity/template";
 dotenv.config();
 
 export const AppDataSource = new DataSource({
@@ -12,7 +14,7 @@ export const AppDataSource = new DataSource({
   type: "postgres",
   synchronize: false,
   logging: false,
-  entities: [User],
+  entities: [User, Button, Template],
   migrations: [],
   subscribers: [],
 });

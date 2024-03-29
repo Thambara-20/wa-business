@@ -30,7 +30,9 @@ const TemplateBox = styled(Box)`
   justify-content: center;
 
   @media (max-width: 700px) {
-    margin: 0px 10px;
+    margin: 0 10px;
+    justify-content: flex-end;
+    
   }
 `;
 
@@ -39,16 +41,16 @@ const TemplateTypography = styled(Typography)`
   display: flex;
   justify-content: space-between;
   @media (max-width: 700px) {
-   padding: 15px 0
+    padding: 15px 0;
   }
 `;
 
 const StyledTextField = styled(TextField)<{ editable: any }>`
   margin: 10px 0px 0 13px !important;
   width: 99%;
-  
+
   background-color: ${({ editable }) => (editable ? "white" : "lightgray")};
-  border-radius: 5px;
+  border-radius: 20px;
 `;
 
 const Divider = styled.div`
@@ -63,7 +65,6 @@ const StyledButton = styled(Button)`
   border-radius: 20px !important;
   text-transform: none !important;
 
-
   @media (max-width: 700px) {
     width: 48%;
   }
@@ -72,11 +73,19 @@ const StyledButton = styled(Button)`
 const EditText = styled.div`
   display: flex;
   font-size: 19px;
-  color: 'blue'!important;
+  color: "blue" !important;
   justify-content: center;
   align-items: center;
   margin: 0 10px;
 `;
+
+const StyledButtonWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 99.5%;
+  padding: 20px 0;
+`;
+
 
 function TemplateCreationPage() {
   const [editable, setEditable] = useState(false);
@@ -105,7 +114,10 @@ function TemplateCreationPage() {
     );
     dispatch(
       updatetemplate({
-        buttons: [...buttons, { _id: id + 1, link: "", name: "Test", type: "" }],
+        buttons: [
+          ...buttons,
+          { _id: id + 1, link: "", name: "Test", type: "" },
+        ],
       })
     );
   };
@@ -129,13 +141,13 @@ function TemplateCreationPage() {
   };
 
   return (
-    <TemplateBox>
+    <TemplateBox  data-aos="fade-up" >
       <TemplateTypography variant="h4" gutterBottom>
         Your Template
         {!editable && (
           <IconButton onClick={() => setEditable(!editable)}>
             <EditOutlined />
-            <EditText >Edit</EditText>
+            <EditText>Edit</EditText>
           </IconButton>
         )}
       </TemplateTypography>
@@ -155,6 +167,11 @@ function TemplateCreationPage() {
                 margin: "10px 0",
                 width: "99.5%",
               }}
+              InputProps={{
+                style: {
+                  borderRadius: "20px",
+                },
+              }}
               value={template.name}
               onChange={handleTemplateNameChange}
               required
@@ -167,13 +184,13 @@ function TemplateCreationPage() {
               Buttons: Max(6)
             </Typography>
             {buttons.map((button, index) => (
-              <div
+              <Box
                 key={button._id}
                 style={{
                   margin: "10px",
                 }}
               >
-                <div
+                <Box
                   style={{
                     display: "flex",
                     flexDirection: "row",
@@ -190,7 +207,7 @@ function TemplateCreationPage() {
                   >
                     <GridDeleteIcon />
                   </IconButton>
-                </div>
+                </Box>
                 <StyledTextField
                   value={button.name}
                   onChange={(event) =>
@@ -200,6 +217,9 @@ function TemplateCreationPage() {
                   disabled={!editable}
                   editable={editable}
                   InputProps={{
+                    style: {
+                      borderRadius: "20px",
+                    },
                     startAdornment: (
                       <InputAdornment position="start">
                         Button text
@@ -217,6 +237,9 @@ function TemplateCreationPage() {
                   disabled={!editable}
                   editable={editable}
                   InputProps={{
+                    style: {
+                      borderRadius: "20px",
+                    },
                     startAdornment: (
                       <InputAdornment position="start">
                         Button link
@@ -224,20 +247,12 @@ function TemplateCreationPage() {
                     ),
                   }}
                 />
-
                 <Divider />
-              </div>
+              </Box>
             ))}
           </Grid>
         </Grid>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            width: "99.5%",
-            padding: "20px 0",
-          }}
-        >
+        <StyledButtonWrapper>
           <StyledButton
             variant="contained"
             onClick={handleAddButton}
@@ -248,7 +263,7 @@ function TemplateCreationPage() {
           <StyledButton variant="contained" color="primary" type="submit">
             Save Template
           </StyledButton>
-        </div>
+        </StyledButtonWrapper>
       </form>
     </TemplateBox>
   );

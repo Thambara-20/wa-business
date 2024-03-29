@@ -1,4 +1,6 @@
 import { UserController } from "../controllers/userController";
+import { TemplateController } from "../controllers/templateController";
+import { ButtonController } from "../controllers/buttonController";
 import { authenticateToken, authorizeRole } from "../middleware/auth";
 export enum Role {
   ADMIN = "admin",
@@ -54,6 +56,79 @@ export const Routes = [
     route: "/users/logout",
     controller: UserController,
     action: "logout",
+    middleware: [],
+  },
+  // Template routes
+  {
+    method: "get",
+    route: "/templates",
+    controller: TemplateController,
+    action: "getAllTemplates",
+    middleware: [],
+  },
+  {
+    method: "post",
+    route: "/templates",
+    controller: TemplateController,
+    action: "createTemplate",
+    middleware: [],
+  },
+  {
+    method: "get",
+    route: "/templates/:id",
+    controller: TemplateController,
+    action: "getTemplateById",
+    middleware: [],
+  },
+  {
+    method: "put",
+    route: "/templates/:id",
+    controller: TemplateController,
+    action: "updateTemplate",
+    middleware: [],
+  },
+  {
+    method: "delete",
+    route: "/templates/:id",
+    controller: TemplateController,
+    action: "deleteTemplate",
+    middleware: [],
+  },
+
+  // Button routes
+  {
+    method: "get",
+    route: "/buttons",
+    controller: ButtonController,
+    action: "getAllButtons",
+    middleware: [],
+  },
+  {
+    method: "post",
+    route: "/buttons",
+    controller: ButtonController,
+    action: "createButton",
+    middleware: [],
+  },
+  {
+    method: "get",
+    route: "/buttons/:id",
+    controller: ButtonController,
+    action: "getButtonById",
+    middleware: [],
+  },
+  {
+    method: "put",
+    route: "/buttons/:id",
+    controller: ButtonController,
+    action: "updateButton",
+    middleware: [],
+  },
+  {
+    method: "delete",
+    route: "/buttons/:id",
+    controller: ButtonController,
+    action: "deleteButton",
     middleware: [],
   },
 ];
