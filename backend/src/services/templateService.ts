@@ -1,7 +1,16 @@
 import { AppDataSource } from "../config/data-source";
 import { Template } from "../entity/template";
-import { getRepository } from "typeorm";
 import { Button } from "../entity/button";
+import { User } from "../entity/user";
+import { getManager } from "typeorm";
+import { getRepository } from "typeorm";
+
+export class TemplateDTO {
+  id: string;
+  name: string;
+  userId?: string;
+  buttons?: Button[] | null;
+}
 
 export class TemplateService {
   private templateRepository = AppDataSource.getRepository(Template);
@@ -11,44 +20,88 @@ export class TemplateService {
     return await this.templateRepository.find({ relations: ["buttons"] });
   }
 
-  async createTemplate(name: string, userId: string): Promise<Template> {
-    const template = new Template();
-    template.name = name;
-    template.userId = userId;
-    return await this.templateRepository.save(template);
+  async createTemplate(name: string, email: string): Promise<TemplateDTO> {
+    //done
+    return AppDataSource.transaction(async (transactionalEntityManager) => {
+      const user = await transactionalEntityManager.findOne(User, {
+        where: { email },
+      });
+
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      const template = new Template();
+      template.name = name;
+      template.user = user;
+
+      await transactionalEntityManager.save(template);
+      await this.addButtonsToTemplate(transactionalEntityManager, template.id);
+
+      return { id: template.id, name: template.name, userId: user.email };
+    });
   }
 
   async getTemplateByUserId(userid: string): Promise<Template | undefined> {
+    //done
     return await this.templateRepository.findOne({
-      where: { userId: userid },
+      where: { user: { email: userid } },
       relations: ["buttons"],
     });
   }
 
   async updateTemplate(
+    //done
     id: string,
     name: string,
     buttons: { name: string; link: string }[]
-  ): Promise<Template | undefined> {
-    const template = await this.templateRepository.findOne({ where: { id } });
-    if (!template) {
+  ): Promise<TemplateDTO | undefined> {
+    if (!id) {
       return undefined;
     }
-    template.name = name;
-    template.buttons = await this.addButtonsToTemplate(id, buttons);
-    return await this.templateRepository.save(template);
-  }
+    return AppDataSource.transaction(async (transactionalEntityManager) => {
+      const template = await transactionalEntityManager.findOne(Template, {
+        where: { id: id },
+        relations: ["buttons"],
+      });
 
-  async deleteTemplate(id: number): Promise<boolean> {
-    const result = await this.templateRepository.delete(id);
-    return result.affected !== 0;
+      if (!template) {
+        return undefined;
+      }
+
+      template.name = name;
+      const currentButtons = await transactionalEntityManager.find(Button, {
+        where: { template: { id: template.id } },
+      });
+
+      await transactionalEntityManager.remove(currentButtons);
+
+      for (const buttonData of buttons) {
+        const button = new Button();
+        button.name = buttonData.name;
+        button.link = buttonData.link;
+        button.template = template;
+        await transactionalEntityManager.save(button);
+      }
+
+      const updatedTemplate = await transactionalEntityManager.save(template);
+      return {
+        id: updatedTemplate.id,
+        name: updatedTemplate.name,
+        buttons: updatedTemplate.buttons,
+      };
+    });
   }
 
   async addButtonsToTemplate(
+    transactionalEntityManager: any,
     templateId: string,
-    buttonsData: { name: string; link: string }[]
+    buttonsData: { name: string; link: string }[] = [
+      { link: "https://www.sample.com", name: "Sample" },
+    ]
   ): Promise<Button[]> {
-    const template = await this.templateRepository.findOne({
+    //done
+    const template = await transactionalEntityManager.findOne(Template, {
       where: { id: templateId },
     });
 
@@ -63,7 +116,7 @@ export class TemplateService {
       button.name = buttonData.name;
       button.link = buttonData.link;
       button.template = template;
-      buttons.push(await this.buttonRepository.save(button));
+      buttons.push(await transactionalEntityManager.save(button));
     }
 
     return buttons;
@@ -72,7 +125,6 @@ export class TemplateService {
   async updateButtons(
     buttonsData: { id: string; name: string; link: string }[]
   ): Promise<Button[]> {
-    
     const buttons: Button[] = [];
     for (const buttonData of buttonsData) {
       const button = await this.buttonRepository.findOne({

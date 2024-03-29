@@ -1,22 +1,31 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToMany } from "typeorm";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+  OneToMany,
+} from "typeorm";
 import { User } from "./user";
 import { Button } from "./button";
+import { IsNotEmpty, IsString } from "class-validator";
 
 @Entity()
 export class Template {
   @PrimaryGeneratedColumn()
+  @IsNotEmpty()
+  @IsString()
   id: string;
 
   @Column()
+  @IsNotEmpty()
+  @IsString()
   name: string;
 
-  @Column()
-  userId: string;
-
-  @ManyToOne(() => User)
-  @JoinColumn({ name: "userId" })
+  @ManyToOne(() => User, (user) => user.templates)
+  @JoinColumn({ name: "email" })
   user: User;
 
-  @OneToMany(() => Button, button => button.template, { cascade: true })
+  @OneToMany(() => Button, (button) => button.template, { cascade: true })
   buttons: Button[];
 }

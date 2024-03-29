@@ -12,12 +12,13 @@ export const AppDataSource = new DataSource({
   //   rejectUnauthorized: false,
   // },
   type: "postgres",
-  synchronize: false,
+  synchronize: true,
   logging: false,
   entities: [User, Button, Template],
   migrations: [],
   subscribers: [],
 });
+
 
 // export const AppDataSource = new DataSource({
 //   type: "postgres",

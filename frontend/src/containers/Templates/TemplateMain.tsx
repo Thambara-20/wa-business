@@ -9,7 +9,6 @@ export const HomeWarpper = styled.div`
   position: relative;
   width: 100%;
   height: 100vh;
-  
 `;
 
 export const ContainerWrapper = styled.div`
@@ -24,7 +23,6 @@ export const ContainerWrapper = styled.div`
   justify-content: center;
   align-items: center;
 
-
   @media (max-width: 900px) {
     flex-direction: column;
     min-height: 165vh;
@@ -34,9 +32,7 @@ export const ContainerWrapper = styled.div`
   @media (max-width: 400px) {
     min-height: 190vh;
     align-items: flex-end;
-
   }
-
 `;
 
 export default function Templates() {

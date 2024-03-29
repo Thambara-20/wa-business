@@ -7,10 +7,12 @@ import { User } from "../entity/user";
 import * as bcrypt from "bcrypt";
 import { sendMessage, sendSignupEmail } from "../services/emailService";
 import { getSocketInstance } from "../services/socketService";
+import { TemplateService } from "../services/templateService";
 const SECRET_KEY = process.env.SECRET_KEY;
 
 export class UserController {
   private userService = new UserService();
+  private templateService = new TemplateService();
   private io = getSocketInstance();
 
   async login(req: Request, res: Response) {
@@ -36,7 +38,7 @@ export class UserController {
           httpOnly: true,
           domain: "localhost",
           secure: false,
-          maxAge: 1000 * 60 * 60 ,
+          maxAge: 1000 * 60 * 60,
         })
         .cookie("refreshToken", refreshToken, {
           httpOnly: true,

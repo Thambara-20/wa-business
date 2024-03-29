@@ -1,6 +1,7 @@
-import { Entity, Column, PrimaryColumn } from "typeorm";
+import { Entity, Column, PrimaryColumn, OneToMany } from "typeorm";
 import * as bcrypt from "bcrypt";
 import { IsEmail, IsNotEmpty, IsString, MinLength } from "class-validator";
+import { Template } from "./template"; // Import Template entity
 
 @Entity()
 export class User {
@@ -24,6 +25,9 @@ export class User {
 
   @Column({ default: false })
   verified: boolean;
+
+  @OneToMany(() => Template, (template) => template.user, { cascade: true })
+  templates: Template[];
 
   async comparePassword(enteredPassword: string): Promise<boolean> {
     return await bcrypt.compare(enteredPassword, this.password);

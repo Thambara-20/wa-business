@@ -13,16 +13,6 @@ export class ButtonController {
     }
   }
 
-  // export const createButton = async (req: Request, res: Response) => {
-  //   const { name, link, templateId } = req.body;
-  //   try {
-  //     const button = await buttonService.createButton(name, link, templateId);
-  //     res.status(201).json(button);
-  //   } catch (error) {
-  //     res.status(400).json({ message: error.message });
-  //   }
-  // };
-
   async getButtonById(req: Request, res: Response) {
     const id = req.params.id;
     try {
