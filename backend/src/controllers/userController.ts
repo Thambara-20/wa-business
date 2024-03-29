@@ -145,7 +145,7 @@ export class UserController {
         const newUser = new User();
         newUser.email = email;
         newUser.password = hashedPassword;
-        newUser.role = "admin";
+        newUser.role = "observer";
         newUser.verified = true;
         await this.userService.createUser(newUser);
         res.status(200).json({ message: "User created successfully" });
