@@ -13,7 +13,6 @@ export const HomeWarpper = styled.div`
 
 export const ContainerWrapper = styled.div`
   display: flex;
-  background-color: #e0e0e0;
   border-radius: 20px 20px 0px 0px;
   flex-direction: row;
   width: 100%;
@@ -22,6 +21,16 @@ export const ContainerWrapper = styled.div`
   margin-top: 15px;
   justify-content: center;
   align-items: center;
+  background-image: url("./mobile.jpg");
+  &::before {
+    content: "";
+    position: absolute; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.2);
+  }
 
   @media (max-width: 900px) {
     flex-direction: column;

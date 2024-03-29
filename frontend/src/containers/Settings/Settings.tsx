@@ -62,10 +62,10 @@ const SettingsPage = () => {
     <Box
       maxWidth="md"
       style={{
-        padding: "40px",
+        padding: "30px",
         backgroundColor: "#fff",
         borderRadius: "20px",
-        width: "85%",
+        width: "75%",
         boxShadow: "5px 5px 15px -5px rgba(0, 0, 0, 0.2)",
       }}
       data-aos="fade-up"
@@ -116,7 +116,7 @@ const SettingsPage = () => {
             justifyContent: "flex-end",
           }}
         >
-          <Button variant="contained" type="submit">
+          <Button variant="contained" type="submit" style={{borderRadius:"20px", textTransform:"none"}}>
             Save Changes
           </Button>
         </div>

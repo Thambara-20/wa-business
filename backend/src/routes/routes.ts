@@ -1,6 +1,5 @@
 import { UserController } from "../controllers/userController";
 import { TemplateController } from "../controllers/templateController";
-import { ButtonController } from "../controllers/buttonController";
 import { authenticateToken, authorizeRole } from "../middleware/auth";
 export enum Role {
   ADMIN = "admin",

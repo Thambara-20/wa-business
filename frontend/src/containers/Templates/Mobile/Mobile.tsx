@@ -28,6 +28,7 @@ const StyledBox = styled.div`
   border: 1px solid #000;
   margin: 20px 20px 0px 20px;
   min-width: 300px;
+  background-color: #ddd;
   max-width: 300px;
   margin-right: 20px;
   box-shadow:
