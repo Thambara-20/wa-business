@@ -16,15 +16,14 @@ interface ErrorPopupProps {
 }
 
 const ButtonWrapper = styled.div`
-  padding: 15px 0 0 0;
+  padding: 20px 0 0 0;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
 `;
 
 const StyledBackdrop = styled(Backdrop)`
-  background-color: rgba(255, 255, 255, 0.2) !important;
-  color: #fff;
+  background-color: rgba(0, 0, 0, 0.5) !important;
 `;
 
 const StyledDialogContent = styled(Dialog)`
@@ -32,20 +31,23 @@ const StyledDialogContent = styled(Dialog)`
     .MuiPaper-root.MuiDialog-paper {
       margin: 0 !important;
       border-radius: 10px;
+      background-color: #fff;
+      box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
     }
+  }
 
   && {
     .MuiDialogContent-root {
-        padding: 15px 20px 5px 20px !important;
-        min-width: 300px !important;
-      }}
+      padding: 20px !important;
+      min-width: 350px !important;
+    }
+  }
 `;
 
 const StyledButton = styled(Button)`
-  border: none !important;
-  margin-left: 4px !important;
-  margin-right: 0px !important;
-  padding: 5px !important;
+  border-radius: 5px !important;
+  margin-left: 8px !important;
+  padding: 10px 20px !important;
 `;
 
 import { NotificationTypes, NotificationTexts } from "../../utilities";
@@ -57,54 +59,20 @@ const NotificationPopup: React.FC<ErrorPopupProps> = ({
   onSubmit,
 }) => {
   let errorMessage = "";
-  let button: React.ReactNode = null;
-
-  const ButtonSet: React.FC = () => {
-    return (
-      <>
-        <StyledButton variant="outlined" color="primary" onClick={onClose}>
-          Dismiss
-        </StyledButton>
-        <StyledButton variant="outlined" color="secondary" onClick={onSubmit}>
-          Confirm
-        </StyledButton>
-      </>
-    );
-  };
-
-  const SingleButton: React.FC<{ text: string }> = ({ text }) => {
-    return (
-      <>
-        <StyledButton variant="outlined" color="primary" onClick={onClose}>
-          {text}
-        </StyledButton>
-      </>
-    );
-  };
-
+  let buttonText = "";
 
   if (type === NotificationTypes.LOADING_DATA) {
     errorMessage = NotificationTexts[NotificationTypes.LOADING_DATA];
-    button = <SingleButton text="ok" />;
+    buttonText = "OK";
   } else if (type === NotificationTypes.MISSING_FIELDS) {
     errorMessage = NotificationTexts[NotificationTypes.MISSING_FIELDS];
-    button = <SingleButton text="keep editing" />;
-  } else if (type === NotificationTypes.DISCARD_CHANGES) {
-    errorMessage = NotificationTexts[NotificationTypes.DISCARD_CHANGES];
-    button = <ButtonSet />;
-  } else if (type === NotificationTypes.LOGOUT_USER) {
-    errorMessage = NotificationTexts[NotificationTypes.LOGOUT_USER];
-    button = <ButtonSet />;
-  } else if (type === NotificationTypes.SUCCESS_REGISTER_OBSERVER) {
-    errorMessage =
-      NotificationTexts[NotificationTypes.SUCCESS_REGISTER_OBSERVER];
-    button = <SingleButton text="ok" />;
-  } else if (type === NotificationTypes.SUCCESS_SEND_EMAIL) {
-    errorMessage = NotificationTexts[NotificationTypes.SUCCESS_SEND_EMAIL];
-    button = <SingleButton text="ok" />;
-  } else if (type === NotificationTypes.FAIL_SEND_EMAIL) {
-    errorMessage = NotificationTexts[NotificationTypes.FAIL_SEND_EMAIL];
-    button = <SingleButton text="try again later" />;
+    buttonText = "Keep Editing";
+  } else if (type === NotificationTypes.DISCARD_CHANGES || type === NotificationTypes.LOGOUT_USER) {
+    errorMessage = NotificationTexts[type];
+    buttonText = "Confirm";
+  } else if (type === NotificationTypes.SUCCESS_REGISTER_OBSERVER || type === NotificationTypes.SUCCESS_SEND_EMAIL || type === NotificationTypes.FAIL_SEND_EMAIL) {
+    errorMessage = NotificationTexts[type];
+    buttonText = "OK";
   }
 
   function breakText(text: string) {
@@ -117,21 +85,27 @@ const NotificationPopup: React.FC<ErrorPopupProps> = ({
   }
 
   return (
-    <div>
-      <StyledBackdrop open={open} />
+    <StyledBackdrop open={open}>
       <StyledDialogContent open={open} onClose={onClose}>
         <DialogContent>
           <Typography variant="body1">
-            {errorMessage ===
-            NotificationTexts[NotificationTypes.SUCCESS_SEND_EMAIL]
+            {errorMessage === NotificationTexts[NotificationTypes.SUCCESS_SEND_EMAIL]
               ? breakText(errorMessage)
               : errorMessage}
           </Typography>
-          <ButtonWrapper>{button}</ButtonWrapper>
+          <ButtonWrapper>
+            <StyledButton variant="contained" color="primary" onClick={onSubmit}>
+              {buttonText}
+            </StyledButton>
+            <StyledButton variant="outlined" color="primary" onClick={onClose}>
+              Dismiss
+            </StyledButton>
+          </ButtonWrapper>
         </DialogContent>
       </StyledDialogContent>
-    </div>
+    </StyledBackdrop>
   );
 };
 
 export default NotificationPopup;
+

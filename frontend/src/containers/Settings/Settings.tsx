@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   TextField,
   Button,
@@ -8,6 +8,7 @@ import {
   FormControlLabel,
   Switch,
 } from "@mui/material";
+import Aos from "aos";
 
 const SettingsPage = () => {
   const [webhookUrl, setWebhookUrl] = useState("");
@@ -58,10 +59,17 @@ const SettingsPage = () => {
     setSnackbarOpen(false);
   };
 
+  useEffect(() => {
+    Aos.init({
+      duration: 1000,
+    });
+  }, []);
+  
   return (
     <Box
       maxWidth="md"
       style={{
+        zIndex: 50,
         padding: "30px",
         backgroundColor: "#fff",
         borderRadius: "20px",
@@ -116,7 +124,11 @@ const SettingsPage = () => {
             justifyContent: "flex-end",
           }}
         >
-          <Button variant="contained" type="submit" style={{borderRadius:"20px", textTransform:"none"}}>
+          <Button
+            variant="contained"
+            type="submit"
+            style={{ borderRadius: "20px", textTransform: "none" }}
+          >
             Save Changes
           </Button>
         </div>

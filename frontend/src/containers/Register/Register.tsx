@@ -13,6 +13,7 @@ import {
 } from "../../utilities/validateUser";
 import NotificationPopup from "../../components/Notification/Notification";
 import { NotificationTypes } from "../../utilities";
+import { Link } from "react-router-dom";
 
 const StyledLoginContainer = styled.div`
   display: flex;
@@ -275,12 +276,12 @@ const Register = () => {
           </StyledButton>
           <StyledTypography>
             Already have an account?{" "}
-            <a
-              href={Paths.LOGIN}
+            <Link
+              to={Paths.LOGIN}
               style={{ color: "blue", textDecoration: "none" }}
             >
               Login
-            </a>
+            </Link>
           </StyledTypography>
         </StyledPasswordContainer>
         <NotificationPopup

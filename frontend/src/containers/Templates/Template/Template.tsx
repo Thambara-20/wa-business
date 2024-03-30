@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   TextField,
   Button,
@@ -18,6 +18,7 @@ import {
   saveTemplate,
 } from "../../../redux/template/slice";
 import InputAdornment from "@mui/material/InputAdornment";
+import Aos from "aos";
 
 const TemplateBox = styled(Box)`
   max-width: md;
@@ -33,7 +34,6 @@ const TemplateBox = styled(Box)`
   @media (max-width: 700px) {
     margin: 0 10px;
     justify-content: flex-end;
-    
   }
 `;
 
@@ -87,7 +87,6 @@ const StyledButtonWrapper = styled.div`
   padding: 20px 0;
 `;
 
-
 function TemplateCreationPage() {
   const [editable, setEditable] = useState(false);
   const template = useAppSelector((state) => state.template);
@@ -115,10 +114,7 @@ function TemplateCreationPage() {
     );
     dispatch(
       updatetemplate({
-        buttons: [
-          ...buttons,
-          { id: id + 1, link: "", name: "Test", type: "" },
-        ],
+        buttons: [...buttons, { id: id + 1, link: "", name: "Test", type: "" }],
       })
     );
   };
@@ -132,16 +128,21 @@ function TemplateCreationPage() {
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
-  
+
     dispatch(saveTemplate(template));
 
     setEditable(!editable);
     // setTemplateName("");
     // setButtons([{ text: "", link: "" }]);
   };
+  useEffect(() => {
+    Aos.init({
+      duration: 1000,
+    });
+  }, []);
 
   return (
-    <TemplateBox  data-aos="fade-up" >
+    <TemplateBox data-aos="fade-up">
       <TemplateTypography variant="h4" gutterBottom>
         Your Template
         {!editable && (
@@ -210,9 +211,7 @@ function TemplateCreationPage() {
                 </Box>
                 <StyledTextField
                   value={button.name}
-                  onChange={(event) =>
-                    handleButtonTextChange(button.id, event)
-                  }
+                  onChange={(event) => handleButtonTextChange(button.id, event)}
                   required
                   disabled={!editable}
                   editable={editable}
@@ -230,9 +229,7 @@ function TemplateCreationPage() {
                 <StyledTextField
                   type="url"
                   value={button.link}
-                  onChange={(event) =>
-                    handleButtonLinkChange(button.id, event)
-                  }
+                  onChange={(event) => handleButtonLinkChange(button.id, event)}
                   required
                   disabled={!editable}
                   editable={editable}

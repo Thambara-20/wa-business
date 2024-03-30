@@ -2,6 +2,7 @@ import styled from "styled-components";
 import Appbar from "../../components/Appbar/Appbar";
 import SettingsPage from "./Settings";
 import Footer from "../Footer/Footer";
+import "aos/dist/aos.css";
 
 export const HomeWarpper = styled.div`
   display: flex;

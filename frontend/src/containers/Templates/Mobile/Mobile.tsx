@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Container } from "@mui/material";
 import { useAppSelector } from "../../../redux/hooks";
 import styled from "styled-components";
+import Aos from "aos";
 
 const Wrapper = styled.div`
   display: flex;
@@ -21,16 +22,15 @@ const StyledBox = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 70vh;
+  height: 75vh;
   min-height: 65vh;
   position: relative;
   border-radius: 20px;
   border: 1px solid #000;
-  margin: 20px 20px 0px 20px;
+  margin: 10px 20px 0px 20px;
   min-width: 300px;
   background-color: #ddd;
   max-width: 300px;
-  margin-right: 20px;
   box-shadow:
     9px 0px 5px -5px rgba(0, 0, 0, 0.4),
     -9px 0px 5px -5px rgba(0, 0, 0, 0.4),
@@ -68,12 +68,18 @@ const StyledBox = styled.div`
     min-width: 340px;
     max-width: 340px;
   }
+
+  @media (min-height: 600px) and (max-width: 500px){
+    min-height: 75vh;
+    min-width: 340px;
+    max-width: 340px;
+  }
 `;
 
 const StyledContainer = styled(Container)`
   height: calc(100% - 40px);
   width: 100%;
-  padding: 20px 10px 0 10px !important;
+  padding: 10px 10px 0 10px !important;
   border: none;
   position: relative;
   display: flex;
@@ -173,6 +179,12 @@ function MobileScreenWithButton() {
     "You can reply to this message",
     "you have the option to reply to this message",
   ];
+
+  useEffect(() => {
+    Aos.init({
+      duration: 1000,
+    });
+  }, []);
 
   return (
     <Wrapper data-aos="fade-left">

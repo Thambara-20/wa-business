@@ -15,7 +15,6 @@ const isSecure = process.env.NODE_ENV === "development" ? false : true;
 
 export class UserController {
   private userService = new UserService();
-  private templateService = new TemplateService();
   private io = getSocketInstance();
 
   async login(req: Request, res: Response) {

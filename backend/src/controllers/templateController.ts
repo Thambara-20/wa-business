@@ -14,18 +14,6 @@ export class TemplateController {
     }
   }
 
-  // async createTemplate(req: Request, res: Response) {
-  //   //done
-  //   const { name, email } = req.body;
-  //   console.log(req.body);
-  //   try {
-  //     const template = await this.templateService.createTemplate(name, email,);
-  //     res.status(201).json(template);
-  //   } catch (error) {
-  //     res.status(400).json({ message: error.message });
-  //   }
-  // }
-
   async getTemplateByUserId(req: Request, res: Response) {
     //done
     const id = req.params.id;

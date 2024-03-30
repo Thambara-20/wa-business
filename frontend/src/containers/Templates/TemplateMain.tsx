@@ -21,6 +21,7 @@ export const ContainerWrapper = styled.div`
   margin-top: 15px;
   justify-content: center;
   align-items: center;
+  background: #f0f0f0;
   background-image: url("./mobile.jpg");
   background-repeat: no-repeat;
   background-size: cover;

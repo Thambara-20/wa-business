@@ -28,6 +28,7 @@ export const ContainerWrapper = styled.div`
   margin-top: 10px;
   justify-content: space-around;
   align-items: center;
+  background: #f0f0f0;
   background-image: url("./clock.jpg");
   background-repeat: no-repeat;
   background-size: cover;

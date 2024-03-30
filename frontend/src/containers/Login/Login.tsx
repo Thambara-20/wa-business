@@ -6,6 +6,7 @@ import { useNavigate } from "react-router";
 import { authenticate, login, updateUser } from "../../redux/user/slice";
 import { Paths } from "../../App";
 import { getTemplateByUserId } from "../../redux/template/slice";
+import { Link } from "react-router-dom";
 
 const StyledLoginContainer = styled.div`
   display: flex;
@@ -48,7 +49,6 @@ const StyledLoginFormContainer = styled.div`
   height: 95vh;
   background-color: white;
   @media (max-width: 700px) {
-    
     height: 10vh;
     justify-content: flex-start;
   }
@@ -162,7 +162,10 @@ const Login = () => {
             Login
           </StyledButton>
           <Typography>
-            Don`&apos;t have an account? <a href={Paths.REGISTER} style={{textDecoration:"none"}}>Register</a>
+            Don`&apos;t have an account?{" "}
+            <Link to={Paths.REGISTER} style={{ textDecoration: "none" }}>
+              Register
+            </Link>
           </Typography>
         </StyledForm>
       </StyledLoginFormContainer>

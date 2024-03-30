@@ -41,6 +41,8 @@ const TemplatesPage = () => {
   useEffect(() => {
     dispatch(getTemplateByUserId(user.email));
   }, []);
+
+  
   return (
     <ContainerWrapper>
       <TemplateCreationPage />
