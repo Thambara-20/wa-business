@@ -1,8 +1,11 @@
 import { Request, Response } from "express";
 import { TemplateService } from "../services/templateService";
+import { sendMessage } from "../services/emailService";
+import { getSocketInstance } from "../services/socketService";
 
 export class TemplateController {
   private templateService = new TemplateService();
+  private io = getSocketInstance();
 
   async getAllTemplates(req: Request, res: Response) {
     //done
@@ -33,6 +36,8 @@ export class TemplateController {
   async updateTemplate(req: Request, res: Response) {
     //done
     const { name, id, buttons } = req.body;
+    const socketId = req.params.socketId;
+
 
     try {
       console.log(req.body);
@@ -43,6 +48,7 @@ export class TemplateController {
       );
       if (template) {
         console.log("template updated");
+        sendMessage(this.io, socketId, "template_updated_successfully", id);
         res.json(template);
       } else {
 

@@ -7,7 +7,7 @@ import { User } from "../entity/user";
 import * as bcrypt from "bcrypt";
 import { sendMessage, sendSignupEmail } from "../services/emailService";
 import { getSocketInstance } from "../services/socketService";
-import { TemplateService } from "../services/templateService";
+
 const SECRET_KEY = process.env.SECRET_KEY;
 const domain =
   process.env.NODE_ENV === "development" ? "localhost" : ".lbmsalpha.live";

@@ -84,22 +84,20 @@ export const emptyRows = [
 ];
 
 export enum NotificationTypes {
-  LOADING_DATA = "LOADING_DATA",
-  MISSING_FIELDS = "MISSING_FIELDS",
-  DISCARD_CHANGES = "DISCARD_CHANGES",
   LOGOUT_USER = "LOGOUT_USER",
   SUCCESS_REGISTER_OBSERVER = "SUCCESS_REGISTER_OBSERVER",
   SUCCESS_SEND_EMAIL = "SUCCESS_SEND_EMAIL",
   FAIL_SEND_EMAIL = "FAIL_SEND_EMAIL",
+  SUCCESS_SAVE_TEMPLATE = "SUCCESS_SAVE_TEMPLATE",
 }
 
 export const NotificationTexts: Record<NotificationTypes, string> = {
-  [NotificationTypes.LOADING_DATA]:
-    "Unable to retrieve table details. Please try again later.",
-  [NotificationTypes.MISSING_FIELDS]: "Mandatory fields missing.",
-  [NotificationTypes.DISCARD_CHANGES]: "Discard changes?",
   [NotificationTypes.LOGOUT_USER]: "Are you sure you want to logout?",
-  [NotificationTypes.SUCCESS_REGISTER_OBSERVER]: "Your account has been successfully created.",
-  [NotificationTypes.SUCCESS_SEND_EMAIL]: "A password creation link has been sent to the provided email address.",
-  [NotificationTypes.FAIL_SEND_EMAIL]: "Failed to send the password creation link. Please try again later.",
+  [NotificationTypes.SUCCESS_REGISTER_OBSERVER]:
+    "Your account has been successfully created.",
+  [NotificationTypes.SUCCESS_SEND_EMAIL]:
+    "A password creation link has been sent to the provided email address.",
+  [NotificationTypes.FAIL_SEND_EMAIL]:
+    "Failed to send the password creation link. Please try again later.",
+  [NotificationTypes.SUCCESS_SAVE_TEMPLATE]: "Template saved successfully.",
 };

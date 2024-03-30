@@ -29,8 +29,8 @@ const StyledBackdrop = styled(Backdrop)`
 const StyledDialogContent = styled(Dialog)`
   && {
     .MuiPaper-root.MuiDialog-paper {
-      margin: 0 !important;
-      border-radius: 10px;
+      margin: 20px !important;
+      border-radius: 20px;
       background-color: #fff;
       box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
     }
@@ -45,9 +45,11 @@ const StyledDialogContent = styled(Dialog)`
 `;
 
 const StyledButton = styled(Button)`
-  border-radius: 5px !important;
+  border-radius: 25px !important;
   margin-left: 8px !important;
-  padding: 10px 20px !important;
+  text-transform: none !important;
+  min-width: 100px !important;
+  padding: 5px 15px !important;
 `;
 
 import { NotificationTypes, NotificationTexts } from "../../utilities";
@@ -61,45 +63,41 @@ const NotificationPopup: React.FC<ErrorPopupProps> = ({
   let errorMessage = "";
   let buttonText = "";
 
-  if (type === NotificationTypes.LOADING_DATA) {
-    errorMessage = NotificationTexts[NotificationTypes.LOADING_DATA];
-    buttonText = "OK";
-  } else if (type === NotificationTypes.MISSING_FIELDS) {
-    errorMessage = NotificationTexts[NotificationTypes.MISSING_FIELDS];
-    buttonText = "Keep Editing";
-  } else if (type === NotificationTypes.DISCARD_CHANGES || type === NotificationTypes.LOGOUT_USER) {
+  if (type === NotificationTypes.LOGOUT_USER) {
     errorMessage = NotificationTexts[type];
     buttonText = "Confirm";
-  } else if (type === NotificationTypes.SUCCESS_REGISTER_OBSERVER || type === NotificationTypes.SUCCESS_SEND_EMAIL || type === NotificationTypes.FAIL_SEND_EMAIL) {
+  } else if (
+    type === NotificationTypes.SUCCESS_SAVE_TEMPLATE ||
+    type === NotificationTypes.SUCCESS_REGISTER_OBSERVER ||
+    type === NotificationTypes.SUCCESS_SEND_EMAIL ||
+    type === NotificationTypes.FAIL_SEND_EMAIL
+  ) {
     errorMessage = NotificationTexts[type];
     buttonText = "OK";
-  }
-
-  function breakText(text: string) {
-    if (text.length > 45) {
-      const firstLine = text.substring(0, 45);
-      const secondLine = text.substring(45);
-      return `${firstLine}\n${secondLine}`;
-    }
-    return text;
   }
 
   return (
     <StyledBackdrop open={open}>
       <StyledDialogContent open={open} onClose={onClose}>
         <DialogContent>
-          <Typography variant="body1">
-            {errorMessage === NotificationTexts[NotificationTypes.SUCCESS_SEND_EMAIL]
-              ? breakText(errorMessage)
-              : errorMessage}
-          </Typography>
+          <Typography variant="body1">{errorMessage}</Typography>
           <ButtonWrapper>
-            <StyledButton variant="contained" color="primary" onClick={onSubmit}>
+            <StyledButton
+              variant="contained"
+              color="primary"
+              onClick={buttonText === "OK" ? onClose : onSubmit}
+            >
               {buttonText}
             </StyledButton>
-            <StyledButton variant="outlined" color="primary" onClick={onClose}>
-              Dismiss
-            </StyledButton>
+            {buttonText != "OK" && (
+              <StyledButton
+                variant="outlined"
+                color="primary"
+                onClick={onClose}
+              >
+                Dismiss
+              </StyledButton>
+            )}
           </ButtonWrapper>
         </DialogContent>
       </StyledDialogContent>
@@ -108,4 +106,3 @@ const NotificationPopup: React.FC<ErrorPopupProps> = ({
 };
 
 export default NotificationPopup;
-

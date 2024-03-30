@@ -75,7 +75,7 @@ export const Routes = [
   },
   {
     method: "put",
-    route: "/templates/update",
+    route: "/templates/update/:socketId",
     controller: TemplateController,
     action: "updateTemplate",
     middleware: [],

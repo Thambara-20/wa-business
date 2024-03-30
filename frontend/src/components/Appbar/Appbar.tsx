@@ -139,7 +139,6 @@ const Appbar = () => {
         type: NotificationTypes.SUCCESS_SEND_EMAIL,
       });
       console.log("email sent", data);
-      socket.emit("messageReceived", "Message received successfully");
     });
 
     socket.on("email_sent_fail", (id: any) => {
@@ -149,7 +148,15 @@ const Appbar = () => {
         onConfirm: handleCloseNotification,
         type: NotificationTypes.FAIL_SEND_EMAIL,
       });
-      socket.emit("messageReceived", "Message received successfully");
+    });
+
+    socket.on("template_updated_successfully", (data: any) => {
+      console.log("template updated", data);
+      setNotification({
+        open: true,
+        onConfirm: handleCloseNotification,
+        type: NotificationTypes.SUCCESS_SAVE_TEMPLATE,
+      });
     });
 
     socket.on("disconnect", () => {

@@ -58,7 +58,7 @@ export class TemplateService {
     name: string,
     buttons: { name: string; link: string }[]
   ): Promise<TemplateDTO | undefined> {
-    if (!id) {
+    if (!id || !name || !buttons) {
       return undefined;
     }
     return AppDataSource.transaction(async (transactionalEntityManager) => {

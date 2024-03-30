@@ -137,7 +137,7 @@ export const getTemplateByUserIdAsync = async (id: string) => {
 
 export const savetemplateAsync = async (data: any) => {
   try {
-    const response = await axiosInstance.put(`${url}/templates/update`, data, {
+    const response = await axiosInstance.put(`${url}/templates/update/${data.socketId}`, data.template, {
       withCredentials: true,
     });
     return response.data;

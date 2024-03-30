@@ -1,14 +1,14 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 const LocalstorageId = `${process.env.REACT_APP_API_URL}`;
 
-type Button = {
+export type Button = {
   id: number;
   name: string;
   type: string;
   link: string;
 };
 
-type template = {
+export type template = {
   id: string;
   name: string;
   buttons: Button[];
@@ -50,7 +50,7 @@ const userSlice = createSlice({
       state.buttons = state.buttons.filter((e) => e.id != action.payload);
     },
     getTemplateByUserId: (state, action: PayloadAction<any>) => {},
-    saveTemplate: (state, action: PayloadAction<template>) => {},
+    saveTemplate: (state, action: PayloadAction<any>) => {},
   },
 });
 

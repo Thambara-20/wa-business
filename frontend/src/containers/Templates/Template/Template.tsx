@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { isValidElement, useEffect, useState } from "react";
 import {
   TextField,
   Button,
@@ -19,6 +19,10 @@ import {
 } from "../../../redux/template/slice";
 import InputAdornment from "@mui/material/InputAdornment";
 import Aos from "aos";
+import {
+  isValidTemplate,
+  isValidateLink,
+} from "../../../utilities/validateUser";
 
 const TemplateBox = styled(Box)`
   max-width: md;
@@ -46,12 +50,27 @@ const TemplateTypography = styled(Typography)`
   }
 `;
 
-const StyledTextField = styled(TextField)<{ editable: any }>`
-  margin: 10px 0px 0 13px !important;
+const StyledTextField = styled(TextField)<{ editable: any; title?: any }>`
+  margin: ${({ title }) =>
+    title ? "10px 0px 5px 0px !important;" : "10px 0px 5px 13px !important;"};
   width: 99%;
 
   background-color: ${({ editable }) => (editable ? "white" : "lightgray")};
   border-radius: 20px;
+
+  &.Mui-error {
+    border-color: darkred;
+  }
+
+  & + .error-message {
+    position: relative;
+    color: darkred;
+    font-size: 0.8rem;
+    width: 99%;
+    margin: 2px 0 0 20px;
+    padding: 0;
+    display: block;
+  }
 `;
 
 const Divider = styled.div`
@@ -83,7 +102,7 @@ const EditText = styled.div`
 const StyledButtonWrapper = styled.div`
   display: flex;
   justify-content: space-between;
-  width: 99.5%;
+  width: 100%;
   padding: 20px 0;
 `;
 
@@ -91,6 +110,7 @@ function TemplateCreationPage() {
   const [editable, setEditable] = useState(false);
   const template = useAppSelector((state) => state.template);
   const buttons = useAppSelector((state) => state.template.buttons);
+  const socketId = useAppSelector((state) => state.user.socketId);
   const dispatch = useAppDispatch();
 
   const handleTemplateNameChange = (event: any) => {
@@ -128,12 +148,15 @@ function TemplateCreationPage() {
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
-
-    dispatch(saveTemplate(template));
-
+    if (!editable) {
+      return;
+    }
+    const data = {
+      template: template,
+      socketId: socketId,
+    };
+    dispatch(saveTemplate(data));
     setEditable(!editable);
-    // setTemplateName("");
-    // setButtons([{ text: "", link: "" }]);
   };
   useEffect(() => {
     Aos.init({
@@ -158,16 +181,21 @@ function TemplateCreationPage() {
           spacing={3}
           style={{ height: "420px", overflowY: "auto" }}
         >
-          <Grid item xs={12}>
+          <Grid
+            item
+            xs={12}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+            }}
+          >
             <Typography variant="h6" style={{ textAlign: "start" }}>
               Template Name:
             </Typography>
-            <TextField
+            <StyledTextField
+              fullWidth
               variant="outlined"
-              style={{
-                margin: "10px 0",
-                width: "99.5%",
-              }}
               InputProps={{
                 style: {
                   borderRadius: "20px",
@@ -175,10 +203,15 @@ function TemplateCreationPage() {
               }}
               value={template.name}
               onChange={handleTemplateNameChange}
-              required
+              error={template.name === ""}
               InputLabelProps={{ hidden: true }}
+              editable={editable}
+              title={true}
               disabled={!editable}
             />
+            {template.name.length < 1 && (
+              <div className="error-message">Name cannot be empty.</div>
+            )}
           </Grid>
           <Grid item xs={12} style={{ padding: "0px 0px 10px 0px" }}>
             <Typography variant="h6" style={{ margin: "25px 0px 10px 25px" }}>
@@ -209,10 +242,11 @@ function TemplateCreationPage() {
                     <GridDeleteIcon />
                   </IconButton>
                 </Box>
+
                 <StyledTextField
                   value={button.name}
                   onChange={(event) => handleButtonTextChange(button.id, event)}
-                  required
+                  error={button.name === ""}
                   disabled={!editable}
                   editable={editable}
                   InputProps={{
@@ -226,11 +260,12 @@ function TemplateCreationPage() {
                     ),
                   }}
                 />
+
                 <StyledTextField
                   type="url"
                   value={button.link}
                   onChange={(event) => handleButtonLinkChange(button.id, event)}
-                  required
+                  error={!isValidateLink(button.link)}
                   disabled={!editable}
                   editable={editable}
                   InputProps={{
@@ -244,6 +279,18 @@ function TemplateCreationPage() {
                     ),
                   }}
                 />
+                <div className="error-message">
+                  {!isValidateLink(button.link) && button.name.length >= 1 &&(
+                    <span>Please enter a valid link.</span>
+                  )}
+                  {button.name.length < 1 && isValidateLink(button.link) &&(
+                    <span>Please enter a valid name.</span>
+                  )}
+                  {!isValidateLink(button.link) && button.name.length < 1 && (
+                    <span>Please enter a valid link and name.</span>
+                  )}
+                </div>
+
                 <Divider />
               </Box>
             ))}
@@ -257,7 +304,12 @@ function TemplateCreationPage() {
           >
             Add Button
           </StyledButton>
-          <StyledButton variant="contained" color="primary" type="submit">
+          <StyledButton
+            variant="contained"
+            color="primary"
+            type="submit"
+            disabled={isValidTemplate(template) && editable ? false : true}
+          >
             Save Template
           </StyledButton>
         </StyledButtonWrapper>
