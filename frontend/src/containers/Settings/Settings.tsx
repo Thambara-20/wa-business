@@ -7,8 +7,10 @@ import {
   Snackbar,
   FormControlLabel,
   Switch,
+  IconButton,
 } from "@mui/material";
 import Aos from "aos";
+import { FileCopy as FileCopyIcon } from "@mui/icons-material";
 
 const SettingsPage = () => {
   const [webhookUrl, setWebhookUrl] = useState("");
@@ -32,6 +34,12 @@ const SettingsPage = () => {
 
   const handleAutoLogoutToggle = () => {
     setAutoLogoutEnabled(!autoLogoutEnabled);
+  };
+
+  const handleCopyButtonClick = () => {
+    navigator.clipboard.writeText(webhookUrl);
+    setSnackbarMessage("Webhook URL copied to clipboard.");
+    setSnackbarOpen(true);
   };
 
   const handleSubmit = (event: any) => {
@@ -64,7 +72,7 @@ const SettingsPage = () => {
       duration: 1000,
     });
   }, []);
-  
+
   return (
     <Box
       maxWidth="md"
@@ -79,17 +87,30 @@ const SettingsPage = () => {
       data-aos="fade-up"
     >
       <Typography variant="h4" gutterBottom>
-        Settings
+        Configurations
       </Typography>
       <form onSubmit={handleSubmit}>
-        <TextField
-          fullWidth
-          label="WebHook URL"
-          variant="outlined"
-          value={webhookUrl}
-          onChange={handleWebhookUrlChange}
-          style={{ marginBottom: "20px" }}
-        />
+        <Box display="flex" alignItems="flex-start">
+          <TextField
+            fullWidth
+            label="WebHook URL"
+            variant="outlined"
+            value={webhookUrl}
+            onChange={handleWebhookUrlChange}
+            style={{ marginBottom: "20px", marginRight: "8px" }}
+          />
+          <Box
+            display={"flex"}
+            justifyContent={"center"}
+            alignItems={"center"}
+            height="100%"
+            margin={1}
+          >
+            <IconButton onClick={handleCopyButtonClick}>
+              <FileCopyIcon />
+            </IconButton>
+          </Box>
+        </Box>
         <TextField
           fullWidth
           label="API Key"
@@ -123,15 +144,7 @@ const SettingsPage = () => {
             display: "flex",
             justifyContent: "flex-end",
           }}
-        >
-          <Button
-            variant="contained"
-            type="submit"
-            style={{ borderRadius: "20px", textTransform: "none" }}
-          >
-            Save Changes
-          </Button>
-        </div>
+        ></div>
       </form>
       <Snackbar
         open={snackbarOpen}

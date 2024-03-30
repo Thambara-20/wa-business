@@ -46,6 +46,9 @@ export class TemplateService {
 
   async getTemplateByUserId(userid: string): Promise<Template | undefined> {
     //done
+    if (!userid) {
+      return undefined;
+    }
     return await this.templateRepository.findOne({
       where: { user: { email: userid } },
       relations: ["buttons"],

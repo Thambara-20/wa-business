@@ -1,12 +1,10 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import {
-  saveTemplate,
-  updateButton,
-  updatetemplate,
-  getTemplateByUserId,
-} from "./slice";
+import { saveTemplate, getTemplateByUserId, setTemplate } from "./slice";
 
-import { getTemplateByUserIdAsync, savetemplateAsync } from "../../utilities/services";
+import {
+  getTemplateByUserIdAsync,
+  savetemplateAsync,
+} from "../../utilities/services";
 const LocalstorageId = `${process.env.REACT_APP_API_URL}`;
 
 export function* watchGetTemplateByUser(
@@ -14,7 +12,7 @@ export function* watchGetTemplateByUser(
 ): Generator<any, void, any> {
   try {
     const response: any = yield call(getTemplateByUserIdAsync, action.payload);
-    yield put(updatetemplate(response[0]));
+    yield put(setTemplate(response));
   } catch (error: any) {
     return error;
   }

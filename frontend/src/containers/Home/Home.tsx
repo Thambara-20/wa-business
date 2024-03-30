@@ -10,9 +10,12 @@ import {
 } from "@mui/material";
 import { Paths } from "../../App";
 import AOS from "aos";
+import { useAppSelector } from "../../redux/hooks";
 
 const HomePage = () => {
+  const template = useAppSelector((state) => state.template);
   useEffect(() => {
+    console.log(template, "home");
     AOS.init({
       duration: 1000,
     });

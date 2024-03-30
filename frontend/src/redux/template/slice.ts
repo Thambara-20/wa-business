@@ -9,14 +9,14 @@ export type Button = {
 };
 
 export type template = {
-  id: string;
+  id: number;
   name: string;
   buttons: Button[];
   isloading: boolean;
 };
 
 export const initialStateTemplate: template = {
-  id: "1",
+  id: 1,
   isloading: false,
   name: "Sample",
   buttons: [
@@ -34,8 +34,12 @@ const userSlice = createSlice({
   initialState: initialStateTemplate,
   reducers: {
     updatetemplate: (state, action: PayloadAction<Partial<template>>) => {
-      console.log("action.payload", action.payload);
       Object.assign(state, action.payload);
+    },
+    setTemplate: (state, action: PayloadAction<any>) => {
+      state.id = action.payload.id;
+      state.name = action.payload.name;
+      state.buttons = action.payload.buttons;
     },
     updateButton: (state, action: PayloadAction<Partial<Button>>) => {
       const buttonIndex = state.buttons.findIndex(
@@ -49,6 +53,18 @@ const userSlice = createSlice({
     deleteButton: (state, action: PayloadAction<number>) => {
       state.buttons = state.buttons.filter((e) => e.id != action.payload);
     },
+    clearTemplate: (state) => {
+      state.id = 1;
+      state.name = "Sample";
+      state.buttons = [
+        {
+          id: 1,
+          name: "Test Button",
+          type: "",
+          link: "https://sample.com",
+        },
+      ];
+    },
     getTemplateByUserId: (state, action: PayloadAction<any>) => {},
     saveTemplate: (state, action: PayloadAction<any>) => {},
   },
@@ -60,5 +76,7 @@ export const {
   updateButton,
   deleteButton,
   getTemplateByUserId,
-  saveTemplate
+  saveTemplate,
+  clearTemplate,
+  setTemplate
 } = userSlice.actions;

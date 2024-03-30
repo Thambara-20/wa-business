@@ -63,15 +63,15 @@ export const Routes = [
     route: "/templates",
     controller: TemplateController,
     action: "getAllTemplates",
-    middleware: [],
+    middleware: [authenticateToken, authorizeRole([Role.ADMIN])],
   },
 
   {
     method: "get",
-    route: "/templates/:id",
+    route: "/template",
     controller: TemplateController,
     action: "getTemplateByUserId",
-    middleware: [],
+    middleware: [authenticateToken, authorizeRole([Role.ADMIN, Role.OBSERVER])],
   },
   {
     method: "put",

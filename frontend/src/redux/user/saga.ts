@@ -1,4 +1,3 @@
-
 import { call, put, takeLatest } from "redux-saga/effects";
 import {
   addNewUser,
@@ -21,6 +20,7 @@ import {
   registerUsersAsync,
   logoutAsync,
 } from "../../utilities/services";
+import { clearTemplate } from "../template/slice";
 const LocalstorageId = `${process.env.REACT_APP_API_URL}`;
 
 export function* watchLogin(action: any) {
@@ -44,7 +44,7 @@ export function* watchAddNewUser(action: any): Generator<any, void, any> {
   }
 }
 
-export function* watchAuthenticate(): Generator<any, void, any>{
+export function* watchAuthenticate(): Generator<any, void, any> {
   try {
     const data: any = yield call(asyncAuthenticateUser);
     yield put(loginSuccess(data));
@@ -79,11 +79,11 @@ export function* watchLogoutUser() {
   try {
     yield call(logoutAsync);
     yield put(logoutSuccess());
+    yield put(clearTemplate());
   } catch (error: any) {
     return error;
   }
 }
-
 
 export function* userSaga() {
   yield takeLatest(login, watchLogin);

@@ -126,7 +126,7 @@ export const logoutAsync = async () => {
 
 export const getTemplateByUserIdAsync = async (id: string) => {
   try {
-    const response = await axiosInstance.get(`${url}/templates/${id}`, {
+    const response = await axiosInstance.get(`${url}/template`, {
       withCredentials: true,
     });
     return response.data;

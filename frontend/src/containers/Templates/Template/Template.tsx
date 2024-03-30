@@ -162,6 +162,7 @@ function TemplateCreationPage() {
     Aos.init({
       duration: 1000,
     });
+    console.log("Template", template);
   }, []);
 
   return (

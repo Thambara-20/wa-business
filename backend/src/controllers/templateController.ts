@@ -17,13 +17,13 @@ export class TemplateController {
     }
   }
 
-  async getTemplateByUserId(req: Request, res: Response) {
+  async getTemplateByUserId(req: any, res: Response) {
     //done
-    const id = req.params.id;
+    const id = req.user.email;
     try {
       const template = await this.templateService.getTemplateByUserId(id);
       if (template) {
-        console.log("template found");
+        console.log(template, "template");
         res.json(template);
       } else {
         res.status(404).json({ message: "Template not found" });
