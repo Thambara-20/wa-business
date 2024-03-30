@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Container } from "@mui/material";
 import { useAppSelector } from "../../../redux/hooks";
 import styled from "styled-components";
 import Aos from "aos";
+import axios from "axios";
 
 const Wrapper = styled.div`
   display: flex;
@@ -69,7 +70,7 @@ const StyledBox = styled.div`
     max-width: 340px;
   }
 
-  @media (min-height: 600px) and (max-width: 500px){
+  @media (min-height: 600px) and (max-width: 500px) {
     min-height: 75vh;
     min-width: 340px;
     max-width: 340px;
@@ -169,16 +170,32 @@ const FooterElement = styled.div`
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.4);
 `;
 
+interface Reply {
+  id: number;
+  message: string;
+}
+
 function MobileScreenWithButton() {
   const handleClickWhatsAppButton = () => {
     console.log("WhatsApp Button Clicked!");
   };
 
   const buttons = useAppSelector((state) => state.template.buttons);
-  const reply = [
-    "You can reply to this message",
-    "you have the option to reply to this message",
-  ];
+  const [replyMessages, setReplyMessages] = useState<Reply[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  const handleClickButton = async (link: any) => {
+    try {
+      setLoading(true);
+      const response = await axios.get("/replymessagedata.json");
+      setReplyMessages(response.data);
+      console.log("Reply Messages:", response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching reply buttons:", error);
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     Aos.init({
@@ -198,24 +215,23 @@ function MobileScreenWithButton() {
             {buttons.map((button, index) => (
               <MessageContainer key={index}>
                 <StyledButton
-                  key={index}
                   variant="contained"
                   color="primary"
-                  onClick={handleClickWhatsAppButton}
+                  onClick={() => handleClickButton(button.link)}
                 >
                   {button.name}
                 </StyledButton>
               </MessageContainer>
             ))}
-            {reply.map((message, index) => (
-              <ReplyContainer key={index}>
+            {replyMessages.map((reply) => (
+              <ReplyContainer key={reply.id}>
                 <StyledReplyButton
-                  key={index}
                   variant="contained"
                   color="primary"
-                  onClick={handleClickWhatsAppButton}
+                  onClick={handleClickButton}
+                  disabled={loading}
                 >
-                  {message}
+                  {loading ? "Loading..." : reply.message}
                 </StyledReplyButton>
               </ReplyContainer>
             ))}

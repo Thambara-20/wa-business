@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "@mui/material";
+import { Avatar, Box, Button, Tooltip } from "@mui/material";
 import styled, { keyframes } from "styled-components";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { Role, login, logout } from "../../redux/user/slice";
@@ -10,7 +10,7 @@ import { Paths } from "../../App";
 import UserCard from "../UserCard/UserCard";
 import MenuIcon from "@mui/icons-material/Menu";
 import { setSocketId } from "../../redux/user/slice";
-import { Socket, io } from "socket.io-client";
+import { io } from "socket.io-client";
 const url = process.env.REACT_APP_API_URL;
 
 const AppbarWrapper = styled.div`
@@ -94,6 +94,7 @@ const DropdownMenu = styled.div<{ showDropdown: any }>`
 const Appbar = () => {
   const isLogged = useAppSelector((state) => state.user.isLogged);
   const role = useAppSelector((state) => state.user.role);
+  const email = useAppSelector((state) => state.user.email);
   const [AddUserClicked, setAddUserClicked] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showMenuButton, setShowMenuButton] = useState(false);
@@ -237,21 +238,34 @@ const Appbar = () => {
           </AdminButtonWrapper>
         )}
         {isLogged ? (
-          <Button
-            variant="outlined"
-            onClick={handleLogout}
-            style={{ borderRadius: "20px", marginRight: "10px" }}
-          >
-            Logout
-          </Button>
+          <Box display="flex" margin="0 5px 0 5px">
+            <Button
+              variant="outlined"
+              onClick={handleLogout}
+              style={{ borderRadius: "20px", marginRight: "10px" }}
+            >
+              Logout
+            </Button>
+            <Tooltip title={email} arrow>
+              <Avatar
+                style={{ width: "35px", height: "35px", marginRight: "5px", border:"1px solid #000" }}
+              >
+                <span style={{ fontSize: "20px" }}>
+                  {role === Role.ADMIN ? "A" : email?.charAt(0).toUpperCase()}
+                </span>
+              </Avatar>
+            </Tooltip>
+          </Box>
         ) : (
-          <Button
-            variant="outlined"
-            onClick={handleLogin}
-            style={{ borderRadius: "20px", marginRight: "10px" }}
-          >
-            Login
-          </Button>
+          <>
+            <Button
+              variant="outlined"
+              onClick={handleLogin}
+              style={{ borderRadius: "20px", marginRight: "10px" }}
+            >
+              Login
+            </Button>
+          </>
         )}
         <PopupNotification
           open={notification.open}

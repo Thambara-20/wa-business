@@ -218,6 +218,6 @@ export class UserController {
   async verify(req: any, res: Response) {
     res
       .status(200)
-      .json({ message: "User verified successfully", role: req.user.role });
+      .json({ message: "User verified successfully", role: req.user.role, email: req.user.email});
   }
 }

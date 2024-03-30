@@ -44,16 +44,7 @@ export const initialStateUser: InitialDataTypeUser = {
   },
 };
 
-const parseToken = (token: string): { role: Role } => {
-  try {
-    const payloadBase64 = token.split(".")[1];
-    const payload = JSON.parse(atob(payloadBase64));
-    return { role: payload.role || "" };
-  } catch (error) {
-    console.error("Error parsing token:", error);
-    return { role: Role.NONE };
-  }
-};
+
 
 const userSlice = createSlice({
   name: "user",
@@ -73,6 +64,7 @@ const userSlice = createSlice({
       state.isLogged = true;
       state.loginError = false;
       state.role = action.payload.role;
+      state.email = action.payload.email;
     },
     loginFail: (state, action: PayloadAction<string>) => {
       state.loginError = true;
