@@ -4,6 +4,7 @@ import * as dotenv from "dotenv";
 import { User } from "../entity/user";
 import { Button } from "../entity/button";
 import { Template } from "../entity/template";
+import { Phone } from "../entity/phone";
 dotenv.config();
 
 export const AppDataSource = new DataSource({
@@ -14,7 +15,7 @@ export const AppDataSource = new DataSource({
   type: "postgres",
   synchronize: true,
   logging: false,
-  entities: [User, Button, Template],
+  entities: [User, Button, Template, Phone],
   migrations: [],
   subscribers: [],
 });

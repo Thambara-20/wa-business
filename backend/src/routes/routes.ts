@@ -1,6 +1,7 @@
 import { UserController } from "../controllers/userController";
 import { TemplateController } from "../controllers/templateController";
 import { authenticateToken, authorizeRole } from "../middleware/auth";
+import { PhoneController } from "../controllers/phoneController";
 export enum Role {
   ADMIN = "admin",
   OBSERVER = "observer",
@@ -81,5 +82,19 @@ export const Routes = [
     middleware: [],
   },
 
-  // Button routes
+  // Phone routes
+  {
+    method: "post",
+    route: "/phone/update",
+    controller: PhoneController,
+    action: "updatePhoneNumbers",
+    middleware: [],
+  },
+  {
+    method: "get",
+    route: "/phone",
+    controller: PhoneController,
+    action: "getPhoneNumbersByUserId",
+    middleware: [],
+  }
 ];

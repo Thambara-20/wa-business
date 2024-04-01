@@ -2,6 +2,7 @@ import { Entity, Column, PrimaryColumn, OneToMany } from "typeorm";
 import * as bcrypt from "bcrypt";
 import { IsEmail, IsNotEmpty, IsString, MinLength } from "class-validator";
 import { Template } from "./template"; // Import Template entity
+import { Phone } from "./phone";
 
 @Entity()
 export class User {
@@ -28,6 +29,12 @@ export class User {
 
   @OneToMany(() => Template, (template) => template.user, { cascade: true })
   templates: Template[];
+
+  @Column({ nullable: true })
+  tel: string;
+
+  @OneToMany(() => Phone, (phone) => phone.user, { cascade: true })
+  phone_numbers: Phone[];
 
   async comparePassword(enteredPassword: string): Promise<boolean> {
     return await bcrypt.compare(enteredPassword, this.password);

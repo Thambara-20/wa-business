@@ -8,6 +8,7 @@ import {
 } from "typeorm";
 import { User } from "./user";
 import { Button } from "./button";
+import { Phone } from "./phone";
 import { IsNotEmpty, IsString } from "class-validator";
 
 @Entity()
