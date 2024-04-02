@@ -10,6 +10,7 @@ import {
   Autocomplete,
   InputAdornment,
 } from "@mui/material";
+import { EditOutlined, SaveOutlined, DoneOutline } from "@mui/icons-material";
 import Aos from "aos";
 import {
   FileCopy as FileCopyIcon,
@@ -24,6 +25,10 @@ import {
   getMobileNumbers,
   updateMobileNumbers,
 } from "../../redux/template/slice";
+import {
+  isValidMobile,
+  isValideMobileNumberList,
+} from "../../utilities/validateUser";
 
 const StyledButton = styled(Button)`
   border-radius: 20px !important;
@@ -42,9 +47,8 @@ const SettingsPage = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [webhookUrl, setWebhookUrl] = useState("");
-  const [telError, setTelError] = useState(false);
-  const [tokenError, setTokenError] = useState(false);
-  const [phoneNumberError, setPhoneNumberError] = useState(false);
+  const [whatsappTokenEditable, setWhatsappTokenEditable] = useState(false);
+  const [mobileEditable, setMobileEditable] = useState(false);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -56,52 +60,19 @@ const SettingsPage = () => {
     dispatch(getMobileNumbers());
     fetchData();
   }, []);
-  
-  const validateFields = () => {
-    let isValid = true;
-    
-    if (!WhatsappToken) {
-      setTokenError(true);
-      isValid = false;
-    } else {
-      setTokenError(false);
-    }
-
-    if (!tel) {
-      setTelError(true);
-      isValid = false;
-    } else {
-      setTelError(false);
-    }
-
-    if (allowedPhoneNumbers.length === 0) {
-      setPhoneNumberError(true);
-      isValid = false;
-    } else {
-      setPhoneNumberError(false);
-    }
-
-    return isValid;
-  };
 
   const handleApiKeyChange = (event: any) => {
     const whatsappToken = event.target.value;
     dispatch(updateUser({ whatsappToken }));
-    setTokenError(false);
   };
 
   const handleTelephoneChange = (event: any) => {
     const tel = event.target.value;
     dispatch(updateUser({ tel }));
-    setTelError(false);
   };
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
-
-    if (!validateFields()) {
-      return;
-    }
 
     dispatch(
       updateUserSettings({
@@ -121,11 +92,11 @@ const SettingsPage = () => {
     );
   };
 
-  const handleCopyButtonClick = () => { 
+  const handleCopyButtonClick = () => {
     navigator.clipboard.writeText(webhookUrl);
     setSnackbarMessage("Webhook URL copied to clipboard.");
     setSnackbarOpen(true);
-  }
+  };
 
   useEffect(() => {
     Aos.init({
@@ -188,8 +159,9 @@ const SettingsPage = () => {
           value={WhatsappToken}
           onChange={handleApiKeyChange}
           style={{ marginBottom: "20px" }}
-          error={tokenError}
-          helperText={ "API Key is required."}
+          error={!WhatsappToken}
+          disabled={!whatsappTokenEditable}
+          helperText={!WhatsappToken && "API Key is required."}
           InputProps={{
             style: {
               borderRadius: "20px",
@@ -199,6 +171,19 @@ const SettingsPage = () => {
                 Your Whatsapp Token
               </InputAdornment>
             ),
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={() => {
+                    if (WhatsappToken) {
+                      setWhatsappTokenEditable(!whatsappTokenEditable);
+                    }
+                  }}
+                >
+                  {!whatsappTokenEditable ? <EditOutlined /> : <DoneOutline />}
+                </IconButton>
+              </InputAdornment>
+            ),
           }}
         />{" "}
         <TextField
@@ -206,9 +191,12 @@ const SettingsPage = () => {
           variant="outlined"
           value={tel}
           onChange={handleTelephoneChange}
+          disabled={!mobileEditable}
           style={{ marginBottom: "20px" }}
-          error={telError}
-          helperText={ "Telephone number is required."}
+          error={!isValidMobile(tel as string)}
+          helperText={
+            !isValidMobile(tel as string) && "Telephone number is inValid."
+          }
           InputProps={{
             style: {
               borderRadius: "20px",
@@ -216,6 +204,19 @@ const SettingsPage = () => {
             startAdornment: (
               <InputAdornment position="start">
                 Your Whatsapp Number
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={() => {
+                    if (isValidMobile(tel as string)) {
+                      setMobileEditable(!mobileEditable);
+                    }
+                  }}
+                >
+                  {!mobileEditable ? <EditOutlined /> : <DoneOutline />}
+                </IconButton>
               </InputAdornment>
             ),
           }}
@@ -230,7 +231,14 @@ const SettingsPage = () => {
             options={allowedPhoneNumbers as string[]}
             value={allowedPhoneNumbers}
             onChange={(event, newValue) => {
-              dispatch(updateMobileNumbers(newValue));
+              if (isValideMobileNumberList(newValue)) {
+                dispatch(updateMobileNumbers(newValue));
+              }
+              else{
+                setSnackbarMessage("Invalid phone number");
+                setSnackbarOpen(true);
+              
+              }
             }}
             renderTags={(value) =>
               value.map((option, index) => (
@@ -261,8 +269,11 @@ const SettingsPage = () => {
                   overflowY: "auto",
                   minHeight: "50px",
                 }}
-                error={phoneNumberError}
-                helperText={ "At least one mobile number is required."}
+                error={allowedPhoneNumbers?.length === 0}
+                helperText={
+                  allowedPhoneNumbers?.length === 0 &&
+                  "At least one mobile number is required."
+                }
               />
             )}
           />
@@ -310,8 +321,8 @@ const SettingsPage = () => {
           >
             x
           </IconButton>
-        }/>
-
+        }
+      />
     </Box>
   );
 };
