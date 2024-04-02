@@ -104,10 +104,6 @@ const SettingsPage = () => {
     });
   }, []);
 
-  if (allowedPhoneNumbers === undefined) {
-    return <LoadingComponent />;
-  }
-
   return (
     <Box
       maxWidth="md"
@@ -177,6 +173,8 @@ const SettingsPage = () => {
                   onClick={() => {
                     if (WhatsappToken) {
                       setWhatsappTokenEditable(!whatsappTokenEditable);
+                    } else {
+                      setWhatsappTokenEditable(true);
                     }
                   }}
                 >
@@ -212,6 +210,8 @@ const SettingsPage = () => {
                   onClick={() => {
                     if (isValidMobile(tel as string)) {
                       setMobileEditable(!mobileEditable);
+                    } else {
+                      setMobileEditable(true);
                     }
                   }}
                 >
@@ -232,12 +232,11 @@ const SettingsPage = () => {
             value={allowedPhoneNumbers}
             onChange={(event, newValue) => {
               if (isValideMobileNumberList(newValue)) {
-                dispatch(updateMobileNumbers(newValue));
-              }
-              else{
+                const uniqueValues = new Set(newValue);
+                dispatch(updateMobileNumbers(Array.from(uniqueValues)));
+              } else {
                 setSnackbarMessage("Invalid phone number");
                 setSnackbarOpen(true);
-              
               }
             }}
             renderTags={(value) =>
