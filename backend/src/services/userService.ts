@@ -10,8 +10,12 @@ export class UserService {
     try {
       return await AppDataSource.transaction(
         async (transactionalEntityManager) => {
-          const createdUser: User =  await transactionalEntityManager.save(user);
-          await this.templateService.createTemplate("Default", createdUser.email, transactionalEntityManager);
+          const createdUser: User = await transactionalEntityManager.save(user);
+          await this.templateService.createTemplate(
+            "Default",
+            createdUser.email,
+            transactionalEntityManager
+          );
           return createdUser;
         }
       );
@@ -22,6 +26,13 @@ export class UserService {
   }
   async findByEmail(email: string): Promise<User | undefined> {
     return await this.userRepository.findOne({ where: { email } });
+  }
+
+  async findWithMobiles(email: string): Promise<User | undefined> {
+    return await this.userRepository.findOne({
+      where: { email },
+      relations: ["phone_numbers"],
+    });
   }
 
   async updateUser(user: User): Promise<User> {

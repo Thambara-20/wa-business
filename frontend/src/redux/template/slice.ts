@@ -13,11 +13,13 @@ export type template = {
   name: string;
   buttons: Button[];
   isloading: boolean;
+  allowedMobileNumbers: string[];
 };
 
 export const initialStateTemplate: template = {
   id: 1,
   isloading: false,
+  allowedMobileNumbers: [],
   name: "Sample",
   buttons: [
     {
@@ -50,6 +52,10 @@ const userSlice = createSlice({
         ...action.payload,
       };
     },
+    updateMobileNumbers: (state, action: PayloadAction<any>) => {
+      state.allowedMobileNumbers = action.payload;
+    },
+
     deleteButton: (state, action: PayloadAction<number>) => {
       state.buttons = state.buttons.filter((e) => e.id != action.payload);
     },
@@ -67,6 +73,7 @@ const userSlice = createSlice({
     },
     getTemplateByUserId: (state, action: PayloadAction<any>) => {},
     saveTemplate: (state, action: PayloadAction<any>) => {},
+    getMobileNumbers: (state) => {},
   },
 });
 
@@ -78,5 +85,7 @@ export const {
   getTemplateByUserId,
   saveTemplate,
   clearTemplate,
-  setTemplate
+  setTemplate,
+  getMobileNumbers,
+  updateMobileNumbers,
 } = userSlice.actions;

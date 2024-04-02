@@ -89,6 +89,7 @@ export enum NotificationTypes {
   SUCCESS_SEND_EMAIL = "SUCCESS_SEND_EMAIL",
   FAIL_SEND_EMAIL = "FAIL_SEND_EMAIL",
   SUCCESS_SAVE_TEMPLATE = "SUCCESS_SAVE_TEMPLATE",
+  SUCCESS_SAVE_SETTINGS = "SUCCESS_SAVE_SETTINGS",
 }
 
 export const NotificationTexts: Record<NotificationTypes, string> = {
@@ -100,4 +101,5 @@ export const NotificationTexts: Record<NotificationTypes, string> = {
   [NotificationTypes.FAIL_SEND_EMAIL]:
     "Failed to send the password creation link. Please try again later.",
   [NotificationTypes.SUCCESS_SAVE_TEMPLATE]: "Template saved successfully.",
+  [NotificationTypes.SUCCESS_SAVE_SETTINGS]: "Settings saved successfully.",
 };

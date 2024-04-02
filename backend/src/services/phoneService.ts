@@ -2,23 +2,30 @@ import { Phone } from "../entity/phone";
 import { AppDataSource } from "../config/data-source";
 import { User } from "../entity/user";
 import { And } from "typeorm";
+import { Button } from "../entity/button";
 
 export class PhoneService {
   private phoneRepository = AppDataSource.getRepository(Phone);
   private userRepository = AppDataSource.getRepository(User);
+  private buttonsRepository = AppDataSource.getRepository(Button);
 
   async updatePhoneNumbersByUserId(userId: any, phoneNumbers: string[]) {
+    if (!userId) {
+      return undefined;
+    }
     const user = await this.userRepository.findOne({
-      where: { email: userId },
+      where: { email: userId, verified: true },
       relations: ["phone_numbers"],
     });
 
     if (!user) {
       return undefined;
     }
-    console.log(user, "user data");
     await this.phoneRepository.remove(user.phone_numbers);
     for (let i = 0; i < phoneNumbers.length; i++) {
+      if (phoneNumbers[i].length != 10) {
+        return undefined;
+      }
       const phone = new Phone();
       phone.phone_number = phoneNumbers[i];
       phone.user = user;
@@ -28,16 +35,49 @@ export class PhoneService {
     return phoneNumbers;
   }
 
-  async getPhoneNumbersByUserId(email: string, tel: string) {
+  async getPhoneNumbersByUserId(email: string) {
+    if (!email) {
+      return undefined;
+    }
     const user = await this.userRepository.findOne({
-      where: { email, tel },
+      where: { email, verified: true },
       relations: ["phone_numbers"],
     });
 
     if (!user) {
       return undefined;
     }
+    const phoneNumbers = user.phone_numbers.map((phone) => phone.phone_number);
+    return { allowedMobileNumbers: phoneNumbers };
+  }
+
+  async getAllByMobileId(tel: string, from: string) {
+    if (!tel || !from) {
+      return undefined;
+    }
+    const user = await this.userRepository.findOne({
+      where: { tel, verified: true },
+      relations: ["templates", "phone_numbers"],
+    });
     console.log(user, "user data");
-    return user.phone_numbers;
+    const allowed = user.phone_numbers;
+
+    if (!user || !allowed.some((phone) => phone.phone_number === from)) {
+      return undefined;
+    }
+    const buttons = await this.buttonsRepository.find({
+      where: { template: user.templates[0] },
+    });
+
+    console.log(user, "user data");
+    return {
+      template: user.templates[0],
+      buttons,
+      user: {
+        email: user.email,
+        whatsappToken: user.whatsappToken,
+        tel: user.tel,
+      },
+    };
   }
 }

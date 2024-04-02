@@ -145,3 +145,30 @@ export const savetemplateAsync = async (data: any) => {
     throw error;
   }
 }
+
+export const getUserMobileNumbersAsync = async () => {
+  try {
+    const response = await axiosInstance.get(`${url}/phone`, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const updateSettingsAsync = async (data: any) => {
+  try {
+    const body ={
+      mobile: data.mobile,
+      whatsappToken: data.whatsappToken,
+      phoneNumbers: data.phoneNumbers
+    }
+    const response = await axiosInstance.post(`${url}/user/update/${data.socketId}`, body, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}

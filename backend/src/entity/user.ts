@@ -33,6 +33,9 @@ export class User {
   @Column({ nullable: true })
   tel: string;
 
+  @Column({ nullable: true })
+  whatsappToken: string;
+
   @OneToMany(() => Phone, (phone) => phone.user, { cascade: true })
   phone_numbers: Phone[];
 

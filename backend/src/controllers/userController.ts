@@ -7,6 +7,7 @@ import { User } from "../entity/user";
 import * as bcrypt from "bcrypt";
 import { sendMessage, sendSignupEmail } from "../services/emailService";
 import { getSocketInstance } from "../services/socketService";
+import { PhoneService } from "../services/phoneService";
 
 const SECRET_KEY = process.env.SECRET_KEY;
 const domain =
@@ -15,6 +16,7 @@ const isSecure = process.env.NODE_ENV === "development" ? false : true;
 
 export class UserController {
   private userService = new UserService();
+  private phoneService = new PhoneService();
   private io = getSocketInstance();
 
   async login(req: Request, res: Response) {
@@ -215,9 +217,49 @@ export class UserController {
         .json({ role: user.role });
     });
   }
+
+  async updateUser(req: any, res: Response) {
+    const { mobile, whatsappToken, phoneNumbers } = req.body;
+    const email = req.user.email;
+    const socketId = req.params.socketId;
+    try {
+      if (!email || mobile.length != 10 || !whatsappToken) {
+        res.status(400).json({ message: "Invalid data" });
+        return;
+      }
+
+      const user = await this.userService.findByEmail(email);
+      if (!user) {
+        res.status(404).json({ message: "User not found" });
+        return;
+      }
+      user.tel = mobile;
+      user.whatsappToken = whatsappToken;
+      const updated = await this.phoneService.updatePhoneNumbersByUserId(
+        user.email,
+        phoneNumbers
+      );
+      if (!updated) {
+        res.status(400).json({ message: "Invalid phone numbers" });
+        return;
+      }
+      await this.userService.updateUser(user);
+      sendMessage(this.io, socketId, "settings_updated_successfully", email);
+      res.status(200).json({ message: "Mobile number updated successfully" });
+    } catch (error) {
+      sendMessage(this.io, socketId, "settings_updated_fail", email);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+
   async verify(req: any, res: Response) {
-    res
-      .status(200)
-      .json({ message: "User verified successfully", role: req.user.role, email: req.user.email});
+    const user = await this.userService.findWithMobiles(req.user.email);
+    res.status(200).json({
+      message: "User verified successfully",
+      role: req.user.role,
+      email: req.user.email,
+      tel: user?.tel,
+      whatsappToken: user?.whatsappToken,
+    });
   }
 }

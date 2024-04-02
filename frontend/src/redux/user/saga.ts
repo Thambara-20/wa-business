@@ -11,6 +11,7 @@ import {
   registerSuccess,
   logout,
   logoutSuccess,
+  updateUserSettings,
 } from "./slice";
 import {
   loginAsync,
@@ -19,6 +20,7 @@ import {
   signupUsersAsync,
   registerUsersAsync,
   logoutAsync,
+  updateSettingsAsync,
 } from "../../utilities/services";
 import { clearTemplate } from "../template/slice";
 const LocalstorageId = `${process.env.REACT_APP_API_URL}`;
@@ -75,6 +77,14 @@ export function* watchRegisterUser(action: any): Generator<any, void, any> {
   }
 }
 
+export function* watchUpdateSettings(action: any) {
+  try {
+    yield call(updateSettingsAsync, action.payload);
+  } catch (error: any) {
+    return error;
+  }
+}
+
 export function* watchLogoutUser() {
   try {
     yield call(logoutAsync);
@@ -92,4 +102,5 @@ export function* userSaga() {
   yield takeLatest(signup, watchSignupUser);
   yield takeLatest(register, watchRegisterUser);
   yield takeLatest(logout, watchLogoutUser);
+  yield takeLatest(updateUserSettings, watchUpdateSettings);
 }

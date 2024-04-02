@@ -23,6 +23,8 @@ type InitialDataTypeUser = {
   email?: string;
   password?: string;
   loginError?: boolean;
+  whatsappToken?: string;
+  tel?: string;
   newUser: newUser;
 };
 
@@ -44,8 +46,6 @@ export const initialStateUser: InitialDataTypeUser = {
   },
 };
 
-
-
 const userSlice = createSlice({
   name: "user",
   initialState: initialStateUser,
@@ -65,6 +65,8 @@ const userSlice = createSlice({
       state.loginError = false;
       state.role = action.payload.role;
       state.email = action.payload.email;
+      state.whatsappToken = action.payload.whatsappToken;
+      state.tel = action.payload.tel;
     },
     loginFail: (state, action: PayloadAction<string>) => {
       state.loginError = true;
@@ -93,6 +95,7 @@ const userSlice = createSlice({
     setNewUserVerification: (state, action: PayloadAction<boolean>) => {
       state.newUser.isVerifiedUser = action.payload;
     },
+
     addNewUser: (state, action: PayloadAction<any>) => {
       //middleware
     },
@@ -107,7 +110,10 @@ const userSlice = createSlice({
     },
     logout: (state) => {
       //middleware
-    }
+    },
+    updateUserSettings: (state, action: PayloadAction<any>) => {
+      //middleware
+    },
   },
 });
 
@@ -128,4 +134,5 @@ export const {
   register,
   registerSuccess,
   setSocketId,
+  updateUserSettings
 } = userSlice.actions;

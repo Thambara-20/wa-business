@@ -9,6 +9,9 @@ export class ButtonService {
   }
 
   async getButtonById(id: string): Promise<Button | undefined> {
+    if (!id) {
+      return undefined;
+    }
     return await this.buttonRepository.findOne({ where: { id } });
   }
 
@@ -17,6 +20,9 @@ export class ButtonService {
     name: string,
     link: string
   ): Promise<Button | undefined> {
+    if (!id) {
+      return undefined;
+    }
     const button = await this.buttonRepository.findOne({ where: { id } });
     if (!button) {
       return undefined;
@@ -27,6 +33,9 @@ export class ButtonService {
   }
 
   async deleteButton(id: string): Promise<boolean> {
+    if (!id) {
+      return false;
+    }
     const result = await this.buttonRepository.delete(id);
     return result.affected !== 0;
   }

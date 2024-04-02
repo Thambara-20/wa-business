@@ -11,7 +11,7 @@ export default function ProtectedRoute(children: any) {
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(authenticate());
-  }, [dispatch, user]);
+  }, [dispatch, user.isLogged, user.role, user.loginError]);
 
   if (user.role) {
     return <Outlet />;

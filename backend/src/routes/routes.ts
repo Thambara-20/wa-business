@@ -58,6 +58,14 @@ export const Routes = [
     action: "logout",
     middleware: [],
   },
+
+  {
+    method: "post",
+    route: "/user/update/:socketId",
+    controller: UserController,
+    action: "updateUser",
+    middleware: [authenticateToken],
+  },
   // Template routes
   {
     method: "get",
@@ -84,17 +92,17 @@ export const Routes = [
 
   // Phone routes
   {
-    method: "post",
-    route: "/phone/update",
-    controller: PhoneController,
-    action: "updatePhoneNumbers",
-    middleware: [],
-  },
-  {
     method: "get",
     route: "/phone",
     controller: PhoneController,
     action: "getPhoneNumbersByUserId",
+    middleware: [authenticateToken, authorizeRole([Role.ADMIN, Role.OBSERVER])],
+  },
+  {
+    method: "get",
+    route: "/template/buttons",
+    controller: PhoneController,
+    action: "getAllByMobileId",
     middleware: [],
-  }
+  },
 ];

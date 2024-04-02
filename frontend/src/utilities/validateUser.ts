@@ -37,8 +37,19 @@ const isValidTemplate = (template: template) => {
   );
 };
 
+const isValidMobile = (mobile: string) => {
+  const mobileRegex = /^\d{10}$/;
+  return mobileRegex.test(mobile);
+}
+
+const isValideMobileNumberList = (mobileNumbers: string[]) => {
+  return mobileNumbers.every((mobile) => isValidMobile(mobile));
+};
+
 export {
   isValidEmail,
+  isValideMobileNumberList,
+  isValidMobile,
   isValidName,
   validatePassword,
   isValidateLink,

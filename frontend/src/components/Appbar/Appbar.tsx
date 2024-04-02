@@ -160,6 +160,15 @@ const Appbar = () => {
       });
     });
 
+    socket.on("settings_updated_successfully", (data: any) => {
+      console.log("settings updated", data);
+      setNotification({
+        open: true,
+        onConfirm: handleCloseNotification,
+        type: NotificationTypes.SUCCESS_SAVE_SETTINGS,
+      });
+    });
+
     socket.on("disconnect", () => {
       socket.emit("userDisconnected");
     });

@@ -2,8 +2,6 @@ import { AppDataSource } from "../config/data-source";
 import { Template } from "../entity/template";
 import { Button } from "../entity/button";
 import { User } from "../entity/user";
-import { getManager } from "typeorm";
-import { getRepository } from "typeorm";
 
 export class TemplateDTO {
   id: string;
@@ -26,6 +24,9 @@ export class TemplateService {
     transactionalEntityManager: any
   ): Promise<TemplateDTO> {
     //done
+    if (!name || !email) {
+      throw new Error("Invalid input");
+    }
     const user = await transactionalEntityManager.findOne(User, {
       where: { email },
     });
@@ -86,7 +87,7 @@ export class TemplateService {
         button.link = buttonData.link;
         button.template = template;
         await transactionalEntityManager.save(button);
-        console.log(button)
+        console.log(button);
       }
 
       const updatedTemplate = await transactionalEntityManager.save(template);
@@ -105,6 +106,10 @@ export class TemplateService {
     ]
   ): Promise<Button[]> {
     //done
+    if (!templateId) {
+      throw new Error("Invalid input");
+    }
+
     const template = await transactionalEntityManager.findOne(Template, {
       where: { id: templateId },
     });
@@ -129,6 +134,7 @@ export class TemplateService {
   async updateButtons(
     buttonsData: { id: string; name: string; link: string }[]
   ): Promise<Button[]> {
+    
     const buttons: Button[] = [];
     for (const buttonData of buttonsData) {
       const button = await this.buttonRepository.findOne({
