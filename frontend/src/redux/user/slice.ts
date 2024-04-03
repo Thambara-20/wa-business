@@ -26,6 +26,7 @@ type InitialDataTypeUser = {
   whatsappToken?: string;
   tel?: string;
   newUser: newUser;
+  active: boolean;
 };
 
 export const initialStateUser: InitialDataTypeUser = {
@@ -34,6 +35,7 @@ export const initialStateUser: InitialDataTypeUser = {
   socketId: "",
   email: "",
   password: "",
+  active: false,  
   loginError: false,
   newUser: {
     _id: "",
@@ -64,6 +66,7 @@ const userSlice = createSlice({
       state.isLogged = true;
       state.loginError = false;
       state.role = action.payload.role;
+      state.active = action.payload.active;
       state.email = action.payload.email;
       state.whatsappToken = action.payload.whatsappToken;
       state.tel = action.payload.tel;
@@ -78,6 +81,8 @@ const userSlice = createSlice({
     },
     logoutSuccess: (state) => {
       state.isLogged = false;
+      state.whatsappToken = "";
+      state.tel = "";
       state.email = "";
       state.password = "";
       state.role = Role.NONE;

@@ -1,16 +1,18 @@
 import CircularProgress from "@mui/material/CircularProgress";
 import { styled } from "styled-components";
 
-const StyledCircularProgress = styled.div`
+const StyledCircularProgress = styled.div<{ height: string }>`
   display: flex;
-  height: 100vh;
+  height: ${(props) => props.height};
   justify-content: center;
   align-items: center;
 `;
-
-const LoadingComponent = () => {
+interface Props {
+  height: string;
+}
+const LoadingComponent: React.FC<Props> = ({ height }) => {
   return (
-    <StyledCircularProgress>
+    <StyledCircularProgress height={height}>
       <CircularProgress />
     </StyledCircularProgress>
   );

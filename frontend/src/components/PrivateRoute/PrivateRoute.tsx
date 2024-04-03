@@ -11,7 +11,7 @@ export default function ProtectedRoute(children: any) {
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(authenticate());
-  }, [dispatch, user.isLogged, user.role, user.loginError]);
+  }, [dispatch, user]);
 
   if (user.role) {
     return <Outlet />;
@@ -19,6 +19,6 @@ export default function ProtectedRoute(children: any) {
     if (user.loginError) {
       return <Navigate to={Paths.LOGIN} />;
     }
-    return <LoadingComponent />;
+    return <LoadingComponent height="100vh" />;
   }
 }

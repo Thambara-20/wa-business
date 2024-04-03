@@ -235,6 +235,7 @@ export class UserController {
       }
       user.tel = mobile;
       user.whatsappToken = whatsappToken;
+      user.active = true;
       const updated = await this.phoneService.updatePhoneNumbersByUserId(
         user.email,
         phoneNumbers
@@ -260,6 +261,7 @@ export class UserController {
       email: req.user.email,
       tel: user?.tel,
       whatsappToken: user?.whatsappToken,
+      active: user?.active,
     });
   }
 }

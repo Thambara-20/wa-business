@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Avatar, Box, Button, Tooltip } from "@mui/material";
 import styled, { keyframes } from "styled-components";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { Role, login, logout } from "../../redux/user/slice";
+import { Role, login, logout, updateUser } from "../../redux/user/slice";
 import PopupNotification from "../../components/Notification/Notification";
 import { NotificationTypes } from "../../utilities";
 import { Link } from "react-router-dom";
@@ -95,6 +95,7 @@ const Appbar = () => {
   const isLogged = useAppSelector((state) => state.user.isLogged);
   const role = useAppSelector((state) => state.user.role);
   const email = useAppSelector((state) => state.user.email);
+  const active = useAppSelector((state) => state.user.active);
   const [AddUserClicked, setAddUserClicked] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showMenuButton, setShowMenuButton] = useState(false);
@@ -162,6 +163,7 @@ const Appbar = () => {
 
     socket.on("settings_updated_successfully", (data: any) => {
       console.log("settings updated", data);
+      dispatch(updateUser({ active: true }));
       setNotification({
         open: true,
         onConfirm: handleCloseNotification,
@@ -235,6 +237,28 @@ const Appbar = () => {
         )}
       </AppbarLeftContainer>
       <ButtonWrapper>
+        {
+          <Button
+            variant="contained"
+            style={{
+              borderRadius: "20px",
+              backgroundColor: active ? "green" : "red",
+            }}
+            onClick={() => {
+              if (!active) {
+                setNotification({
+                  open: true,
+                  onConfirm: () => {
+                    window.location.href = `#${Paths.SETTINGS}`;
+                  },
+                  type: NotificationTypes.SETTINGS_UPDATE_WARNING,
+                });
+              }
+            }}
+          >
+            {!active ? "Innactive" : "Active"}
+          </Button>
+        }
         {role === Role.ADMIN && (
           <AdminButtonWrapper>
             <Button
@@ -257,7 +281,12 @@ const Appbar = () => {
             </Button>
             <Tooltip title={email} arrow>
               <Avatar
-                style={{ width: "35px", height: "35px", marginRight: "5px", border:"1px solid #000" }}
+                style={{
+                  width: "35px",
+                  height: "35px",
+                  marginRight: "5px",
+                  border: "1px solid #000",
+                }}
               >
                 <span style={{ fontSize: "20px" }}>
                   {role === Role.ADMIN ? "A" : email?.charAt(0).toUpperCase()}

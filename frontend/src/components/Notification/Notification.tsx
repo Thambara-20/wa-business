@@ -52,6 +52,13 @@ const StyledButton = styled(Button)`
   padding: 5px 15px !important;
 `;
 
+const StyledTypography = styled(Typography)`
+  font-size: 16px !important;
+  justify-content: center !important;
+  text-align: center !important;
+  display: flex !important;
+`;
+
 import { NotificationTypes, NotificationTexts } from "../../utilities";
 
 const NotificationPopup: React.FC<ErrorPopupProps> = ({
@@ -66,6 +73,9 @@ const NotificationPopup: React.FC<ErrorPopupProps> = ({
   if (type === NotificationTypes.LOGOUT_USER) {
     errorMessage = NotificationTexts[type];
     buttonText = "Confirm";
+  } else if (type === NotificationTypes.SETTINGS_UPDATE_WARNING) {
+    errorMessage = NotificationTexts[type];
+    buttonText = "Change Settings";
   } else if (
     type === NotificationTypes.SUCCESS_SAVE_TEMPLATE ||
     type === NotificationTypes.SUCCESS_REGISTER_OBSERVER ||
@@ -81,7 +91,7 @@ const NotificationPopup: React.FC<ErrorPopupProps> = ({
     <StyledBackdrop open={open}>
       <StyledDialogContent open={open} onClose={onClose}>
         <DialogContent>
-          <Typography variant="body1">{errorMessage}</Typography>
+          <StyledTypography variant="body1">{errorMessage}</StyledTypography>
           <ButtonWrapper>
             <StyledButton
               variant="contained"
