@@ -171,30 +171,57 @@ const FooterElement = styled.div`
 `;
 
 interface Reply {
-  id: number;
-  message: string;
+  // this should be changed based on the mapping
 }
 
 function MobileScreenWithButton() {
-  const handleClickWhatsAppButton = () => {
-    console.log("WhatsApp Button Clicked!");
-  };
-
   const buttons = useAppSelector((state) => state.template.buttons);
-  const [replyMessages, setReplyMessages] = useState<Reply[]>([]);
+  const [replyMessage, setReplyMessage] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const handleClickButton = async (link: any) => {
+  const handleClickButton = async ( mapping: any,link?: any,) => {
     try {
       setLoading(true);
-      const response = await axios.get("/replymessagedata.json");
-      setReplyMessages(response.data);
-      console.log("Reply Messages:", response.data);
+      console.log("Link:", link, "Mapping:", mapping);
+      const response = await axios.get(link || "/replymessagedata.json");
+      const mappedMessages: any = mapDataToMessages(response.data, mapping);
+      setReplyMessage(mappedMessages);
+      console.log("Reply Messages:", mappedMessages);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching reply buttons:", error);
       setLoading(false);
     }
+  };
+
+  const mapDataToMessages = (data: any, mappings: any) => {
+    const matchedData = [];
+
+    if (mappings.length === 0) {
+      return data.map((obj: any) => JSON.stringify(obj)).join(", ");
+    }
+
+    for (const item of data) {
+      for (const mapping of mappings) {
+        let itemData = item;
+        const properties = mapping.split(".");
+        console.log("Properties:", properties);
+        for (const prop of properties) {
+          console.log("Property:", prop, "itemData", itemData);
+          if (itemData.hasOwnProperty(prop)) {
+            itemData = itemData[prop];
+          } else {
+            itemData = null;
+            break;
+          }
+        }
+        if (itemData !== null) {
+          matchedData.push(itemData);
+        }
+      }
+    }
+
+    return matchedData.join(", ");
   };
 
   useEffect(() => {
@@ -217,24 +244,21 @@ function MobileScreenWithButton() {
                 <StyledButton
                   variant="contained"
                   color="primary"
-                  onClick={() => handleClickButton(button.link)}
+                  onClick={() => handleClickButton(button.mapping)}
                 >
                   {button.name}
                 </StyledButton>
               </MessageContainer>
             ))}
-            {replyMessages.map((reply) => (
-              <ReplyContainer key={reply.id}>
-                <StyledReplyButton
-                  variant="contained"
-                  color="primary"
-                  onClick={handleClickButton}
-                  disabled={loading}
-                >
-                  {loading ? "Loading..." : reply.message}
-                </StyledReplyButton>
-              </ReplyContainer>
-            ))}
+            <ReplyContainer>
+              <StyledReplyButton
+                variant="contained"
+                color="primary"
+                disabled={loading}
+              >
+                {loading ? "Loading..." : replyMessage}
+              </StyledReplyButton>
+            </ReplyContainer>
           </ButtonContainer>
         </StyledContainer>
         <StyledFooter>
