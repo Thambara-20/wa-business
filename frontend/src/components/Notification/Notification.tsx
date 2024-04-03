@@ -23,7 +23,7 @@ const ButtonWrapper = styled.div`
 `;
 
 const StyledBackdrop = styled(Backdrop)`
-  background-color: rgba(0, 0, 0, 0.5) !important;
+  background-color: rgba(0, 0, 0, 0.0) !important;
 `;
 
 const StyledDialogContent = styled(Dialog)`

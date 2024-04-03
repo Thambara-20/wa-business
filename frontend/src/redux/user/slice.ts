@@ -14,6 +14,8 @@ type newUser = {
   role: Role;
   registered: boolean;
   isVerifiedUser: boolean;
+  mobileError: boolean;
+  tel?: string;
 };
 
 type InitialDataTypeUser = {
@@ -27,15 +29,18 @@ type InitialDataTypeUser = {
   tel?: string;
   newUser: newUser;
   active: boolean;
+  mobileError: boolean;
+  passwordCreated?: boolean;
 };
 
 export const initialStateUser: InitialDataTypeUser = {
   isLogged: false,
   role: Role.NONE,
+  mobileError: false,
   socketId: "",
   email: "",
   password: "",
-  active: false,  
+  active: false,
   loginError: false,
   newUser: {
     _id: "",
@@ -45,6 +50,7 @@ export const initialStateUser: InitialDataTypeUser = {
     role: Role.OBSERVER,
     registered: false,
     isVerifiedUser: false,
+    mobileError: false,
   },
 };
 
@@ -61,6 +67,8 @@ const userSlice = createSlice({
     ) => {
       Object.assign(state, action.payload);
       state.loginError = false;
+      state.mobileError = false;
+      state.passwordCreated = false;
     },
     loginSuccess: (state, action: PayloadAction<any>) => {
       state.isLogged = true;
@@ -86,6 +94,7 @@ const userSlice = createSlice({
       state.email = "";
       state.password = "";
       state.role = Role.NONE;
+      state.active = false;
     },
     signup: (state, action: PayloadAction<any>) => {
       //middleware
@@ -96,6 +105,7 @@ const userSlice = createSlice({
     ) => {
       state.newUser = { ...state.newUser, ...action.payload };
       state.newUser.isVerifiedUser = false;
+      state.newUser.mobileError = false;
     },
     setNewUserVerification: (state, action: PayloadAction<boolean>) => {
       state.newUser.isVerifiedUser = action.payload;
@@ -119,12 +129,26 @@ const userSlice = createSlice({
     updateUserSettings: (state, action: PayloadAction<any>) => {
       //middleware
     },
+    mobileError: (state) => {
+      state.mobileError = true;
+    },
+    newUserMobileError: (state) => {
+      state.newUser.mobileError = true;
+    },
+    passwordCreationSuccess: (state) => {
+      state.passwordCreated = true;
+    },
+    passwordCreationFailed: (state) => {
+      state.passwordCreated = false;
+    },
   },
 });
 
 export { Role };
 export default userSlice.reducer;
 export const {
+  newUserMobileError,
+  mobileError,
   login,
   logoutSuccess,
   logout,
@@ -139,5 +163,7 @@ export const {
   register,
   registerSuccess,
   setSocketId,
-  updateUserSettings
+  updateUserSettings,
+  passwordCreationSuccess,
+  passwordCreationFailed,
 } = userSlice.actions;

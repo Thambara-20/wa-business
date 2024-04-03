@@ -12,6 +12,8 @@ import {
   logout,
   logoutSuccess,
   updateUserSettings,
+  passwordCreationFailed,
+  passwordCreationSuccess,
 } from "./slice";
 import {
   loginAsync,
@@ -59,7 +61,9 @@ export function* watchAuthenticate(): Generator<any, void, any> {
 export function* watchSignupUser(action: any): Generator<any, void, any> {
   try {
     yield call(signupUsersAsync, action.payload);
+    yield put(passwordCreationSuccess())
   } catch (error: any) {
+    yield put(passwordCreationFailed())
     return error;
   }
 }

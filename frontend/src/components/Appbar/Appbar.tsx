@@ -2,7 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Avatar, Box, Button, Tooltip } from "@mui/material";
 import styled, { keyframes } from "styled-components";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { Role, login, logout, updateUser } from "../../redux/user/slice";
+import {
+  Role,
+  login,
+  logout,
+  mobileError,
+  newUserMobileError,
+  updateUser,
+} from "../../redux/user/slice";
 import PopupNotification from "../../components/Notification/Notification";
 import { NotificationTypes } from "../../utilities";
 import { Link } from "react-router-dom";
@@ -24,6 +31,12 @@ const AppbarWrapper = styled.div`
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid #e0e0e0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.8) 40%,
+    rgba(0, 0, 0, 0.9) 100%
+  );
+  backdrop-filter: blur(15px);
 `;
 
 const AppbarLeftContainer = styled.div`
@@ -52,9 +65,10 @@ const ButtonWrapper = styled.div`
   display: flex;
   flex-direction: row;
   align-items: flex-end;
-  padding: 5px 0 5px 0;
+  justify-content: flex-end;
+  padding: 5px 0;
+  transform: scale(0.9);
 `;
-
 const AdminButtonWrapper = styled.div`
   padding: 0px 5px 0px 5px;
   display: flex;
@@ -90,7 +104,81 @@ const DropdownMenu = styled.div<{ showDropdown: any }>`
   animation: ${({ showDropdown }) => (showDropdown ? slideInAnimation : "none")}
     0.3s ease-in-out forwards;
 `;
+const CustomButton = styled(Button)<{ active: any }>`
+  && {
+    border-radius: 20px;
+    color: #fff;
+    border: 1px solid #000;
+    margin-right: 5px;
+    padding: 5px 20px;
+    margin-left: 5px;
+    box-shadow: 1px 0px 5px 0px #000;
+    transition: all 0.3s;
+    background-color: ${({ active }) =>
+      active ? "rgb(0,200,0,0.6)" : "rgb(170,0,0,0.5)"};
+    font-size: 0.9rem;
+    text-transform: none;
 
+    &:hover {
+      background-color: ${({ active }) =>
+        active ? "rgb(0,200,0,0.6)" : "rgb(0,0,0,0.5)"};
+      box-shadow: ${({ active }) =>
+        !active ? "2px 2px 10px 0px #000" : "1px 0px 5px 0px #000"};
+    }
+  }
+`;
+const AdminButton = styled(Button)`
+  && {
+    border-radius: 20px;
+    color: #000;
+    border: 1px solid #000;
+    margin-right: 5px;
+    padding: 5px 20px;
+    margin-left: 5px;
+    box-shadow: 1px 0px 5px 0px #000;
+    transition: all 0.3s;
+    background-color: rgb(255, 255, 255, 0.5);
+    font-size: 0.9rem;
+    text-transform: none;
+
+    &:hover {
+      background-color: #000;
+      color: white;
+      box-shadow: 2px 2px 10px 0px #000;
+    }
+  }
+`;
+
+const StyledLogButton = styled(Button)`
+  && {
+    border-radius: 20px;
+    color: #fff;
+    border: 1px solid #000;
+    margin-right: 5px;
+    padding: 5px 20px;
+    margin-left: 5px;
+    margin-right: 15px;
+    box-shadow: 1px 0px 5px 0px #000;
+    transition: all 0.3s;
+    background: linear-gradient(
+      90deg,
+      rgba(3, 150, 300, 0.5) 0%,
+      rgba(3, 178, 203, 0.5) 100%
+    ) !important;
+    font-size: 0.9rem;
+    text-transform: none;
+
+    &:hover {
+      background: linear-gradient(
+        90deg,
+        rgba(50, 50, 30, 0.5) 0%,
+        rgba(0, 0, 0, 0.5) 100%
+      ) !important;
+      color: white;
+      box-shadow: 2px 2px 10px 0px #000;
+    }
+  }
+`;
 const Appbar = () => {
   const isLogged = useAppSelector((state) => state.user.isLogged);
   const role = useAppSelector((state) => state.user.role);
@@ -171,6 +259,15 @@ const Appbar = () => {
       });
     });
 
+    socket.on("NewUser_Mobile_is_taken", (data: any) => {
+      dispatch(newUserMobileError());
+      console.log("settings updated fail", data);
+    });
+
+    socket.on("Mobile_is_taken", (email: any) => {
+      dispatch(mobileError());
+    });
+
     socket.on("disconnect", () => {
       socket.emit("userDisconnected");
     });
@@ -237,13 +334,20 @@ const Appbar = () => {
         )}
       </AppbarLeftContainer>
       <ButtonWrapper>
+        {role === Role.ADMIN && (
+          <AdminButtonWrapper>
+            <AdminButton
+              variant="outlined"
+              onClick={() => setAddUserClicked(true)}
+            >
+              Add new User
+            </AdminButton>
+          </AdminButtonWrapper>
+        )}
         {
-          <Button
-            variant="contained"
-            style={{
-              borderRadius: "20px",
-              backgroundColor: active ? "green" : "red",
-            }}
+          <CustomButton
+            variant={"outlined"}
+            active={active}
             onClick={() => {
               if (!active) {
                 setNotification({
@@ -257,35 +361,20 @@ const Appbar = () => {
             }}
           >
             {!active ? "Innactive" : "Active"}
-          </Button>
+          </CustomButton>
         }
-        {role === Role.ADMIN && (
-          <AdminButtonWrapper>
-            <Button
-              variant="contained"
-              style={{ borderRadius: "20px" }}
-              onClick={() => setAddUserClicked(true)}
-            >
-              Add new User
-            </Button>
-          </AdminButtonWrapper>
-        )}
         {isLogged ? (
           <Box display="flex" margin="0 5px 0 5px">
-            <Button
-              variant="outlined"
-              onClick={handleLogout}
-              style={{ borderRadius: "20px", marginRight: "10px" }}
-            >
-              Logout
-            </Button>
+            <StyledLogButton onClick={handleLogout}>Logout</StyledLogButton>
             <Tooltip title={email} arrow>
               <Avatar
                 style={{
                   width: "35px",
                   height: "35px",
                   marginRight: "5px",
+                  backgroundColor: "#505050",
                   border: "1px solid #000",
+                  boxShadow: "1px 0px 5px 0px #000",
                 }}
               >
                 <span style={{ fontSize: "20px" }}>

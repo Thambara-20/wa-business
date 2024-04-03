@@ -102,7 +102,7 @@ export const NotificationTexts: Record<NotificationTypes, string> = {
   [NotificationTypes.FAIL_SEND_EMAIL]:
     "Failed to send the password creation link. Please try again later.",
   [NotificationTypes.SUCCESS_SAVE_TEMPLATE]: "Template saved successfully.",
-  [NotificationTypes.SUCCESS_SAVE_SETTINGS]: "Settings saved successfully.",
+  [NotificationTypes.SUCCESS_SAVE_SETTINGS]: "Updated and saved Settings successfully.",
   [NotificationTypes.SETTINGS_UPDATE_WARNING]:
     "Please ensure that the settings are updated correctly to activate your account. Additionally, kindly provide the correct details to prevent any potential issues.",
 };

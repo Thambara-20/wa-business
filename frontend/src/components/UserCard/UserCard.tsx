@@ -9,7 +9,11 @@ import {
 } from "@mui/material";
 import React from "react";
 import styled from "styled-components";
-import { isValidEmail, isValidName } from "../../utilities/validateUser";
+import {
+  isValidEmail,
+  isValidMobile,
+  isValidName,
+} from "../../utilities/validateUser";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { addNewUser, updateNewUser } from "../../redux/user/slice";
 import { Role } from "../../redux/user/slice";
@@ -46,16 +50,16 @@ const UserCard: React.FC<UserCardProps> = ({ open, onClose }) => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user.newUser);
   const socketId = useAppSelector((state) => state.user.socketId);
-  console.log("socketId", socketId);  
+  console.log("socketId", socketId);
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(updateNewUser({ [event.target.name]: event.target.value }));
   };
 
   const onClickAdd = () => {
-    const data ={
+    const data = {
       user: user,
-      socketId: socketId
-    }
+      socketId: socketId,
+    };
     dispatch(addNewUser(data));
     console.log("clicked");
   };
@@ -70,7 +74,7 @@ const UserCard: React.FC<UserCardProps> = ({ open, onClose }) => {
   ];
   return (
     <div>
-      <Backdrop open={open} />
+      <Backdrop open={open} style={{backgroundColor:'transparent'}}/>
       <StyledDialogContent open={open} onClose={onClose}>
         <DialogContent>
           <Typography fontSize={20}>{errorMessage}</Typography>
@@ -102,6 +106,23 @@ const UserCard: React.FC<UserCardProps> = ({ open, onClose }) => {
             Email
           </StyledTextField>
           <StyledTextField
+            fullWidth
+            label="Whatsapp mobile"
+            error={!isValidMobile(user.tel as any) || user.mobileError}
+            onChange={handleChange}
+            value={user.tel}
+            name="tel"
+            helperText={
+              user.mobileError
+                ? "The entered mobile has already been registered. "
+                : !isValidMobile(user.tel as any)
+                  ? "Please enter a valid mobile number. "
+                  : ""
+            }
+          >
+            Mobile
+          </StyledTextField>
+          <StyledTextField
             select
             label="Role"
             name="role"
@@ -123,6 +144,8 @@ const UserCard: React.FC<UserCardProps> = ({ open, onClose }) => {
               disabled={
                 !isValidName(user.name) ||
                 !isValidEmail(user.email) ||
+                !isValidMobile(user.tel as any) ||
+                user.mobileError ||
                 user.isVerifiedUser ||
                 !user.role ||
                 user.email === "" ||

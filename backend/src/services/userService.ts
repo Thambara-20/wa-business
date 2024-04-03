@@ -25,14 +25,29 @@ export class UserService {
     }
   }
   async findByEmail(email: string): Promise<User | undefined> {
-    return await this.userRepository.findOne({ where: { email } });
-  }
-
-  async findWithMobiles(email: string): Promise<User | undefined> {
+    if (!email) {
+      return undefined;
+    }
     return await this.userRepository.findOne({
       where: { email },
       relations: ["phone_numbers"],
     });
+  }
+
+  async isUniqueMobile(email: string, tel: string): Promise<boolean> {
+    if (!email || tel.length !== 10) {
+      return false;
+    }
+    const existing = await this.userRepository.find({
+      where: { tel },
+    });
+    for (const user of existing) {
+      if (user.email!= email) {
+        console.log("User with email already exists", user, email);
+        return false;
+      }
+    }
+    return true;
   }
 
   async updateUser(user: User): Promise<User> {

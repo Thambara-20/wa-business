@@ -18,6 +18,9 @@ export class Button {
   @Column()
   link: string;
 
+  @Column("simple-array", { nullable: true})
+  mapping: string[] | [];
+
   @ManyToOne(() => Template, (template) => template.buttons)
   @JoinColumn({ name: "templateId" })
   template: Template;

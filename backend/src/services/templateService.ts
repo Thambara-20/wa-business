@@ -60,7 +60,7 @@ export class TemplateService {
     //done
     id: string,
     name: string,
-    buttons: { name: string; link: string }[]
+    buttons: { name: string; link: string, mapping: string[] }[]
   ): Promise<TemplateDTO | undefined> {
     if (!id || !name || !buttons) {
       return undefined;
@@ -85,6 +85,7 @@ export class TemplateService {
         const button = new Button();
         button.name = buttonData.name;
         button.link = buttonData.link;
+        button.mapping = buttonData.mapping;
         button.template = template;
         await transactionalEntityManager.save(button);
         console.log(button);
@@ -101,8 +102,8 @@ export class TemplateService {
   async addButtonsToTemplate(
     transactionalEntityManager: any,
     templateId: string,
-    buttonsData: { name: string; link: string }[] = [
-      { link: "https://www.sample.com", name: "Sample" },
+    buttonsData: { name: string; link: string, mapping: string[] }[] = [
+      { link: "https://www.sample.com", name: "Sample", mapping: ["sample"]},
     ]
   ): Promise<Button[]> {
     //done
@@ -124,6 +125,7 @@ export class TemplateService {
       const button = new Button();
       button.name = buttonData.name;
       button.link = buttonData.link;
+      button.mapping = buttonData.mapping;
       button.template = template;
       buttons.push(await transactionalEntityManager.save(button));
     }
@@ -132,7 +134,7 @@ export class TemplateService {
   }
 
   async updateButtons(
-    buttonsData: { id: string; name: string; link: string }[]
+    buttonsData: { id: string; name: string; link: string, mapping: string[] }[]
   ): Promise<Button[]> {
     
     const buttons: Button[] = [];
@@ -145,6 +147,7 @@ export class TemplateService {
       }
       button.name = buttonData.name;
       button.link = buttonData.link;
+      button.mapping = buttonData.mapping;
       buttons.push(await this.buttonRepository.save(button));
     }
     return buttons;

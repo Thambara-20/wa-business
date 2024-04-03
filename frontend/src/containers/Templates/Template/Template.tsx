@@ -6,6 +6,8 @@ import {
   Box,
   Grid,
   IconButton,
+  Chip,
+  Autocomplete,
 } from "@mui/material";
 import { EditOutlined } from "@mui/icons-material";
 import { GridDeleteIcon } from "@mui/x-data-grid";
@@ -23,7 +25,8 @@ import {
   isValidTemplate,
   isValidateLink,
 } from "../../../utilities/validateUser";
-
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 const TemplateBox = styled(Box)`
   max-width: md;
   padding: 1px 30px 20px 30px;
@@ -71,6 +74,13 @@ const StyledTextField = styled(TextField)<{ editable: any; title?: any }>`
     padding: 0;
     display: block;
   }
+
+  textarea {
+    height: auto;
+    min-height: 40px;
+    max-height: 192px;
+    overflow-y: auto;
+  }
 `;
 
 const Divider = styled.div`
@@ -112,6 +122,7 @@ function TemplateCreationPage() {
   const buttons = useAppSelector((state) => state.template.buttons);
   const socketId = useAppSelector((state) => state.user.socketId);
   const dispatch = useAppDispatch();
+  const [mappingInput, setMappingInput] = useState("");
 
   const handleTemplateNameChange = (event: any) => {
     dispatch(updatetemplate({ name: event.target.value }));
@@ -125,6 +136,16 @@ function TemplateCreationPage() {
     dispatch(updateButton({ id: index, link: event.target.value }));
   };
 
+
+  const handleDeleteMapping = (button: any, mapping: any) => {
+    dispatch(
+      updateButton({
+        id: button.id,
+        mapping: button.mapping.filter((item: any) => item !== mapping),
+      })
+    );
+  };
+
   const handleAddButton = () => {
     const id = Math.max.apply(
       Math,
@@ -134,7 +155,10 @@ function TemplateCreationPage() {
     );
     dispatch(
       updatetemplate({
-        buttons: [...buttons, { id: id + 1, link: "", name: "Test", type: "" }],
+        buttons: [
+          ...buttons,
+          { id: id + 1, link: "", name: "Test", mapping: [] },
+        ],
       })
     );
   };
@@ -180,7 +204,7 @@ function TemplateCreationPage() {
         <Grid
           container
           spacing={3}
-          style={{ height: "420px", overflowY: "auto" }}
+          style={{ height: "420px", overflowY: "auto", maxWidth: "120vh" }}
         >
           <Grid
             item
@@ -280,11 +304,77 @@ function TemplateCreationPage() {
                     ),
                   }}
                 />
+                <Autocomplete
+                  multiple
+                  style={{
+                    width: "99%",
+                  }}
+                  freeSolo
+                  autoComplete={false}
+                  disabled={!editable}
+                  options={[] as string[]}
+                  value={button.mapping}
+                  onChange={(event: any, newValue: any) => {
+                    if (button.mapping === null) {
+                      dispatch(
+                        updateButton({
+                          id: button.id,
+                          mapping: [newValue[newValue.length - 1]],
+                        })
+                      );
+                    }
+                    dispatch(
+                      updateButton({
+                        id: button.id,
+                        mapping: newValue,
+                      })
+                    );
+                  }}
+                  renderTags={(value: any) =>
+                    value.map((option: any, index: any) => (
+                      <Chip
+                        key={index}
+                        label={option}
+                        color="primary"
+                        disabled={!editable}
+                        onDelete={() => handleDeleteMapping(button, option)}
+                        style={{
+                          margin: "8px 8px 8px 8px",
+                          backgroundColor: "grey",
+                        }}
+                      />
+                    ))
+                  }
+                  renderInput={(params: any) => (
+                    <StyledTextField
+                      {...params}
+                      disabled={!editable}
+                      editable={editable}
+                      
+                      placeholder={(button.mapping===null || button.mapping.length===0) && "Mappings: Any" }
+                      InputProps={{
+                        ...params.InputProps,
+                        disabled: !editable,
+                        style: {
+                          borderRadius: "20px",
+                          autoComplete: "disabled",
+                        },
+                      }}
+                      style={{
+                        marginBottom: "20px",
+                        width: "100%",
+                        maxHeight: "100px",
+                        overflowY: "auto",
+                      }}
+                    />
+                  )}
+                />
+
                 <div className="error-message">
-                  {!isValidateLink(button.link) && button.name.length >= 1 &&(
+                  {!isValidateLink(button.link) && button.name.length >= 1 && (
                     <span>Please enter a valid link.</span>
                   )}
-                  {button.name.length < 1 && isValidateLink(button.link) &&(
+                  {button.name.length < 1 && isValidateLink(button.link) && (
                     <span>Please enter a valid name.</span>
                   )}
                   {!isValidateLink(button.link) && button.name.length < 1 && (

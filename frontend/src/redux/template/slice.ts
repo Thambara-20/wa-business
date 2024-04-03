@@ -4,7 +4,7 @@ const LocalstorageId = `${process.env.REACT_APP_API_URL}`;
 export type Button = {
   id: number;
   name: string;
-  type: string;
+  mapping: string[];
   link: string;
 };
 
@@ -25,7 +25,7 @@ export const initialStateTemplate: template = {
     {
       id: 1,
       name: "Test Button",
-      type: "",
+      mapping: [],
       link: "https://sample.com",
     },
   ],
@@ -66,7 +66,7 @@ const userSlice = createSlice({
         {
           id: 1,
           name: "Test Button",
-          type: "",
+          mapping: [],
           link: "https://sample.com",
         },
       ];

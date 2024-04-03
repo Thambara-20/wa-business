@@ -49,6 +49,7 @@ const SettingsPage = () => {
   const [webhookUrl, setWebhookUrl] = useState("");
   const [whatsappTokenEditable, setWhatsappTokenEditable] = useState(false);
   const [mobileEditable, setMobileEditable] = useState(false);
+  const mobileError = useAppSelector((state) => state.user.mobileError);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -191,9 +192,9 @@ const SettingsPage = () => {
           onChange={handleTelephoneChange}
           disabled={!mobileEditable}
           style={{ marginBottom: "20px" }}
-          error={!isValidMobile(tel as string)}
+          error={!isValidMobile(tel as string) || mobileError}
           helperText={
-            !isValidMobile(tel as string) && "Telephone number is inValid."
+            !isValidMobile(tel as string) && "Telephone number is inValid." || mobileError && "Given mobile number is taken."
           }
           InputProps={{
             style: {

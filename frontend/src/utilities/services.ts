@@ -50,6 +50,7 @@ export const addUsersAsync = async (data: any) => {
       name: data.user.name,
       email: data.user.email,
       role: data.user.role,
+      tel: data.user.tel,
     };
     const response = await axiosInstance.post(
       `${url}/users/email/${data.socketId}`,
@@ -83,6 +84,7 @@ export const signupUsersAsync = async (data: any) => {
     const body = {
       token: data.token,
       password: data.password,
+      whatsappToken: data.whatsappToken,
     };
     const response = await axios.post(`${url}/users/signup`, body, {});
     console.log("response", response);
@@ -137,14 +139,18 @@ export const getTemplateByUserIdAsync = async (id: string) => {
 
 export const savetemplateAsync = async (data: any) => {
   try {
-    const response = await axiosInstance.put(`${url}/templates/update/${data.socketId}`, data.template, {
-      withCredentials: true,
-    });
+    const response = await axiosInstance.put(
+      `${url}/templates/update/${data.socketId}`,
+      data.template,
+      {
+        withCredentials: true,
+      }
+    );
     return response.data;
   } catch (error) {
     throw error;
   }
-}
+};
 
 export const getUserMobileNumbersAsync = async () => {
   try {
@@ -155,20 +161,24 @@ export const getUserMobileNumbersAsync = async () => {
   } catch (error) {
     throw error;
   }
-}
+};
 
 export const updateSettingsAsync = async (data: any) => {
   try {
-    const body ={
+    const body = {
       mobile: data.mobile,
       whatsappToken: data.whatsappToken,
-      phoneNumbers: data.phoneNumbers
-    }
-    const response = await axiosInstance.post(`${url}/user/update/${data.socketId}`, body, {
-      withCredentials: true,
-    });
+      phoneNumbers: data.phoneNumbers,
+    };
+    const response = await axiosInstance.post(
+      `${url}/user/update/${data.socketId}`,
+      body,
+      {
+        withCredentials: true,
+      }
+    );
     return response.data;
   } catch (error) {
     throw error;
   }
-}
+};

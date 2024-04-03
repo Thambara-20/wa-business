@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { Button, IconButton, TextField, Typography } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import styled from "styled-components";
-import { validatePassword } from "../../utilities/validateUser";
+import { isValidMobile, validatePassword } from "../../utilities/validateUser";
 import { Paths } from "../../App";
-import { useAppDispatch } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { signup } from "../../redux/user/slice";
 
 const StyledPasswordCreate = styled.div`
@@ -44,10 +44,11 @@ const PasswordCreate = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [passwordMatchError, setPasswordMatchError] = useState("");
+  const [whatsappToken, setWhatsappToken] = useState("");
   const dispatch = useAppDispatch();
-  const urlParams = new URLSearchParams(window.location.search);
-  const token = urlParams.get("token");
-
+  const token = window.location.hash.split("?token=")[1];
+  const done = useAppSelector((state) => state.user.passwordCreated);
+  console.log("token", token);
   const handleTogglePasswordVisibility = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
@@ -77,14 +78,27 @@ const PasswordCreate = () => {
     }
   };
 
+  const handlewhatsappTokenChange = (newToken: any) => {
+    setWhatsappToken(newToken);
+  };
+
   const handleSubmit = () => {
-    if (!passwordError && !passwordMatchError && validatePassword(password)) {
+    if (
+      !passwordError &&
+      !passwordMatchError &&
+      validatePassword(password) &&
+      whatsappToken
+    ) {
       const body = {
         password: password,
         token: token,
+        whatsappToken: whatsappToken,
       };
+      console.log(body);
       dispatch(signup(body));
-      window.location.href = Paths.LOGIN;
+      if (done) {
+        window.location.href = `#${Paths.LOGIN}`;
+      }
     }
   };
 
@@ -96,7 +110,7 @@ const PasswordCreate = () => {
           justifyContent={"flex-start"}
           width={"100%"}
         >
-          Create Your Password
+          Create Your Password & Setup Your Account
         </StyledTypography>
         <StyledTextField
           fullWidth
@@ -130,6 +144,17 @@ const PasswordCreate = () => {
             ),
           }}
         />
+        <StyledTextField
+          fullWidth
+          label="Whatsapp Token"
+          error={!whatsappToken}
+          onChange={(e) => handlewhatsappTokenChange(e.target.value)}
+          value={whatsappToken}
+          name="whatsappToken"
+          helperText={!whatsappToken && "Whatsapp Token cannot be empty"}
+        >
+          whatsappToken
+        </StyledTextField>
         <StyledButton variant="contained" fullWidth onClick={handleSubmit}>
           Submit
         </StyledButton>
