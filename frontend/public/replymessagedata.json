@@ -1,5 +1,1 @@
-[
-  { "id": 1, "message": "Reply 1" },
-  { "id": 2, "message": "Reply 2" },
-  { "id": 3, "message": "Reply 3" }
-]
+{ "id": 1, "message": "Reply 1" }

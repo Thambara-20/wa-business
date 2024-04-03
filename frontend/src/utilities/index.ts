@@ -106,3 +106,59 @@ export const NotificationTexts: Record<NotificationTypes, string> = {
   [NotificationTypes.SETTINGS_UPDATE_WARNING]:
     "Please ensure that the settings are updated correctly to activate your account. Additionally, kindly provide the correct details to prevent any potential issues.",
 };
+
+export const mapDataToMessages = (data: any, mappings: any) => {
+  const matchedData = [];
+
+  if (mappings.length === 0) {
+    if (Array.isArray(data)) {
+      console.log("Data Array:", data);
+      return data.map((obj: any) => JSON.stringify(obj)).join(", ");
+    }
+    console.log("Data:", data);
+    return JSON.stringify(data);
+  }
+
+  if (!Array.isArray(data)) {
+    for (const mapping of mappings) {
+      let itemData = data;
+      const properties = mapping.split(".");
+      console.log("Properties:", properties);
+      for (const prop of properties) {
+        console.log("Property:", prop, "itemData", itemData);
+        if (itemData.hasOwnProperty(prop)) {
+          itemData = itemData[prop];
+        } else {
+          itemData = null;
+          break;
+        }
+      }
+      if (itemData !== null) {
+        matchedData.push(itemData);
+      }
+    }
+    return matchedData.join(", ");
+  }
+
+  for (const item of data) {
+    for (const mapping of mappings) {
+      let itemData = item;
+      const properties = mapping.split(".");
+      console.log("Properties:", properties);
+      for (const prop of properties) {
+        console.log("Property:", prop, "itemData", itemData);
+        if (itemData.hasOwnProperty(prop)) {
+          itemData = itemData[prop];
+        } else {
+          itemData = null;
+          break;
+        }
+      }
+      if (itemData !== null) {
+        matchedData.push(itemData);
+      }
+    }
+  }
+
+  return matchedData.join(", ");
+};

@@ -204,7 +204,7 @@ function TemplateCreationPage() {
         <Grid
           container
           spacing={3}
-          style={{ height: "420px", overflowY: "auto", maxWidth: "120vh" }}
+          style={{ height: "420px", overflowY: "auto", maxWidth: "125vh" }}
         >
           <Grid
             item
@@ -220,6 +220,7 @@ function TemplateCreationPage() {
             </Typography>
             <StyledTextField
               fullWidth
+              style={{width:"99.4%"}}
               variant="outlined"
               InputProps={{
                 style: {

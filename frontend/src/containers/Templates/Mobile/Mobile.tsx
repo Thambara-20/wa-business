@@ -4,6 +4,7 @@ import { useAppSelector } from "../../../redux/hooks";
 import styled from "styled-components";
 import Aos from "aos";
 import axios from "axios";
+import { mapDataToMessages } from "../../../utilities";
 
 const Wrapper = styled.div`
   display: flex;
@@ -170,16 +171,12 @@ const FooterElement = styled.div`
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.4);
 `;
 
-interface Reply {
-  // this should be changed based on the mapping
-}
-
 function MobileScreenWithButton() {
   const buttons = useAppSelector((state) => state.template.buttons);
   const [replyMessage, setReplyMessage] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const handleClickButton = async ( mapping: any,link?: any,) => {
+  const handleClickButton = async (mapping: any, link?: any) => {
     try {
       setLoading(true);
       console.log("Link:", link, "Mapping:", mapping);
@@ -192,36 +189,6 @@ function MobileScreenWithButton() {
       console.error("Error fetching reply buttons:", error);
       setLoading(false);
     }
-  };
-
-  const mapDataToMessages = (data: any, mappings: any) => {
-    const matchedData = [];
-
-    if (mappings.length === 0) {
-      return data.map((obj: any) => JSON.stringify(obj)).join(", ");
-    }
-
-    for (const item of data) {
-      for (const mapping of mappings) {
-        let itemData = item;
-        const properties = mapping.split(".");
-        console.log("Properties:", properties);
-        for (const prop of properties) {
-          console.log("Property:", prop, "itemData", itemData);
-          if (itemData.hasOwnProperty(prop)) {
-            itemData = itemData[prop];
-          } else {
-            itemData = null;
-            break;
-          }
-        }
-        if (itemData !== null) {
-          matchedData.push(itemData);
-        }
-      }
-    }
-
-    return matchedData.join(", ");
   };
 
   useEffect(() => {
