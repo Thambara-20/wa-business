@@ -1,14 +1,15 @@
 import axios from "axios";
 import { sendInteractiveMessage } from "./buttons.mjs";
+import { mapDataToMessages } from "./datamapper.mjs";
+import { sendTextReply } from "./textMessage.mjs";
 
 export const handler = async (event) => {
   const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
-  const WHATSAPP_TOKEN = process.env.WHATSAPP_TOKEN;
+  let WHATSAPP_TOKEN;
   let buttons;
 
   let response;
   if (event?.requestContext?.http?.method === "GET") {
-
     let queryParams = event?.queryStringParameters;
     if (queryParams != null) {
       const mode = queryParams["hub.mode"];
@@ -54,40 +55,56 @@ export const handler = async (event) => {
         let value = change.value;
         if (value != null) {
           let phone_number_id = value.metadata.phone_number_id;
-          const isValid = axios.get("https://api.example.com/validate", {
-            // to be tested
-            params: {
-              phone_number: from,
-              tel: phone_number_id,
-            },
-          });
 
-          if (isValid) {
-            buttons = axios.get(
-              // to be tested
-              `https://api.example.com/buttons/${phone_number}`
-            );
-          }
           if (value.messages != null) {
             for (let message of value.messages) {
               const from = message.from;
               if (message.type === "text") {
                 let message_body = message.text.body;
+                const body = {
+                  tel: phone_number_id,
+                  from: from,
+                };
+                const response = await axios.post(
+                  `${url}/template/buttons`,
+                  body,
+                  {}
+                );
+                WHATSAPP_TOKEN = response.data.user.whatsappToken;
+                buttons = response.data.buttons;
+                console.log("buttons", buttons, "token", WHATSAPP_TOKEN);
 
-                if (isValid && buttons) {
-                  sendInteractiveMessage(
-                    phone_number_id,
-                    WHATSAPP_TOKEN,
-                    from,
-                    buttons
-                  );
-                }
+                sendInteractiveMessage(
+                  phone_number_id,
+                  WHATSAPP_TOKEN,
+                  from,
+                  buttons
+                );
               } else if (message.type === "interactive") {
                 const button_id = message.interactive.button_reply.id;
-                const mapping = buttons[button_id].mapping;
-                const link = buttons[button_id].link;
-                const data = axios.get(link); // to be tested
-                const mappedData = data[mapping]; // to be tested
+
+                const body = {
+                  tel: phone_number_id,
+                  from: from,
+                };
+
+                const response = await axios.post(
+                  `${url}/template/buttons`,
+                  body,
+                  {}
+                );
+                WHATSAPP_TOKEN = response.data.user.whatsappToken;
+                buttons = response.data.buttons;
+                console.log("buttons", buttons, "token", WHATSAPP_TOKEN);
+
+                const button = buttons.find((b) => b.id === button_id);
+                const mapping = button.mapping;
+                const link = button.link;
+
+                const data = await axios.get(link);
+                const mappedData = mapDataToMessages(data, mapping);
+
+
                 await sendTextReply(
                   phone_number_id,
                   WHATSAPP_TOKEN,
@@ -95,6 +112,7 @@ export const handler = async (event) => {
                   mappedData
                 );
                 const responseBody = "Done";
+
                 response = {
                   statusCode: 200,
                   body: JSON.stringify(responseBody),

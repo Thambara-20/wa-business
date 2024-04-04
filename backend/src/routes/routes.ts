@@ -2,6 +2,7 @@ import { UserController } from "../controllers/userController";
 import { TemplateController } from "../controllers/templateController";
 import { authenticateToken, authorizeRole } from "../middleware/auth";
 import { PhoneController } from "../controllers/phoneController";
+import { ButtonController } from "../controllers/buttonController";
 export enum Role {
   ADMIN = "admin",
   OBSERVER = "observer",
@@ -99,10 +100,18 @@ export const Routes = [
     middleware: [authenticateToken, authorizeRole([Role.ADMIN, Role.OBSERVER])],
   },
   {
-    method: "get",
+    method: "post",
     route: "/template/buttons",
     controller: PhoneController,
     action: "getAllByMobileId",
+    middleware: [],
+  },
+  // button routes
+  {
+    method: "get",
+    route: "/button/:id",
+    controller: ButtonController,
+    action: "getButtonById",
     middleware: [],
   },
 ];

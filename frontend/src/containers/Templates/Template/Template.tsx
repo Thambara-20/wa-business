@@ -215,7 +215,7 @@ function TemplateCreationPage() {
               justifyContent: "flex-start",
             }}
           >
-            <Typography variant="h6" style={{ textAlign: "start" }}>
+            <Typography variant="h6" style={{ textAlign: "start", paddingBottom:"10px" }}>
               Template Name:
             </Typography>
             <StyledTextField

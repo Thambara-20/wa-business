@@ -1,24 +1,26 @@
 import axios from "axios";
 
 const defaultBody = [
-  {
-    text: "Welcome!",
-    options: [
-      { id: 1, text: "Health & Lifestyle", link: "www.google.com" },
-      { id: 2, text: "Work Challenges", link: "www.google.com" },
-      { id: 3, text: "Study Overwhelm", link: "www.google.com" },
-    ],
-  },
+  { id: 1, text: "Lifestyle", link: "www.google.com", mapping: [] },
+  { id: 2, text: "Work Challenges", link: "www.google.com", mapping: [] },
+  { id: 3, text: "Study Overwhelm", link: "www.google.com", mapping: [] },
 ];
+
 export const sendInteractiveMessage = async (
   phone_number_id,
   whatsapp_token,
   to,
-  body = defaultBody
+  buttons = defaultBody
 ) => {
   try {
-    const options = body[0].options;
-    const texts = options.map((option) => option.text);
+
+    let actionButtons = buttons.map((button, index) => ({
+      type: "reply",
+      reply: {
+        id: (button.id).toString(),
+        title: button.text,
+      },
+    }));
 
     let data = JSON.stringify({
       messaging_product: "whatsapp",
@@ -32,29 +34,7 @@ export const sendInteractiveMessage = async (
         },
 
         action: {
-          buttons: [
-            {
-              type: "reply",
-              reply: {
-                id: "1",
-                title: texts[0],
-              },
-            },
-            {
-              type: "reply",
-              reply: {
-                id: "2",
-                title: texts[1],
-              },
-            },
-            {
-              type: "reply",
-              reply: {
-                id: "3",
-                title: texts[2],
-              },
-            },
-          ],
+          buttons: actionButtons,
         },
       },
     });

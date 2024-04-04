@@ -15,6 +15,9 @@ export class ButtonController {
 
   async getButtonById(req: Request, res: Response) {
     const id = req.params.id;
+    if (!id) {
+      res.status(400).json({ message: "Button id is required" });
+    }
     try {
       const button = await this.buttonService.getButtonById(id);
       if (button) {
