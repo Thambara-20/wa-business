@@ -44,7 +44,7 @@ const PasswordCreate = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [passwordMatchError, setPasswordMatchError] = useState("");
-  const [whatsappToken, setWhatsappToken] = useState("");
+  const [mobile, setmobile] = useState("");
   const dispatch = useAppDispatch();
   const token = window.location.hash.split("?token=")[1];
   const done = useAppSelector((state) => state.user.passwordCreated);
@@ -78,8 +78,8 @@ const PasswordCreate = () => {
     }
   };
 
-  const handlewhatsappTokenChange = (newToken: any) => {
-    setWhatsappToken(newToken);
+  const handleMobileChange = (newToken: any) => {
+    setmobile(newToken);
   };
 
   const handleSubmit = () => {
@@ -87,12 +87,12 @@ const PasswordCreate = () => {
       !passwordError &&
       !passwordMatchError &&
       validatePassword(password) &&
-      whatsappToken
+      mobile
     ) {
       const body = {
         password: password,
         token: token,
-        whatsappToken: whatsappToken,
+        tel: mobile,
       };
       console.log(body);
       dispatch(signup(body));
@@ -146,14 +146,14 @@ const PasswordCreate = () => {
         />
         <StyledTextField
           fullWidth
-          label="Whatsapp Token"
-          error={!whatsappToken}
-          onChange={(e) => handlewhatsappTokenChange(e.target.value)}
-          value={whatsappToken}
-          name="whatsappToken"
-          helperText={!whatsappToken && "Whatsapp Token cannot be empty"}
+          label="Mobile number"
+          error={!mobile}
+          onChange={(e) => handleMobileChange(e.target.value)}
+          value={mobile}
+          name="mobile"
+          helperText={!isValidMobile(mobile) && "Invalid mobile number"}
         >
-          whatsappToken
+          mobile
         </StyledTextField>
         <StyledButton variant="contained" fullWidth onClick={handleSubmit}>
           Submit

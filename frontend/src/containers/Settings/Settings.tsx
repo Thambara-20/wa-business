@@ -20,7 +20,6 @@ import styled from "styled-components";
 import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { updateUser, updateUserSettings } from "../../redux/user/slice";
-import LoadingComponent from "../../components/Loading/Loading";
 import {
   getMobileNumbers,
   updateMobileNumbers,
@@ -37,10 +36,30 @@ const StyledButton = styled(Button)`
   min-width: 150px !important;
 `;
 
+const StyledWrapper = styled(Box)`
+  z-index: 0 !important;
+  position: absolute !important;
+  padding: 30px !important;
+  background-color: #fff;
+  border-radius: 20px;
+  margin: 20px 0 20px 0;
+  width: 80% !important;
+  box-shadow: 5px 5px 15px -5px rgba(0, 0, 0, 0.2);
+  transform: scale(0.8) !important;
+
+  @media (max-width: 700px) {
+    transform: scale-y(0.85);
+    width: 90% !important;
+
+  }
+`;
+
 const SettingsPage = () => {
   const allowedPhoneNumbers = useAppSelector(
     (state) => state.template.allowedMobileNumbers
   );
+  const phoneId = useAppSelector((state) => state.user.phoneId);
+  const verifyToken = useAppSelector((state) => state.user.verifyToken);
   const tel = useAppSelector((state) => state.user.tel);
   const socketId = useAppSelector((state) => state.user.socketId);
   const WhatsappToken = useAppSelector((state) => state.user.whatsappToken);
@@ -49,6 +68,8 @@ const SettingsPage = () => {
   const [webhookUrl, setWebhookUrl] = useState("");
   const [whatsappTokenEditable, setWhatsappTokenEditable] = useState(false);
   const [mobileEditable, setMobileEditable] = useState(false);
+  const [phoneIdEditable, setPhoneIdEditable] = useState(false);
+  const [verifyTokenEditable, setVerifyTokenEditable] = useState(false);
   const mobileError = useAppSelector((state) => state.user.mobileError);
   const dispatch = useAppDispatch();
 
@@ -67,7 +88,17 @@ const SettingsPage = () => {
     dispatch(updateUser({ whatsappToken }));
   };
 
-  const handleTelephoneChange = (event: any) => {
+  const handlePhoneIdChange = (event: any) => {
+    const phoneId = event.target.value;
+    dispatch(updateUser({ phoneId }));
+  };
+
+  const handleVerifyTokenChange = (event: any) => {
+    const verifyToken = event.target.value;
+    dispatch(updateUser({ verifyToken }));
+  };
+
+  const handleTelChange = (event: any) => {
     const tel = event.target.value;
     dispatch(updateUser({ tel }));
   };
@@ -79,7 +110,9 @@ const SettingsPage = () => {
       updateUserSettings({
         phoneNumbers: allowedPhoneNumbers,
         whatsappToken: WhatsappToken,
-        mobile: tel,
+        verifyToken: verifyToken,
+        tel: tel,
+        phoneId: phoneId,
         socketId: socketId,
       })
     );
@@ -106,18 +139,7 @@ const SettingsPage = () => {
   }, []);
 
   return (
-    <Box
-      maxWidth="md"
-      style={{
-        zIndex: 0,
-        padding: "30px",
-        backgroundColor: "#fff",
-        borderRadius: "20px",
-        width: "75%",
-        boxShadow: "5px 5px 15px -5px rgba(0, 0, 0, 0.2)",
-      }}
-      data-aos="fade-up"
-    >
+    <StyledWrapper maxWidth="md" data-aos="fade-up">
       <Typography variant="h4" gutterBottom>
         Configurations
       </Typography>
@@ -165,7 +187,7 @@ const SettingsPage = () => {
             },
             startAdornment: (
               <InputAdornment position="start">
-                Your Whatsapp Token
+                Your Whatsapp Access Token
               </InputAdornment>
             ),
             endAdornment: (
@@ -188,13 +210,49 @@ const SettingsPage = () => {
         <TextField
           fullWidth
           variant="outlined"
-          value={tel}
-          onChange={handleTelephoneChange}
-          disabled={!mobileEditable}
+          value={verifyToken}
+          onChange={handleVerifyTokenChange}
           style={{ marginBottom: "20px" }}
-          error={!isValidMobile(tel as string) || mobileError}
+          error={!verifyToken}
+          disabled={!verifyTokenEditable}
+          helperText={!verifyToken && "API Key is required."}
+          InputProps={{
+            style: {
+              borderRadius: "20px",
+            },
+            startAdornment: (
+              <InputAdornment position="start">
+                Your Whatsapp Verify Token
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={() => {
+                    if (verifyToken) {
+                      setVerifyTokenEditable(!verifyTokenEditable);
+                    } else {
+                      setVerifyTokenEditable(true);
+                    }
+                  }}
+                >
+                  {!verifyTokenEditable ? <EditOutlined /> : <DoneOutline />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />{" "}
+        <TextField
+          fullWidth
+          variant="outlined"
+          value={phoneId}
+          onChange={handlePhoneIdChange}
+          style={{ marginBottom: "20px" }}
+          error={!phoneId}
+          disabled={!phoneIdEditable}
           helperText={
-            !isValidMobile(tel as string) && "Telephone number is inValid." || mobileError && "Given mobile number is taken."
+            (!phoneId && "PhoneId is required.") ||
+            (mobileError && "PhoneId is taken before.")
           }
           InputProps={{
             style: {
@@ -202,7 +260,44 @@ const SettingsPage = () => {
             },
             startAdornment: (
               <InputAdornment position="start">
-                Your Whatsapp Number
+                Your Whatsapp PhoneId
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={() => {
+                    if (phoneId) {
+                      setPhoneIdEditable(!phoneIdEditable);
+                    } else {
+                      setPhoneIdEditable(true);
+                    }
+                  }}
+                >
+                  {!phoneIdEditable ? <EditOutlined /> : <DoneOutline />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />{" "}
+        <TextField
+          fullWidth
+          variant="outlined"
+          value={tel}
+          onChange={handleTelChange}
+          disabled={!mobileEditable}
+          style={{ marginBottom: "20px" }}
+          error={!isValidMobile(tel as string) || mobileError}
+          helperText={
+            !isValidMobile(tel as string) && "mobile number is inValid."
+          }
+          InputProps={{
+            style: {
+              borderRadius: "20px",
+            },
+            startAdornment: (
+              <InputAdornment position="start">
+                Your Whatsapp Mobile
               </InputAdornment>
             ),
             endAdornment: (
@@ -259,7 +354,7 @@ const SettingsPage = () => {
                 InputProps={{
                   ...params.InputProps,
                   style: {
-                    borderRadius: "20px", // Adjust the border radius here for the TextField input
+                    borderRadius: "20px",
                   },
                 }}
                 style={{
@@ -323,7 +418,7 @@ const SettingsPage = () => {
           </IconButton>
         }
       />
-    </Box>
+    </StyledWrapper>
   );
 };
 

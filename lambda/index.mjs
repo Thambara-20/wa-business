@@ -62,7 +62,7 @@ export const handler = async (event) => {
               if (message.type === "text") {
                 let message_body = message.text.body;
                 const body = {
-                  tel: phone_number_id,
+                  phoneId: phone_number_id,
                   from: from,
                 };
                 const response = await axios.post(
@@ -84,7 +84,7 @@ export const handler = async (event) => {
                 const button_id = message.interactive.button_reply.id;
 
                 const body = {
-                  tel: phone_number_id,
+                  phoneId: phone_number_id,
                   from: from,
                 };
 
@@ -103,7 +103,6 @@ export const handler = async (event) => {
 
                 const data = await axios.get(link);
                 const mappedData = mapDataToMessages(data, mapping);
-
 
                 await sendTextReply(
                   phone_number_id,

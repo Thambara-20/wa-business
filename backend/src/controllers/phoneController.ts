@@ -20,9 +20,9 @@ export class PhoneController {
     }
   }
   async getAllByMobileId(req: Request, res: Response) {
-    const { tel, from } = req.body;
+    const { phoneId, from } = req.body;
     try {
-      const data = await this.phoneService.getAllByMobileId(tel, from);
+      const data = await this.phoneService.getAllByMobileId(phoneId, from);
       if (data) {
         res.json(data);
       } else {

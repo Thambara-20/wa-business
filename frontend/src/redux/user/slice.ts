@@ -15,7 +15,10 @@ type newUser = {
   registered: boolean;
   isVerifiedUser: boolean;
   mobileError: boolean;
+  phoneId?: string;
   tel?: string;
+  whatsappToken?: string;
+  verifyToken?: string;
 };
 
 type InitialDataTypeUser = {
@@ -26,6 +29,8 @@ type InitialDataTypeUser = {
   password?: string;
   loginError?: boolean;
   whatsappToken?: string;
+  phoneId?: string;
+  verifyToken?: string;
   tel?: string;
   newUser: newUser;
   active: boolean;
@@ -77,6 +82,8 @@ const userSlice = createSlice({
       state.active = action.payload.active;
       state.email = action.payload.email;
       state.whatsappToken = action.payload.whatsappToken;
+      state.phoneId = action.payload.phoneId;
+      state.verifyToken = action.payload.verifyToken;
       state.tel = action.payload.tel;
     },
     loginFail: (state, action: PayloadAction<string>) => {
@@ -90,11 +97,13 @@ const userSlice = createSlice({
     logoutSuccess: (state) => {
       state.isLogged = false;
       state.whatsappToken = "";
-      state.tel = "";
+      state.phoneId = "";
       state.email = "";
       state.password = "";
       state.role = Role.NONE;
       state.active = false;
+      state.tel = "";
+      state.verifyToken = "";
     },
     signup: (state, action: PayloadAction<any>) => {
       //middleware

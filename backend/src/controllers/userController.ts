@@ -58,19 +58,19 @@ export class UserController {
   }
 
   async email(req: Request, res: Response) {
-    const { email, role, name, tel } = req.body;
+    const { email, role, name, phoneId, whatsappToken, verifyToken } = req.body;
     const socketId = req.params.socketId;
-    console.log("email", email, "role", role, "name", name, socketId, tel);
+    console.log("email", email, "role", role, "name", name, socketId, phoneId);
 
     try {
-      if (name && role && email) {
+      if (name && role && email && phoneId && whatsappToken && verifyToken) {
         const tempToken = jwt.sign({ email, role }, SECRET_KEY, {
           expiresIn: "1h",
         });
 
         const isUniqueMobile = await this.userService.isUniqueMobile(
           email,
-          tel
+          phoneId
         );
         if (!isUniqueMobile) {
           res.status(400).json({ message: "Mobile number already exists" });
@@ -86,7 +86,10 @@ export class UserController {
           newUser.email = email;
           newUser.role = role;
           newUser.tempToken = hashedToken;
-          newUser.tel = tel;
+          newUser.phoneId = phoneId;
+          newUser.whatsappToken = whatsappToken;
+          newUser.verifyToken = verifyToken;
+          
           const tempPassword = generateTemporaryPassword();
           newUser.password = await bcrypt.hash(tempPassword, 10);
 
@@ -119,16 +122,15 @@ export class UserController {
   }
 
   async create(req: Request, res: Response) {
-    const { password, token, whatsappToken } = req.body;
-    console.log("token", token, "password", password, whatsappToken);
+    const { password, token, tel } = req.body;
+    console.log("token", token, "password", password, "tel", tel);
     try {
       const decodedToken: any = jwt.verify(token, SECRET_KEY);
       const curr_user = await this.userService.findByEmail(decodedToken.email);
       if (
         !curr_user ||
         !(await curr_user.compareTempToken(token)) ||
-        !whatsappToken ||
-        !curr_user.tel
+        !tel
       ) {
         res.status(401).json({ error: "Invalid token" });
         return;
@@ -139,14 +141,14 @@ export class UserController {
       user.password = hashedPassword;
       user.tempToken = null;
       user.verified = true;
-      user.whatsappToken = whatsappToken;
+      user.tel = tel;
       user.active = true;
 
       console.log("user", user);
       await this.userService.updateUser(user);
       const updated = await this.phoneService.updatePhoneNumbersByUserId(
         user.email,
-        [curr_user.tel]
+        [tel]
       );
       if (!updated) {
         res.status(400).json({ message: "Invalid phone numbers" });
@@ -246,16 +248,16 @@ export class UserController {
   }
 
   async updateUser(req: any, res: Response) {
-    const { mobile, whatsappToken, phoneNumbers } = req.body;
+    const { tel, whatsappToken, phoneNumbers, phoneId, verifyToken } = req.body;
     const email = req.user.email;
     const socketId = req.params.socketId;
     try {
-      if (!email || mobile.length != 10 || !whatsappToken) {
+      if (!email || tel.length != 10 || !whatsappToken || !verifyToken ||!phoneId) {
         res.status(400).json({ message: "Invalid data" });
         return;
       }
 
-      const isUnique = await this.userService.isUniqueMobile(email, mobile);
+      const isUnique = await this.userService.isUniqueMobile(email, phoneId);
       if (!isUnique) {
         res.status(400).json({ message: "mobile number existing" });
         sendMessage(this.io, socketId, "Mobile_is_taken", email);
@@ -266,7 +268,9 @@ export class UserController {
         res.status(404).json({ message: "User not found" });
         return;
       }
-      user.tel = mobile;
+      user.tel = tel;
+      user.phoneId = phoneId;
+      user.verifyToken = verifyToken;
       user.whatsappToken = whatsappToken;
       user.active = true;
       const updated = await this.phoneService.updatePhoneNumbersByUserId(
@@ -292,7 +296,9 @@ export class UserController {
       message: "User verified successfully",
       role: req.user.role,
       email: req.user.email,
+      phoneId: user?.phoneId,
       tel: user?.tel,
+      verifyToken: user?.verifyToken,
       whatsappToken: user?.whatsappToken,
       active: user?.active,
     });

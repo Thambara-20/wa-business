@@ -1,7 +1,6 @@
 import { Phone } from "../entity/phone";
 import { AppDataSource } from "../config/data-source";
 import { User } from "../entity/user";
-import { And } from "typeorm";
 import { Button } from "../entity/button";
 
 export class PhoneService {
@@ -51,12 +50,12 @@ export class PhoneService {
     return { allowedMobileNumbers: phoneNumbers };
   }
 
-  async getAllByMobileId(tel: string, from: string) {
-    if (!tel || !from) {
+  async getAllByMobileId(phoneId: string, from: string) {
+    if (!phoneId || !from) {
       return undefined;
     }
     const user = await this.userRepository.findOne({
-      where: { tel, verified: true },
+      where: { phoneId, verified: true },
       relations: ["templates", "phone_numbers"],
     });
     console.log(user, "user data");
@@ -76,7 +75,8 @@ export class PhoneService {
       user: {
         email: user.email,
         whatsappToken: user.whatsappToken,
-        tel: user.tel,
+        phoneId: user.phoneId,
+        verifyToken: user.verifyToken,
       },
     };
   }

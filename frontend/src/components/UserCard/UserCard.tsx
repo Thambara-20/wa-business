@@ -9,11 +9,7 @@ import {
 } from "@mui/material";
 import React from "react";
 import styled from "styled-components";
-import {
-  isValidEmail,
-  isValidMobile,
-  isValidName,
-} from "../../utilities/validateUser";
+import { isValidEmail } from "../../utilities/validateUser";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { addNewUser, updateNewUser } from "../../redux/user/slice";
 import { Role } from "../../redux/user/slice";
@@ -74,19 +70,39 @@ const UserCard: React.FC<UserCardProps> = ({ open, onClose }) => {
   ];
   return (
     <div>
-      <Backdrop open={open} style={{backgroundColor:'transparent'}}/>
+      <Backdrop open={open} style={{ backgroundColor: "transparent" }} />
       <StyledDialogContent open={open} onClose={onClose}>
         <DialogContent>
           <Typography fontSize={20}>{errorMessage}</Typography>
           <StyledTextField
             fullWidth
             label="Name"
-            error={!isValidName(user.name)}
+            error={!user.name}
             onChange={handleChange}
             value={user.name}
             name="name"
           >
             Name
+          </StyledTextField>
+          <StyledTextField
+            fullWidth
+            label="Whatsapp Access Token"
+            error={!user.whatsappToken}
+            onChange={handleChange}
+            value={user.whatsappToken}
+            name="whatsappToken"
+          >
+            Whatsapp Access Token
+          </StyledTextField>
+          <StyledTextField
+            fullWidth
+            label="Whatsapp Verify Token"
+            error={!user.verifyToken}
+            onChange={handleChange}
+            value={user.verifyToken}
+            name="verifyToken"
+          >
+            Whatsapp Verify Token
           </StyledTextField>
           <StyledTextField
             fullWidth
@@ -107,20 +123,20 @@ const UserCard: React.FC<UserCardProps> = ({ open, onClose }) => {
           </StyledTextField>
           <StyledTextField
             fullWidth
-            label="Whatsapp mobile"
-            error={!isValidMobile(user.tel as any) || user.mobileError}
+            label="Whatsapp PhoneID"
+            error={!user.phoneId || user.mobileError}
             onChange={handleChange}
-            value={user.tel}
-            name="tel"
+            value={user.phoneId}
+            name="phoneId"
             helperText={
               user.mobileError
-                ? "The entered mobile has already been registered. "
-                : !isValidMobile(user.tel as any)
-                  ? "Please enter a valid mobile number. "
+                ? "The entered phoneId has already been registered. "
+                : !user.phoneId
+                  ? "phoneId cannot be empty."
                   : ""
             }
           >
-            Mobile
+            PhoneId
           </StyledTextField>
           <StyledTextField
             select
@@ -142,9 +158,9 @@ const UserCard: React.FC<UserCardProps> = ({ open, onClose }) => {
               style={{ marginRight: "10px" }}
               onClick={onClickAdd}
               disabled={
-                !isValidName(user.name) ||
+                !user.name ||
                 !isValidEmail(user.email) ||
-                !isValidMobile(user.tel as any) ||
+                !(user.phoneId ) ||
                 user.mobileError ||
                 user.isVerifiedUser ||
                 !user.role ||

@@ -34,15 +34,15 @@ export class UserService {
     });
   }
 
-  async isUniqueMobile(email: string, tel: string): Promise<boolean> {
-    if (!email || tel.length !== 10) {
+  async isUniqueMobile(email: string, phoneId: string): Promise<boolean> {
+    if (!email || !phoneId) {
       return false;
     }
     const existing = await this.userRepository.find({
-      where: { tel },
+      where: { phoneId },
     });
     for (const user of existing) {
-      if (user.email!= email) {
+      if (user.email != email) {
         console.log("User with email already exists", user, email);
         return false;
       }

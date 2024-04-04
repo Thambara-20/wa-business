@@ -31,10 +31,16 @@ export class User {
   templates: Template[];
 
   @Column({ nullable: true })
+  phoneId: string;
+
+  @Column({ nullable: true })
   tel: string;
 
   @Column({ nullable: true })
   whatsappToken: string;
+
+  @Column({ nullable: true })
+  verifyToken: string;
 
   @Column({ nullable: true, default: false })
   active: boolean;

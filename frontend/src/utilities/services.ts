@@ -50,7 +50,9 @@ export const addUsersAsync = async (data: any) => {
       name: data.user.name,
       email: data.user.email,
       role: data.user.role,
-      tel: data.user.tel,
+      phoneId: data.user.phoneId,
+      whatsappToken: data.user.whatsappToken,
+      verifyToken: data.user.verifyToken,
     };
     const response = await axiosInstance.post(
       `${url}/users/email/${data.socketId}`,
@@ -166,7 +168,9 @@ export const getUserMobileNumbersAsync = async () => {
 export const updateSettingsAsync = async (data: any) => {
   try {
     const body = {
-      mobile: data.mobile,
+      tel: data.tel,
+      phoneId: data.phoneId,
+      verifyToken: data.verifyToken,
       whatsappToken: data.whatsappToken,
       phoneNumbers: data.phoneNumbers,
     };
