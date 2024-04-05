@@ -67,8 +67,18 @@ export class PhoneService {
     const buttons = await this.buttonsRepository.find({
       where: { template: user.templates[0] },
     });
+    
+    console.log({
+      template: user.templates[0],
+      buttons: buttons,
+      user: {
+        email: user.email,
+        whatsappToken: user.whatsappToken,
+        phoneId: user.phoneId,
+        verifyToken: user.verifyToken,
+      },
+    });
 
-    console.log(user, "user data");
     return {
       template: user.templates[0],
       buttons,
