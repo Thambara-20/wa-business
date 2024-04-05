@@ -89,7 +89,7 @@ export class UserController {
           newUser.phoneId = phoneId;
           newUser.whatsappToken = whatsappToken;
           newUser.verifyToken = verifyToken;
-          
+
           const tempPassword = generateTemporaryPassword();
           newUser.password = await bcrypt.hash(tempPassword, 10);
 
@@ -127,11 +127,7 @@ export class UserController {
     try {
       const decodedToken: any = jwt.verify(token, SECRET_KEY);
       const curr_user = await this.userService.findByEmail(decodedToken.email);
-      if (
-        !curr_user ||
-        !(await curr_user.compareTempToken(token)) ||
-        !tel
-      ) {
+      if (!curr_user || !(await curr_user.compareTempToken(token)) || !tel) {
         res.status(401).json({ error: "Invalid token" });
         return;
       }
@@ -252,7 +248,13 @@ export class UserController {
     const email = req.user.email;
     const socketId = req.params.socketId;
     try {
-      if (!email || tel.length != 10 || !whatsappToken || !verifyToken ||!phoneId) {
+      if (
+        !email ||
+        tel.length != 10 ||
+        !whatsappToken ||
+        !verifyToken ||
+        !phoneId
+      ) {
         res.status(400).json({ message: "Invalid data" });
         return;
       }
@@ -273,15 +275,19 @@ export class UserController {
       user.verifyToken = verifyToken;
       user.whatsappToken = whatsappToken;
       user.active = true;
+
+      await this.userService.updateUser(user);
+      
+      console.log(user.email, phoneNumbers, "phoneNumbers");
       const updated = await this.phoneService.updatePhoneNumbersByUserId(
         user.email,
         phoneNumbers
       );
+      console.log("updated", updated);
       if (!updated) {
         res.status(400).json({ message: "Invalid phone numbers" });
         return;
       }
-      await this.userService.updateUser(user);
       sendMessage(this.io, socketId, "settings_updated_successfully", email);
       res.status(200).json({ message: "Mobile number updated successfully" });
     } catch (error) {
