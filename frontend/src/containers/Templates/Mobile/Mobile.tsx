@@ -134,13 +134,17 @@ const StyledButton = styled(Button)`
   color: #fff;
 `;
 
-const StyledReplyButton = styled(Button)`
+const StyledReplyButton = styled.div`
   border-radius: 0 20px 20px 20px !important;
-  padding: 5px 10px 5px 10px !important;
-  font-size: 14px !important;
+  padding: 10px 15px 10px 15px !important;
+  max-width: 80%;
+  overflow: auto;
+  font-size: 16px !important;
   text-transform: none !important;
   margin: 10px 10px 0 10px !important;
   background-color: #3f51b5 !important;
+  color: #fff;
+  overflow-wrap: break-word;
   color: #fff;
 `;
 
@@ -219,9 +223,7 @@ function MobileScreenWithButton() {
             ))}
             <ReplyContainer>
               <StyledReplyButton
-                variant="contained"
                 color="primary"
-                disabled={loading}
               >
                 {loading ? "Loading..." : replyMessage}
               </StyledReplyButton>

@@ -50,7 +50,6 @@ const StyledWrapper = styled(Box)`
   @media (max-width: 700px) {
     transform: scale-y(0.85);
     width: 90% !important;
-
   }
 `;
 
@@ -59,17 +58,16 @@ const SettingsPage = () => {
     (state) => state.template.allowedMobileNumbers
   );
   const phoneId = useAppSelector((state) => state.user.phoneId);
-  const verifyToken = useAppSelector((state) => state.user.verifyToken);
   const tel = useAppSelector((state) => state.user.tel);
   const socketId = useAppSelector((state) => state.user.socketId);
   const WhatsappToken = useAppSelector((state) => state.user.whatsappToken);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [webhookUrl, setWebhookUrl] = useState("");
+  const [verifyToken, setVerifyToken] = useState("");
   const [whatsappTokenEditable, setWhatsappTokenEditable] = useState(false);
   const [mobileEditable, setMobileEditable] = useState(false);
   const [phoneIdEditable, setPhoneIdEditable] = useState(false);
-  const [verifyTokenEditable, setVerifyTokenEditable] = useState(false);
   const mobileError = useAppSelector((state) => state.user.mobileError);
   const dispatch = useAppDispatch();
 
@@ -77,6 +75,7 @@ const SettingsPage = () => {
     const fetchData = async () => {
       const res = await axios.get("webhook.json");
       setWebhookUrl(res.data.url);
+      setVerifyToken(res.data.verifyToken);
     };
 
     dispatch(getMobileNumbers());
@@ -93,11 +92,6 @@ const SettingsPage = () => {
     dispatch(updateUser({ phoneId }));
   };
 
-  const handleVerifyTokenChange = (event: any) => {
-    const verifyToken = event.target.value;
-    dispatch(updateUser({ verifyToken }));
-  };
-
   const handleTelChange = (event: any) => {
     const tel = event.target.value;
     dispatch(updateUser({ tel }));
@@ -110,7 +104,6 @@ const SettingsPage = () => {
       updateUserSettings({
         phoneNumbers: allowedPhoneNumbers,
         whatsappToken: WhatsappToken,
-        verifyToken: verifyToken,
         tel: tel,
         phoneId: phoneId,
         socketId: socketId,
@@ -129,6 +122,12 @@ const SettingsPage = () => {
   const handleCopyButtonClick = () => {
     navigator.clipboard.writeText(webhookUrl);
     setSnackbarMessage("Webhook URL copied to clipboard.");
+    setSnackbarOpen(true);
+  };
+
+  const handleCopyTokenButtonClick = () => {
+    navigator.clipboard.writeText(verifyToken);
+    setSnackbarMessage("Verify Token copied to clipboard.");
     setSnackbarOpen(true);
   };
 
@@ -172,6 +171,34 @@ const SettingsPage = () => {
             </IconButton>
           </Box>
         </Box>
+        <Box display="flex" alignItems="flex-start">
+          <TextField
+            fullWidth
+            variant="outlined"
+            disabled
+            value={verifyToken}
+            style={{ marginBottom: "20px", marginRight: "8px" }}
+            InputProps={{
+              style: {
+                borderRadius: "20px",
+              },
+              startAdornment: (
+                <InputAdornment position="start">Whatsapp Verify Token</InputAdornment>
+              ),
+            }}
+          />
+          <Box
+            display={"flex"}
+            justifyContent={"center"}
+            alignItems={"center"}
+            height="100%"
+            margin={1}
+          >
+            <IconButton onClick={handleCopyTokenButtonClick}>
+              <FileCopyIcon />
+            </IconButton>
+          </Box>
+        </Box>
         <TextField
           fullWidth
           variant="outlined"
@@ -202,41 +229,6 @@ const SettingsPage = () => {
                   }}
                 >
                   {!whatsappTokenEditable ? <EditOutlined /> : <DoneOutline />}
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />{" "}
-        <TextField
-          fullWidth
-          variant="outlined"
-          value={verifyToken}
-          onChange={handleVerifyTokenChange}
-          style={{ marginBottom: "20px" }}
-          error={!verifyToken}
-          disabled={!verifyTokenEditable}
-          helperText={!verifyToken && "API Key is required."}
-          InputProps={{
-            style: {
-              borderRadius: "20px",
-            },
-            startAdornment: (
-              <InputAdornment position="start">
-                Your Whatsapp Verify Token
-              </InputAdornment>
-            ),
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={() => {
-                    if (verifyToken) {
-                      setVerifyTokenEditable(!verifyTokenEditable);
-                    } else {
-                      setVerifyTokenEditable(true);
-                    }
-                  }}
-                >
-                  {!verifyTokenEditable ? <EditOutlined /> : <DoneOutline />}
                 </IconButton>
               </InputAdornment>
             ),
@@ -393,7 +385,17 @@ const SettingsPage = () => {
               Upload Mobiles
             </Button>
           </label>
-          <StyledButton variant="contained" color="primary" type="submit">
+          <StyledButton
+            variant="contained"
+            color="primary"
+            type="submit"
+            disabled={
+              !phoneId ||
+              !WhatsappToken ||
+              !tel ||
+              allowedPhoneNumbers?.length === 0
+            }
+          >
             Save
           </StyledButton>
         </div>

@@ -58,12 +58,12 @@ export class UserController {
   }
 
   async email(req: Request, res: Response) {
-    const { email, role, name, phoneId, whatsappToken, verifyToken } = req.body;
+    const { email, role, name, phoneId, whatsappToken } = req.body;
     const socketId = req.params.socketId;
     console.log("email", email, "role", role, "name", name, socketId, phoneId);
 
     try {
-      if (name && role && email && phoneId && whatsappToken && verifyToken) {
+      if (name && role && email && phoneId && whatsappToken) {
         const tempToken = jwt.sign({ email, role }, SECRET_KEY, {
           expiresIn: "1h",
         });
@@ -88,7 +88,6 @@ export class UserController {
           newUser.tempToken = hashedToken;
           newUser.phoneId = phoneId;
           newUser.whatsappToken = whatsappToken;
-          newUser.verifyToken = verifyToken;
 
           const tempPassword = generateTemporaryPassword();
           newUser.password = await bcrypt.hash(tempPassword, 10);
@@ -250,9 +249,8 @@ export class UserController {
     try {
       if (
         !email ||
-        tel.length != 10 ||
+        tel.length < 10 ||
         !whatsappToken ||
-        !verifyToken ||
         !phoneId
       ) {
         res.status(400).json({ message: "Invalid data" });
@@ -272,7 +270,6 @@ export class UserController {
       }
       user.tel = tel;
       user.phoneId = phoneId;
-      user.verifyToken = verifyToken;
       user.whatsappToken = whatsappToken;
       user.active = true;
 
@@ -304,7 +301,6 @@ export class UserController {
       email: req.user.email,
       phoneId: user?.phoneId,
       tel: user?.tel,
-      verifyToken: user?.verifyToken,
       whatsappToken: user?.whatsappToken,
       active: user?.active,
     });

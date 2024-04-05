@@ -96,16 +96,6 @@ const UserCard: React.FC<UserCardProps> = ({ open, onClose }) => {
           </StyledTextField>
           <StyledTextField
             fullWidth
-            label="Whatsapp Verify Token"
-            error={!user.verifyToken}
-            onChange={handleChange}
-            value={user.verifyToken}
-            name="verifyToken"
-          >
-            Whatsapp Verify Token
-          </StyledTextField>
-          <StyledTextField
-            fullWidth
             label="Email"
             error={!isEmailOk}
             onChange={handleChange}

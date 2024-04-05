@@ -32,7 +32,7 @@ export class PhoneService {
 
       const validPhoneNumbers = [];
       for (const phoneNumber of phoneNumbers) {
-        if (phoneNumber.length !== 10) {
+        if (phoneNumber.length < 10) {
           console.log(`Invalid phone number: ${phoneNumber}`);
           continue;
         }
@@ -100,7 +100,6 @@ export class PhoneService {
         email: user.email,
         whatsappToken: user.whatsappToken,
         phoneId: user.phoneId,
-        verifyToken: user.verifyToken,
       },
     });
 
@@ -111,7 +110,6 @@ export class PhoneService {
         email: user.email,
         whatsappToken: user.whatsappToken,
         phoneId: user.phoneId,
-        verifyToken: user.verifyToken,
       },
     };
   }

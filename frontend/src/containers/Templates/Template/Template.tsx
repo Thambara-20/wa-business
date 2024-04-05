@@ -217,10 +217,11 @@ function TemplateCreationPage() {
               variant="h6"
               style={{ textAlign: "start", paddingBottom: "10px" }}
             >
-              Template Name:
+              Template Name: 
             </Typography>
             <StyledTextField
               fullWidth
+              placeholder="Template Name: (This will be the title)"
               style={{ width: "99.4%" }}
               variant="outlined"
               InputProps={{

@@ -38,7 +38,7 @@ const isValidTemplate = (template: template) => {
 };
 
 const isValidMobile = (mobile: string) => {
-  const mobileRegex = /^\d{10}$/;
+  const mobileRegex = /^[0-9]{10,15}$/;
   return mobileRegex.test(mobile);
 };
 
