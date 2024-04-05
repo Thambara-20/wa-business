@@ -23,10 +23,9 @@ import InputAdornment from "@mui/material/InputAdornment";
 import Aos from "aos";
 import {
   isValidTemplate,
-  isValidaphoneIdink,
+  isValidphoneIdink,
 } from "../../../utilities/validateUser";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+
 const TemplateBox = styled(Box)`
   max-width: md;
   padding: 1px 30px 20px 30px;
@@ -141,7 +140,7 @@ function TemplateCreationPage() {
       updateButton({
         id: button.id,
         mapping: button.mapping.filter((item: any) => item !== mapping),
-      }),
+      })
     );
   };
 
@@ -150,7 +149,7 @@ function TemplateCreationPage() {
       Math,
       buttons.map(function (button) {
         return button.id;
-      }),
+      })
     );
     dispatch(
       updatetemplate({
@@ -158,7 +157,7 @@ function TemplateCreationPage() {
           ...buttons,
           { id: id + 1, link: "", name: "Test", mapping: [] },
         ],
-      }),
+      })
     );
   };
 
@@ -274,7 +273,7 @@ function TemplateCreationPage() {
                 <StyledTextField
                   value={button.name}
                   onChange={(event) => handleButtonTextChange(button.id, event)}
-                  error={button.name === ""}
+                  error={button.name === "" || button.name.length > 10}
                   disabled={!editable}
                   editable={editable}
                   InputProps={{
@@ -293,7 +292,7 @@ function TemplateCreationPage() {
                   type="url"
                   value={button.link}
                   onChange={(event) => handleButtonLinkChange(button.id, event)}
-                  error={!isValidaphoneIdink(button.link)}
+                  error={!isValidphoneIdink(button.link)}
                   disabled={!editable}
                   editable={editable}
                   InputProps={{
@@ -307,6 +306,20 @@ function TemplateCreationPage() {
                     ),
                   }}
                 />
+                <div className="error-message">
+                  {!isValidphoneIdink(button.link) &&
+                    (button.name.length >= 1 && button.name.length <= 10) && (
+                      <span>Please enter a valid link.</span>
+                    )}
+                  {(button.name.length < 1 || button.name.length > 10) &&
+                    isValidphoneIdink(button.link) && (
+                      <span>Please enter a valid name.</span>
+                    )}
+                  {!isValidphoneIdink(button.link) &&
+                    (button.name.length < 1 || button.name.length > 10) && (
+                      <span>Please enter a valid link and name.</span>
+                    )}
+                </div>
                 <Autocomplete
                   multiple
                   style={{
@@ -323,14 +336,14 @@ function TemplateCreationPage() {
                         updateButton({
                           id: button.id,
                           mapping: [newValue[newValue.length - 1]],
-                        }),
+                        })
                       );
                     }
                     dispatch(
                       updateButton({
                         id: button.id,
                         mapping: newValue,
-                      }),
+                      })
                     );
                   }}
                   renderTags={(value: any) =>
@@ -375,21 +388,6 @@ function TemplateCreationPage() {
                     />
                   )}
                 />
-
-                <div className="error-message">
-                  {!isValidaphoneIdink(button.link) &&
-                    button.name.length >= 1 && (
-                      <span>Please enter a valid link.</span>
-                    )}
-                  {button.name.length < 1 &&
-                    isValidaphoneIdink(button.link) && (
-                      <span>Please enter a valid name.</span>
-                    )}
-                  {!isValidaphoneIdink(button.link) &&
-                    button.name.length < 1 && (
-                      <span>Please enter a valid link and name.</span>
-                    )}
-                </div>
 
                 <Divider />
               </Box>

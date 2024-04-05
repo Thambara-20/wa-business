@@ -17,7 +17,7 @@ const validatePassword = (inputPassword: string) => {
   );
 };
 
-const isValidaphoneIdink = (link: any) => {
+const isValidphoneIdink = (link: any) => {
   const linkRegex = /^(http|https):\/\/[^ "]+$/;
   return (
     link != "" &&
@@ -32,7 +32,7 @@ const isValidTemplate = (template: template) => {
   return (
     template.name.length > 0 &&
     template.buttons.every((button) => {
-      return button.name.length > 0 && isValidaphoneIdink(button.link);
+      return button.name.length > 0 && isValidphoneIdink(button.link);
     })
   );
 };
@@ -52,6 +52,6 @@ export {
   isValidMobile,
   isValidName,
   validatePassword,
-  isValidaphoneIdink,
+  isValidphoneIdink,
   isValidTemplate,
 };
