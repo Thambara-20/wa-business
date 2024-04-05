@@ -217,7 +217,7 @@ function TemplateCreationPage() {
               variant="h6"
               style={{ textAlign: "start", paddingBottom: "10px" }}
             >
-              Template Name: 
+              Template Name:
             </Typography>
             <StyledTextField
               fullWidth
@@ -244,6 +244,9 @@ function TemplateCreationPage() {
           <Grid item xs={12} style={{ padding: "0px 0px 10px 0px" }}>
             <Typography variant="h6" style={{ margin: "25px 0px 10px 25px" }}>
               Buttons: Max(6)
+              <p style={{ color: "grey", fontSize: "smaller" }}>
+                You can test individual buttons by clicking on them.
+              </p>
             </Typography>
             {buttons.map((button, index) => (
               <Box
@@ -309,7 +312,8 @@ function TemplateCreationPage() {
                 />
                 <div className="error-message">
                   {!isValidphoneIdink(button.link) &&
-                    (button.name.length >= 1 && button.name.length <= 10) && (
+                    button.name.length >= 1 &&
+                    button.name.length <= 10 && (
                       <span>Please enter a valid link.</span>
                     )}
                   {(button.name.length < 1 || button.name.length > 10) &&

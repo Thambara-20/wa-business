@@ -38,10 +38,12 @@ const StyledButton = styled(Button)`
 
 const StyledWrapper = styled(Box)`
   z-index: 0 !important;
-  position: absolute !important;
+  position: relative !important;
   padding: 30px !important;
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0.7) !important;
+  backdrop-filter: blur(20px);
   border-radius: 20px;
+  justify-content: flex-end;
   margin: 20px 0 20px 0;
   width: 80% !important;
   box-shadow: 5px 5px 15px -5px rgba(0, 0, 0, 0.2);
@@ -138,7 +140,7 @@ const SettingsPage = () => {
   }, []);
 
   return (
-    <StyledWrapper maxWidth="md" data-aos="fade-up">
+    <StyledWrapper data-aos="fade-right" maxWidth="md" >
       <Typography variant="h4" gutterBottom>
         Configurations
       </Typography>
