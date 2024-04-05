@@ -16,7 +16,7 @@ AppDataSource.initialize().then(async () => {
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(
     cors({
-      origin: process.env.FRONT_END_URL,
+      origin: [process.env.FRONT_END_URL, process.env.LAMBDA_URL],
       methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
       credentials: true,
     })
