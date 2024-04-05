@@ -73,7 +73,7 @@ export const Routes = [
     route: "/templates",
     controller: TemplateController,
     action: "getAllTemplates",
-    middleware: [authenticateToken, authorizeRole([Role.ADMIN])],
+    middleware: [],
   },
 
   {

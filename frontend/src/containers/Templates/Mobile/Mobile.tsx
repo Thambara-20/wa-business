@@ -180,7 +180,8 @@ function MobileScreenWithButton() {
     try {
       setLoading(true);
       console.log("Link:", link, "Mapping:", mapping);
-      const response = await axios.get(link || "/replymessagedata.json");
+      // const response = await axios.get(link || "/replymessagedata.json");
+      const response = await axios.get(link);
       const mappedMessages: any = mapDataToMessages(response.data, mapping);
       setReplyMessage(mappedMessages);
       console.log("Reply Messages:", mappedMessages);
@@ -211,7 +212,7 @@ function MobileScreenWithButton() {
                 <StyledButton
                   variant="contained"
                   color="primary"
-                  onClick={() => handleClickButton(button.mapping)}
+                  onClick={() => handleClickButton(button.mapping, button.link)}
                 >
                   {button.name}
                 </StyledButton>
