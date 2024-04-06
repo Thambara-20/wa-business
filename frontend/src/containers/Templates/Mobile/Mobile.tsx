@@ -135,17 +135,16 @@ const StyledButton = styled(Button)`
 `;
 
 const StyledReplyButton = styled.div`
-  border-radius: 0 20px 20px 20px !important;
-  padding: 10px 15px 10px 15px !important;
+  border-radius: 0 20px 20px 20px;
+  padding: 10px 15px;
   max-width: 80%;
   overflow: auto;
-  font-size: 16px !important;
-  text-transform: none !important;
-  margin: 10px 10px 0 10px !important;
-  background-color: #3f51b5 !important;
+  font-size: 16px;
+  text-transform: none;
+  margin: 10px;
+  background-color: #3f51b5;
   color: #fff;
   overflow-wrap: break-word;
-  color: #fff;
 `;
 
 const StyledFooter = styled.div`
@@ -175,6 +174,7 @@ const FooterElement = styled.div`
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.4);
 `;
 
+  
 function MobileScreenWithButton() {
   const buttons = useAppSelector((state) => state.template.buttons);
   const [replyMessage, setReplyMessage] = useState([]);

@@ -102,63 +102,72 @@ export const NotificationTexts: Record<NotificationTypes, string> = {
   [NotificationTypes.FAIL_SEND_EMAIL]:
     "Failed to send the password creation link. Please try again later.",
   [NotificationTypes.SUCCESS_SAVE_TEMPLATE]: "Template saved successfully.",
-  [NotificationTypes.SUCCESS_SAVE_SETTINGS]: "Updated and saved Settings successfully.",
+  [NotificationTypes.SUCCESS_SAVE_SETTINGS]:
+    "Updated and saved Settings successfully.",
   [NotificationTypes.SETTINGS_UPDATE_WARNING]:
     "Please ensure that the settings are updated correctly to activate your account. Additionally, kindly provide the correct details to prevent any potential issues.",
 };
 
 export const mapDataToMessages = (data: any, mappings: any) => {
-  const matchedData = [];
 
   if (mappings.length === 0) {
     if (Array.isArray(data)) {
-      console.log("Data Array:", data);
-      return data.map((obj: any) => JSON.stringify(obj)).join(", ");
+        return formatJSON(JSON.stringify(data));
     }
-    console.log("Data:", data);
-    return JSON.stringify(data);
-  }
+    return formatJSON(JSON.stringify(data));
+}
+  
 
-  if (!Array.isArray(data)) {
-    for (const mapping of mappings) {
-      let itemData = data;
-      const properties = mapping.split(".");
-      console.log("Properties:", properties);
-      for (const prop of properties) {
-        console.log("Property:", prop, "itemData", itemData);
-        if (itemData.hasOwnProperty(prop)) {
-          itemData = itemData[prop];
+  let lst: any = [];
+  function loopThroughJSON(obj: any, key: any, a_key: any) {
+    for (let k in obj) {
+      if (typeof obj[k] === "object") {
+        if (Array.isArray(obj[k])) {
+       
+          for (let i = 0; i < obj[k].length; i++) {
+            loopThroughJSON(obj[k][i], key + `.${k}`, a_key);
+          }
         } else {
-          itemData = null;
-          break;
+          loopThroughJSON(obj[k], key + ".list", a_key);
         }
-      }
-      if (itemData !== null) {
-        matchedData.push(itemData);
-      }
-    }
-    return matchedData.join(", ");
-  }
-
-  for (const item of data) {
-    for (const mapping of mappings) {
-      let itemData = item;
-      const properties = mapping.split(".");
-      console.log("Properties:", properties);
-      for (const prop of properties) {
-        console.log("Property:", prop, "itemData", itemData);
-        if (itemData.hasOwnProperty(prop)) {
-          itemData = itemData[prop];
-        } else {
-          itemData = null;
-          break;
+      } else {
+        const a = key + `.${k}`;
+        console.log("Value found for key:", k, "key : ", a, a_key);
+        if (a.includes(a_key)) {
+          lst.push(obj[k]);
         }
-      }
-      if (itemData !== null) {
-        matchedData.push(itemData);
+        console.log(k + ": " + obj[k]);
       }
     }
   }
 
-  return matchedData.join(", ");
-};
+  for (let i = 0; i < mappings.length; i++) {
+    loopThroughJSON(data, "", mappings[i]);
+  }
+
+  return lst.join(", ");
+}
+
+function formatJSON(jsonString: any) {
+  let result = '';
+  let indent = 0;
+  for (let i = 0; i < jsonString.length; i++) {
+      const char = jsonString[i];
+      if (char === '{' || char === '[') {
+          result += char;
+          indent++;
+          result += '\n' + ' '.repeat(indent * 4);
+      } else if (char === '}' || char === ']') {
+          indent--;
+          result += '\n' + ' '.repeat(indent * 4);
+          result += char;
+      } else if (char === ',') {
+          result += char + '\n' + ' '.repeat(indent * 4);
+      } else {
+          result += char;
+      }
+  }
+  return result;
+}
+
+
