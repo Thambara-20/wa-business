@@ -1,4 +1,5 @@
 import { GridRowsProp } from "@mui/x-data-grid";
+import { AnyAsyncThunk } from "@reduxjs/toolkit/dist/matchers";
 
 export const calculateAge = (dateOfBirth: Date) => {
   if (!dateOfBirth) {
@@ -108,66 +109,65 @@ export const NotificationTexts: Record<NotificationTypes, string> = {
     "Please ensure that the settings are updated correctly to activate your account. Additionally, kindly provide the correct details to prevent any potential issues.",
 };
 
-export const mapDataToMessages = (data: any, mappings: any) => {
-
-  if (mappings.length === 0) {
-    if (Array.isArray(data)) {
-        return formatJSON(JSON.stringify(data));
+export const mapDataToMessages = (jsonObj: any, keysToExtract: any) => {
+  if (keysToExtract.length === 0) {
+    if (Array.isArray(jsonObj)) {
+      return formatJSON(JSON.stringify(jsonObj));
     }
-    return formatJSON(JSON.stringify(data));
-}
-  
-
-  let lst: any = [];
-  function loopThroughJSON(obj: any, key: any, a_key: any) {
-    for (let k in obj) {
-      if (typeof obj[k] === "object") {
-        if (Array.isArray(obj[k])) {
-       
-          for (let i = 0; i < obj[k].length; i++) {
-            loopThroughJSON(obj[k][i], key + `.${k}`, a_key);
-          }
-        } else {
-          loopThroughJSON(obj[k], key + ".list", a_key);
-        }
-      } else {
-        const a = key + `.${k}`;
-        console.log("Value found for key:", k, "key : ", a, a_key);
-        if (a.includes(a_key)) {
-          lst.push(obj[k]);
-        }
-        console.log(k + ": " + obj[k]);
-      }
-    }
+    return formatJSON(JSON.stringify(jsonObj));
+  } else {
+    let extractedData = extractKeys(jsonObj, keysToExtract);
+    console.log("Extracted data:");
+    console.log(extractedData);
+    return formatJSON(JSON.stringify(extractedData.join("\n")));
   }
-
-  for (let i = 0; i < mappings.length; i++) {
-    loopThroughJSON(data, "", mappings[i]);
-  }
-
-  return lst.join(", ");
-}
+};
 
 function formatJSON(jsonString: any) {
-  let result = '';
+  let result = "";
   let indent = 0;
   for (let i = 0; i < jsonString.length; i++) {
-      const char = jsonString[i];
-      if (char === '{' || char === '[') {
-          result += char;
-          indent++;
-          result += '\n' + ' '.repeat(indent * 4);
-      } else if (char === '}' || char === ']') {
-          indent--;
-          result += '\n' + ' '.repeat(indent * 4);
-          result += char;
-      } else if (char === ',') {
-          result += char + '\n' + ' '.repeat(indent * 4);
-      } else {
-          result += char;
-      }
+    const char = jsonString[i];
+    if (char === "{" || char === "[") {
+      result += char;
+      indent++;
+      result += "\n" + " ".repeat(indent * 4);
+    } else if (char === "}" || char === "]") {
+      indent--;
+      result += "\n" + " ".repeat(indent * 4);
+      result += char;
+    } else if (char === ",") {
+      result += char + "\n" + " ".repeat(indent * 4);
+    } else {
+      result += char;
+    }
   }
   return result;
 }
 
+function extractKeys(jsonObj: any, keysToExtract: any) {
+  let extractedData: any = {};
 
+  function traverse(obj: any, path = "") {
+    if (typeof obj === "object" && !Array.isArray(obj)) {
+      for (let key in obj) {
+        let newPath = path ? `${path}.${key}` : key;
+        if (keysToExtract.includes(newPath)) {
+          if (!extractedData[newPath]) {
+            extractedData[newPath] = [];
+          }
+          extractedData[newPath].push(obj[key]);
+        }
+        traverse(obj[key], newPath);
+      }
+    } else if (Array.isArray(obj)) {
+      obj.forEach((item, i) => {
+        let newPath = `${path}[]`;
+        traverse(item, newPath);
+      });
+    }
+  }
+
+  traverse(jsonObj);
+  return Object.values(extractedData);
+}

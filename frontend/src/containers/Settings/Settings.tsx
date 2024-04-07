@@ -49,6 +49,11 @@ const StyledWrapper = styled(Box)`
   box-shadow: 5px 5px 15px -5px rgba(0, 0, 0, 0.2);
   transform: scale(0.8) !important;
 
+  &:hover {
+    transform: scale(1.05); 
+    transition: transform 0.2s ease-in-out; 
+  }
+
   @media (max-width: 700px) {
     transform: scale-y(0.85);
     width: 90% !important;

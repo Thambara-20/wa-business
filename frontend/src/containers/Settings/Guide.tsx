@@ -9,7 +9,7 @@ const MainContentWrapper = styled(Box)(({ theme }) => ({
   padding: "10px",
   alignItems: "center",
   margin: "10px 10px 0px 20px",
-  borderRadius: "20px", // Add border radius
+  borderRadius: "20px", 
 
   [theme.breakpoints.down("sm")]: {
     margin: "50px 20px 0px 20px",
@@ -23,10 +23,15 @@ const LeftColumn = styled(Grid)(({ theme }) => ({
   backgroundColor: 'rgba(0, 0, 0, 0.1)',
   backdropFilter: "blur(20px)",
   borderRadius: "20px",
+  cursor: "pointer",
   boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
 
   [theme.breakpoints.down("sm")]: {
     maxWidth: "350px",
+  },
+  "&:hover": {
+    transform: "scale(1.05)", 
+    transition: "transform 0.2s ease-in-out", 
   },
 }));
 
