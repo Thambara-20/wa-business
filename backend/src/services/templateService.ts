@@ -60,7 +60,14 @@ export class TemplateService {
     //done
     id: string,
     name: string,
-    buttons: { name: string; link: string, mapping: string[] }[]
+    buttons: {
+      name: string;
+      link: string;
+      mapping: string[];
+      method: string;
+      headers: { [key: string]: string }[];
+      body: string;
+    }[]
   ): Promise<TemplateDTO | undefined> {
     if (!id || !name || !buttons) {
       return undefined;
@@ -85,6 +92,9 @@ export class TemplateService {
         const button = new Button();
         button.name = buttonData.name;
         button.link = buttonData.link;
+        button.method = buttonData.method;
+        button.headers = buttonData.headers;
+        button.body = buttonData.body;
         button.mapping = buttonData.mapping;
         button.template = template;
         await transactionalEntityManager.save(button);
@@ -102,8 +112,22 @@ export class TemplateService {
   async addButtonsToTemplate(
     transactionalEntityManager: any,
     templateId: string,
-    buttonsData: { name: string; link: string, mapping: string[] }[] = [
-      { link: "https://www.sample.com", name: "Sample", mapping: ["sample"]},
+    buttonsData: {
+      name: string;
+      link: string;
+      mapping: string[];
+      method: string;
+      headers: { [key: string]: string }[];
+      body: string;
+    }[] = [
+      {
+        link: "https://www.sample.com",
+        name: "Sample",
+        mapping: ["sample"],
+        method: "GET",
+        headers: [{ key: "Content-Type", value: "application/json" }],
+        body: "{}",
+      },
     ]
   ): Promise<Button[]> {
     //done
@@ -125,6 +149,9 @@ export class TemplateService {
       const button = new Button();
       button.name = buttonData.name;
       button.link = buttonData.link;
+      button.method = buttonData.method;
+      button.headers = buttonData.headers;
+      button.body = buttonData.body;
       button.mapping = buttonData.mapping;
       button.template = template;
       buttons.push(await transactionalEntityManager.save(button));
@@ -134,9 +161,16 @@ export class TemplateService {
   }
 
   async updateButtons(
-    buttonsData: { id: string; name: string; link: string, mapping: string[] }[]
+    buttonsData: {
+      id: string;
+      name: string;
+      link: string;
+      mapping: string[];
+      method: string;
+      headers: { [key: string]: string }[];
+      body: string;
+    }[]
   ): Promise<Button[]> {
-    
     const buttons: Button[] = [];
     for (const buttonData of buttonsData) {
       const button = await this.buttonRepository.findOne({
@@ -147,6 +181,9 @@ export class TemplateService {
       }
       button.name = buttonData.name;
       button.link = buttonData.link;
+      button.method = buttonData.method;
+      button.headers = buttonData.headers;
+      button.body = buttonData.body;
       button.mapping = buttonData.mapping;
       buttons.push(await this.buttonRepository.save(button));
     }

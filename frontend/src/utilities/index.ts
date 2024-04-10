@@ -92,6 +92,7 @@ export enum NotificationTypes {
   SUCCESS_SAVE_TEMPLATE = "SUCCESS_SAVE_TEMPLATE",
   SUCCESS_SAVE_SETTINGS = "SUCCESS_SAVE_SETTINGS",
   SETTINGS_UPDATE_WARNING = "SETTINGS_UPDATE_WARNING",
+  FAIL_SAVE_TEMPLATE = "FAIL_SAVE_TEMPLATE",
 }
 
 export const NotificationTexts: Record<NotificationTypes, string> = {
@@ -105,6 +106,7 @@ export const NotificationTexts: Record<NotificationTypes, string> = {
   [NotificationTypes.SUCCESS_SAVE_TEMPLATE]: "Template saved successfully.",
   [NotificationTypes.SUCCESS_SAVE_SETTINGS]:
     "Updated and saved Settings successfully.",
+  [NotificationTypes.FAIL_SAVE_TEMPLATE]: "Failed to save the template.",
   [NotificationTypes.SETTINGS_UPDATE_WARNING]:
     "Please ensure that the settings are updated correctly to activate your account. Additionally, kindly provide the correct details to prevent any potential issues.",
 };

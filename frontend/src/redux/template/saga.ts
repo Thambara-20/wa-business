@@ -1,5 +1,11 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { saveTemplate, getTemplateByUserId, setTemplate, getMobileNumbers, updateMobileNumbers } from "./slice";
+import {
+  saveTemplate,
+  getTemplateByUserId,
+  setTemplate,
+  getMobileNumbers,
+  updateMobileNumbers,
+} from "./slice";
 
 import {
   getTemplateByUserIdAsync,
@@ -13,6 +19,7 @@ export function* watchGetTemplateByUser(
 ): Generator<any, void, any> {
   try {
     const response: any = yield call(getTemplateByUserIdAsync, action.payload);
+    console.log("response", response.data);
     yield put(setTemplate(response));
   } catch (error: any) {
     return error;
@@ -40,5 +47,4 @@ export function* templateSaga() {
   yield takeLatest(getTemplateByUserId, watchGetTemplateByUser);
   yield takeLatest(saveTemplate, watchSaveTemplate);
   yield takeLatest(getMobileNumbers, watchGetUserMobiles);
-
 }

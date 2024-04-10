@@ -18,7 +18,10 @@ export class ButtonService {
   async updateButton(
     id: string,
     name: string,
-    link: string
+    link: string,
+    method: string,
+    headers: { [key: string]: string }[],
+    body: string
   ): Promise<Button | undefined> {
     if (!id) {
       return undefined;
@@ -29,6 +32,9 @@ export class ButtonService {
     }
     button.name = name;
     button.link = link;
+    button.method = method;
+    button.headers = headers;
+    button.body = body;
     return await this.buttonRepository.save(button);
   }
 

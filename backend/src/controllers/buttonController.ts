@@ -31,9 +31,16 @@ export class ButtonController {
   }
   async updateButton(req: Request, res: Response) {
     const id = req.params.id;
-    const { name, link } = req.body;
+    const { name, link, method, headers, body } = req.body;
     try {
-      const button = await this.buttonService.updateButton(id, name, link);
+      const button = await this.buttonService.updateButton(
+        id,
+        name,
+        link,
+        method,
+        headers,
+        body
+      );
       if (button) {
         res.json(button);
       } else {

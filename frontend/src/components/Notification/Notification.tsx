@@ -81,6 +81,7 @@ const NotificationPopup: React.FC<ErrorPopupProps> = ({
     type === NotificationTypes.SUCCESS_REGISTER_OBSERVER ||
     type === NotificationTypes.SUCCESS_SEND_EMAIL ||
     type === NotificationTypes.FAIL_SEND_EMAIL ||
+    type === NotificationTypes.FAIL_SAVE_TEMPLATE ||
     type === NotificationTypes.SUCCESS_SAVE_SETTINGS
   ) {
     errorMessage = NotificationTexts[type];

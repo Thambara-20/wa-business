@@ -18,6 +18,7 @@ import {
   updateButton,
   deleteButton,
   saveTemplate,
+  selectButton,
 } from "../../../redux/template/slice";
 import InputAdornment from "@mui/material/InputAdornment";
 import Aos from "aos";
@@ -156,6 +157,10 @@ function TemplateCreationPage() {
       })
     );
   };
+  const handleDialogClick = (buttonId: any) => {
+    dispatch(selectButton(buttonId));
+    handleOpenDialog();
+  };
 
   const handleAddButton = () => {
     const id = Math.max.apply(
@@ -168,7 +173,15 @@ function TemplateCreationPage() {
       updatetemplate({
         buttons: [
           ...buttons,
-          { id: id + 1, link: "", name: "Test", mapping: [] },
+          {
+            id: id + 1,
+            link: "",
+            name: "Test",
+            mapping: [],
+            method: "GET",
+            headers: [],
+            body: "",
+          },
         ],
       })
     );
@@ -268,6 +281,14 @@ function TemplateCreationPage() {
                   margin: "10px",
                 }}
               >
+                {openDialog && (
+                  <HttpRequestDialog
+                    key={button.id + "dialog"}
+                    open={openDialog}
+                    onClose={handleCloseDialog}
+                    onSubmit={handleSubmitRequest}
+                  />
+                )}
                 <Box
                   style={{
                     display: "flex",
@@ -326,8 +347,8 @@ function TemplateCreationPage() {
                         <Button
                           variant="outlined"
                           disabled={!editable}
-                          sx={{ borderRadius: "20px"}}
-                          onClick={handleOpenDialog}
+                          sx={{ borderRadius: "20px" }}
+                          onClick={()=>handleDialogClick(button.id)}
                         >
                           More...
                         </Button>
@@ -420,12 +441,6 @@ function TemplateCreationPage() {
                 />
 
                 <Divider />
-                <HttpRequestDialog
-                  open={openDialog}
-                  onClose={handleCloseDialog}
-                  onSubmit={handleSubmitRequest}
-                  buttonId={button.id}
-                />
               </Box>
             ))}
           </Grid>

@@ -38,7 +38,6 @@ export class TemplateController {
     const { name, id, buttons } = req.body;
     const socketId = req.params.socketId;
 
-
     try {
       console.log(req.body);
       const template = await this.templateService.updateTemplate(
@@ -51,10 +50,11 @@ export class TemplateController {
         sendMessage(this.io, socketId, "template_updated_successfully", id);
         res.json(template);
       } else {
-
+        sendMessage(this.io, socketId, "template_updated_failed", id);
         res.status(404).json({ message: "Template not found" });
       }
     } catch (error) {
+      sendMessage(this.io, socketId, "template_updated_failed", id);
       res.status(400).json({ message: error.message });
     }
   }

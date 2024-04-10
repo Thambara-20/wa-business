@@ -1,4 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { select } from "redux-saga/effects";
 const LocalstorageId = `${process.env.REACT_APP_API_URL}`;
 
 export type Button = {
@@ -6,6 +7,9 @@ export type Button = {
   name: string;
   mapping: string[];
   link: string;
+  method: string;
+  headers?: { [key: string]: string }[];
+  body?: string;
 };
 
 export type template = {
@@ -14,6 +18,7 @@ export type template = {
   buttons: Button[];
   isloading: boolean;
   allowedMobileNumbers: string[];
+  selectedButtonId?: number;
 };
 
 export const initialStateTemplate: template = {
@@ -27,6 +32,9 @@ export const initialStateTemplate: template = {
       name: "Test Button",
       mapping: [],
       link: "https://sample.com",
+      method: "GET",
+      headers: [],
+      body: "",
     },
   ],
 };
@@ -44,6 +52,7 @@ const userSlice = createSlice({
       state.buttons = action.payload.buttons;
     },
     updateButton: (state, action: PayloadAction<Partial<Button>>) => {
+      console.log("Action Payload:", action.payload);
       const buttonIndex = state.buttons.findIndex(
         (button) => button.id === action.payload.id
       );
@@ -68,8 +77,14 @@ const userSlice = createSlice({
           name: "Test Button",
           mapping: [],
           link: "https://sample.com",
+          method: "GET",
+          headers: [],
+          body: "",
         },
       ];
+    },
+    selectButton: (state, action: PayloadAction<number>) => {
+      state.selectedButtonId = action.payload;
     },
     getTemplateByUserId: (state, action: PayloadAction<any>) => {},
     saveTemplate: (state, action: PayloadAction<any>) => {},
@@ -88,4 +103,5 @@ export const {
   setTemplate,
   getMobileNumbers,
   updateMobileNumbers,
+  selectButton,
 } = userSlice.actions;

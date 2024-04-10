@@ -12,11 +12,13 @@ import {
   MenuItem,
   Typography,
 } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { updateButton } from "../../redux/template/slice";
 
-interface Header {
+type Header = {
   key: string;
   value: string;
-}
+};
 
 interface HttpRequest {
   method: string;
@@ -26,22 +28,23 @@ interface HttpRequest {
 }
 
 interface Props {
-  buttonId: number;
   open: boolean;
   onClose: () => void;
   onSubmit: (request: HttpRequest) => void;
 }
 
-const HttpRequestDialog: React.FC<Props> = ({
-  open,
-  onClose,
-  onSubmit,
-  buttonId,
-}) => {
-  const [method, setMethod] = useState("POST");
-  const [url, setUrl] = useState("");
-  const [headers, setHeaders] = useState<Header[]>([{ key: "", value: "" }]);
-  const [body, setBody] = useState("");
+const HttpRequestDialog: React.FC<Props> = ({ open, onClose, onSubmit }) => {
+  const [bodyError, setBodyError] = useState<string | null>(null); // State to track body validation error
+  const dispatch = useAppDispatch();
+  const buttonId = useAppSelector((state) => state.template.selectedButtonId);
+  const button = useAppSelector((state) =>
+    state.template.buttons.find((button) => button.id === buttonId)
+  );
+  const [headers, setHeaders] = useState<Header[]>(
+    (button?.headers as Header[]) || [{ key: "", value: "" }]
+  );
+
+  console.log("button", button?.id);
 
   const handleAddHeader = () => {
     setHeaders([...headers, { key: "", value: "" }]);
@@ -62,23 +65,44 @@ const HttpRequestDialog: React.FC<Props> = ({
     setHeaders(updatedHeaders);
   };
 
+  const handleBodyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const bodyText = event.target.value;
+    try {
+      JSON.parse(bodyText);
+      setBodyError(null);
+    } catch (error) {
+      setBodyError("Invalid JSON format");
+    }
+    dispatch(updateButton({ id: buttonId, body: bodyText }));
+  };
+
   const handleSubmit = () => {
+    dispatch(
+      updateButton({
+        id: buttonId,
+        headers: headers,
+      })
+    );
     onClose();
   };
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={open} onClose={bodyError ? undefined : onClose}>
       <DialogTitle>Edit Request</DialogTitle>
       <DialogContent
         sx={{
-          maxHeight: "80vh",
+          maxHeight: "64vh",
         }}
       >
         <InputLabel>Method</InputLabel>
         <FormControl fullWidth>
           <Select
-            value={method}
-            onChange={(event) => setMethod(event.target.value as string)}
+            value={button?.method || "GET"}
+            onChange={(event) =>
+              dispatch(
+                updateButton({ id: buttonId, method: event.target.value })
+              )
+            }
           >
             <MenuItem value="GET">GET</MenuItem>
             <MenuItem value="POST">POST</MenuItem>
@@ -89,8 +113,10 @@ const HttpRequestDialog: React.FC<Props> = ({
         <TextField
           label="URL"
           fullWidth
-          value={url}
-          onChange={(event) => setUrl(event.target.value)}
+          value={button?.link || ""}
+          onChange={(event) =>
+            dispatch(updateButton({ id: buttonId, link: event.target.value }))
+          }
           margin="normal"
         />
         <div>
@@ -137,14 +163,18 @@ const HttpRequestDialog: React.FC<Props> = ({
           fullWidth
           multiline
           rows={4}
-          value={body}
-          onChange={(event) => setBody(event.target.value)}
+          value={button?.body || ""}
+          onChange={handleBodyChange}
           margin="normal"
+          error={!!bodyError} // Set error state based on body validation
+          helperText={bodyError} // Show validation error message
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={handleSubmit} color="primary">
+        <Button onClick={bodyError ? undefined : onClose} color="primary">
+          Cancel
+        </Button>
+        <Button onClick={handleSubmit} color="primary" disabled={!!bodyError}>
           Submit
         </Button>
       </DialogActions>

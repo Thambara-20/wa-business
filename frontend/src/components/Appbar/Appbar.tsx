@@ -240,6 +240,14 @@ const Appbar = () => {
       });
     });
 
+    socket.on("template_updated_failed", (data: any) => {
+      console.log("template updated fail", data);
+      setNotification({
+        open: true,
+        onConfirm: handleCloseNotification,
+        type: NotificationTypes.FAIL_SAVE_TEMPLATE,
+      });
+    });
     socket.on("template_updated_successfully", (data: any) => {
       console.log("template updated", data);
       setNotification({

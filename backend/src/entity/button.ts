@@ -18,7 +18,16 @@ export class Button {
   @Column()
   link: string;
 
-  @Column("simple-array", { nullable: true})
+  @Column({ nullable: true })
+  method: string;
+
+  @Column("jsonb", { nullable: true })
+  headers: { [key: string]: string }[];
+
+  @Column({ nullable: true })
+  body: string;
+
+  @Column("simple-array", { nullable: true })
   mapping: string[] | [];
 
   @ManyToOne(() => Template, (template) => template.buttons)
