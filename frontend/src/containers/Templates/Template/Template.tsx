@@ -25,6 +25,7 @@ import {
   isValidTemplate,
   isValidphoneIdink,
 } from "../../../utilities/validateUser";
+import HttpRequestDialog from "../../../components/ButtonRequest/ButtonRequest";
 
 const TemplateBox = styled(Box)`
   max-width: md;
@@ -121,7 +122,19 @@ function TemplateCreationPage() {
   const buttons = useAppSelector((state) => state.template.buttons);
   const socketId = useAppSelector((state) => state.user.socketId);
   const dispatch = useAppDispatch();
-  const [mappingInput, setMappingInput] = useState("");
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  const handleSubmitRequest = (request: any) => {
+    console.log("Submitting request:", request);
+  };
 
   const handleTemplateNameChange = (event: any) => {
     dispatch(updatetemplate({ name: event.target.value }));
@@ -308,6 +321,18 @@ function TemplateCreationPage() {
                         Button link
                       </InputAdornment>
                     ),
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <Button
+                          variant="outlined"
+                          disabled={!editable}
+                          sx={{ borderRadius: "20px"}}
+                          onClick={handleOpenDialog}
+                        >
+                          More...
+                        </Button>
+                      </InputAdornment>
+                    ),
                   }}
                 />
                 <div className="error-message">
@@ -395,6 +420,12 @@ function TemplateCreationPage() {
                 />
 
                 <Divider />
+                <HttpRequestDialog
+                  open={openDialog}
+                  onClose={handleCloseDialog}
+                  onSubmit={handleSubmitRequest}
+                  buttonId={button.id}
+                />
               </Box>
             ))}
           </Grid>
