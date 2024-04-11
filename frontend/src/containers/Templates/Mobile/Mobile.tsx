@@ -174,25 +174,63 @@ const FooterElement = styled.div`
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.4);
 `;
 
-  
 function MobileScreenWithButton() {
   const buttons = useAppSelector((state) => state.template.buttons);
   const [replyMessage, setReplyMessage] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const handleClickButton = async (mapping: any, link?: any) => {
-    try {
-      setLoading(true);
-      console.log("Link:", link, "Mapping:", mapping);
-      const response = await axios.get(link);
-      const mappedMessages: any = mapDataToMessages(response.data, mapping);
-      setReplyMessage(mappedMessages);
-      console.log("Reply Messages:", mappedMessages);
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching reply buttons:", error);
-      setLoading(false);
+  const handleClickButton = async (
+    mapping: any,
+    link?: any,
+    body?: string,
+    method?: string,
+    headers?: any
+  ) => {
+    let data;
+    const headersList: any = {};
+    headers?.map((header: any) => {
+      headersList[header.key] = header.value;
+    });
+    console.log("Headers List:", headersList);
+    if (
+      method === "GET" ||
+      method === null ||
+      method === undefined ||
+      method === ""
+    ) {
+      try {
+        const response = await axios.get(link, {
+          headers: {
+            ...headersList,
+            "Content-Type": "application/json",
+          },
+        });
+        data = response.data;
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
     }
+    if (method === "POST") {
+      try {
+        console.log(body, headersList);
+        const response = await axios.post(link, body, {
+          headers: {
+            ...headersList,
+            "Content-Type": "application/json",
+          },
+        });
+        data = response.data;
+      } catch (error) {
+        console.error("Error posting data:", error);
+      }
+    }
+
+    setLoading(true);
+    console.log("Link:", link, "Mapping:", mapping);
+    const mappedMessages: any = mapDataToMessages(data, mapping);
+    setReplyMessage(mappedMessages);
+    console.log("Reply Messages:", mappedMessages);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -215,16 +253,22 @@ function MobileScreenWithButton() {
                 <StyledButton
                   variant="contained"
                   color="primary"
-                  onClick={() => handleClickButton(button.mapping, button.link)}
+                  onClick={() =>
+                    handleClickButton(
+                      button.mapping,
+                      button.link,
+                      button.body,
+                      button.method,
+                      button.headers as any
+                    )
+                  }
                 >
                   {button.name}
                 </StyledButton>
               </MessageContainer>
             ))}
             <ReplyContainer>
-              <StyledReplyButton
-                color="primary"
-              >
+              <StyledReplyButton color="primary">
                 {loading ? "Loading..." : replyMessage}
               </StyledReplyButton>
             </ReplyContainer>
