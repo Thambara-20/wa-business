@@ -1,6 +1,8 @@
 import axios from "axios";
 import { sendTextReply } from "./textReply.mjs";
 import { sendInteractiveMessage } from "./buttonReply.mjs";
+import { mapDataToMessages } from "./mapData.mjs";
+import { RequestManager } from "./requestManager.mjs";
 
 export const handler = async (event) => {
   const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
@@ -60,6 +62,7 @@ export const handler = async (event) => {
           if (value.messages != null) {
             for (let message of value.messages) {
               const from = message.from;
+              console.log("message type", message.type);
               if (message.type === "text") {
                 try {
                   let message_body = message.text.body;
@@ -67,7 +70,7 @@ export const handler = async (event) => {
 
                   const body = {
                     phoneId: phone_number_id,
-                    from: "0766827280",
+                    from: from,
                   };
 
                   const response = await axios.post(
@@ -81,6 +84,13 @@ export const handler = async (event) => {
                   const buttons = response.data?.buttons;
                   const waToken = response.data?.user?.whatsappToken;
                   console.log("buttons", buttons);
+
+                  // await sendTextReply(
+                  //   phone_number_id,
+                  //   waToken,
+                  //   from,
+                  //   templateName,
+                  // )
 
                   if (buttons.length > 3) {
                     let firstThreeButtons = buttons.slice(0, 3);
@@ -124,42 +134,78 @@ export const handler = async (event) => {
                   };
                 }
               } else if (message.type === "interactive") {
-                const button_id = message.interactive.button_reply.id;
+                try {
+                  console.log(
+                    "called post method interactive",
+                    phone_number_id,
+                    from
+                  );
+                  const button_id = message.interactive.button_reply.id;
+                  console.log("button clicked", button_id);
 
-                const body = {
-                  phoneId: phone_number_id,
-                  from: from,
-                };
+                  const body = {
+                    phoneId: phone_number_id,
+                    from: from,
+                  };
 
-                const response = await axios.post(
-                  `${url}/template/buttons`,
-                  body,
-                  {}
-                );
-                WHATSAPP_TOKEN = response.data.user.whatsappToken;
-                buttons = response.data.buttons;
-                console.log("buttons", buttons, "token", WHATSAPP_TOKEN);
+                  const response = await axios.post(
+                    `${BACKEND_URL}/template/buttons`,
+                    body
+                  );
 
-                const button = buttons.find((b) => b.id === button_id);
-                const mapping = button.mapping;
-                const link = button.link;
+                  const templateName = response.data?.template?.name;
 
-                const data = await axios.get(link);
-                const mappedData = mapDataToMessages(data, mapping);
+                  console.log("backend response", templateName);
+                  const buttons = response.data?.buttons;
+                  const waToken = response.data?.user?.whatsappToken;
+                  const button = buttons.find(
+                    (b) => b.id.toString() === button_id
+                  );
+                  const mapping = button?.mapping;
+                  const method = button?.method;
+                  const jsonBody = button?.body;
+                  const headers = button?.headers;
+                  const link = button?.link;
+                  console.log(
+                    "button_mapping",
+                    mapping,
+                    "button_link",
+                    link,
+                    "buttons",
+                    buttons,
+                    "button",
+                    button
+                  );
+                  const data = await RequestManager(
+                    link,
+                    method,
+                    jsonBody,
+                    headers
+                  );
+                  const mappedData = mapDataToMessages(data, mapping);
+                  console.log("mappedData from button link", mappedData);
 
-                await sendTextReply(
-                  phone_number_id,
-                  WHATSAPP_TOKEN,
-                  from,
-                  mappedData
-                );
-                const responseBody = "Done";
+                  await sendTextReply(
+                    phone_number_id,
+                    waToken,
+                    from,
+                    mappedData
+                  );
 
-                response = {
-                  statusCode: 200,
-                  body: JSON.stringify(responseBody),
-                  isBase64Encoded: false,
-                };
+                  const responseBody = "Done";
+                  return {
+                    statusCode: 200,
+                    body: JSON.stringify(responseBody),
+                    isBase64Encoded: false,
+                  };
+                } catch (error) {
+                  console.error("Error:", error);
+                  return {
+                    statusCode: 500,
+                    body: JSON.stringify({ message: "Internal Server Error" }),
+                    isBase64Encoded: false,
+                  };
+                }
               } else {
                 console.log("unhandled message type.");
                 console.log(message.type);

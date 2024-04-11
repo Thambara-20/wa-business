@@ -119,9 +119,10 @@ export const mapDataToMessages = (jsonObj: any, keysToExtract: any) => {
     return formatJSON(JSON.stringify(jsonObj));
   } else {
     let extractedData = extractKeys(jsonObj, keysToExtract);
-    console.log("Extracted data:");
-    console.log(extractedData);
-    return formatJSON(JSON.stringify(extractedData.join("\n")));
+    console.log("Extracted data:", extractedData);
+    return (extractedData as Array<any>).map((data) =>
+      formatJSON(JSON.stringify(data))
+    );
   }
 };
 

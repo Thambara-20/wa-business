@@ -176,7 +176,7 @@ const FooterElement = styled.div`
 
 function MobileScreenWithButton() {
   const buttons = useAppSelector((state) => state.template.buttons);
-  const [replyMessage, setReplyMessage] = useState([]);
+  const [replyMessage, setReplyMessage] = useState<any>();
   const [loading, setLoading] = useState(false);
 
   const handleClickButton = async (
@@ -186,12 +186,14 @@ function MobileScreenWithButton() {
     method?: string,
     headers?: any
   ) => {
+    setLoading(true);
     let data;
-    const headersList: any = {};
-    headers?.map((header: any) => {
-      headersList[header.key] = header.value;
-    });
-    console.log("Headers List:", headersList);
+    const headersList: any = { "Content-Type": "application/json" };
+    if (headers[0].key !== "" && headers[0].value !== "") {
+      headers.forEach((header: any) => {
+        headersList[header.key] = header.value;
+      });
+    }
     if (
       method === "GET" ||
       method === null ||
@@ -199,10 +201,10 @@ function MobileScreenWithButton() {
       method === ""
     ) {
       try {
+        console.log(body, headersList);
         const response = await axios.get(link, {
           headers: {
             ...headersList,
-            "Content-Type": "application/json",
           },
         });
         data = response.data;
@@ -216,7 +218,6 @@ function MobileScreenWithButton() {
         const response = await axios.post(link, body, {
           headers: {
             ...headersList,
-            "Content-Type": "application/json",
           },
         });
         data = response.data;
@@ -225,9 +226,8 @@ function MobileScreenWithButton() {
       }
     }
 
-    setLoading(true);
     console.log("Link:", link, "Mapping:", mapping);
-    const mappedMessages: any = mapDataToMessages(data, mapping);
+    const mappedMessages = mapDataToMessages(data, mapping);
     setReplyMessage(mappedMessages);
     console.log("Reply Messages:", mappedMessages);
     setLoading(false);
