@@ -20,7 +20,6 @@ export const AppDataSource = new DataSource({
   subscribers: [],
 });
 
-
 // export const AppDataSource = new DataSource({
 //   type: "postgres",
 //   host: process.env.HOST,
